@@ -1,0 +1,6 @@
+langchain
+lancedb
+fastapi
+streamlit
+uvicorn
+sentence-transformers
