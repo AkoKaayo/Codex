@@ -1,6 +1,6 @@
 langchain
 lancedb
 fastapi
-streamlit
+streamlit==1.24.0
 uvicorn
 sentence-transformers
