@@ -3,10 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Codex Arcana</title>
+    <title>Codex Arcana - Tarot AI</title>
 </head>
 <body>
-    <h1>Welcome to Codex Arcana 🔮</h1>
-    <p>Ask a question and get a tarot reading.</p>
+    <h1>Codex Arcana - Tarot Oracle</h1>
+    <p>Ask a tarot-related question:</p>
+    
+    <input type="text" id="query" placeholder="What does The Fool represent?">
+    <button onclick="sendQuery()">Ask</button>
+
+    <h2>Results:</h2>
+    <div id="results"></div>
+
+    <script>
+        function sendQuery() {
+            let query = document.getElementById("query").value;
+            fetch("/query", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ query: query })
+            })
+            .then(response => response.json())
+            .then(data => {
+                let resultsDiv = document.getElementById("results");
+                resultsDiv.innerHTML = "";
+                data.results.forEach((result, index) => {
+                    resultsDiv.innerHTML += `<p><strong>Result ${index + 1}:</strong> ${result.content}</p>`;
+                });
+            })
+            .catch(error => console.error("Error:", error));
+        }
+    </script>
 </body>
 </html>
