@@ -7,7 +7,7 @@ PDF_PATH = "data/book.pdf"
 VECTOR_STORE_PATH = "data/vectorstore"
 
 # Initialize the embedding model
-def create_embeddings(chunks, model_name="sentence-transformers/all-mpnet-base-v2"):
+def create_embeddings(chunks, model_name="sentence-transformers/all-MiniLM-L12-v1"):
     print(f"Using embedding model: {model_name}")
     embeddings = HuggingFaceEmbeddings(model_name=model_name)
     
@@ -27,7 +27,7 @@ if __name__ == "__main__":
     vector_db = create_embeddings(chunks)
     
     # Debug: Test the vector database with a query
-    query = "What is the meaning of Le Diable (The Devil)?"
+    query = "What does the 2 of pentacles mean on the third position on a spread?"
     results = vector_db.similarity_search(query, k=3)
     print(f"Query results for '{query}':")
     for i, result in enumerate(results):
