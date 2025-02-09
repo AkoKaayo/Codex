@@ -1,6 +1,0 @@
-langchain
-lancedb
-fastapi
-streamlit==1.24.0
-uvicorn
-sentence-transformers
