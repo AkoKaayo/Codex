@@ -1,38 +1,162 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Codex Arcana - Tarot AI</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Codex Arcana - AI Tarot Oracle</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;700&display=swap');
+
+    body {
+      font-family: 'Playfair Display', serif;
+      background-color: #ffffff;
+      color: #000;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+    
+    header {
+      padding: 20px;
+      text-align: center;
+      border-bottom: 1px solid #ccc;
+    }
+    
+    #chat-container {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+      background-color: #f5f5f5;
+    }
+    
+    .message {
+      margin: 10px 0;
+      max-width: 80%;
+      padding: 10px 15px;
+      border-radius: 15px;
+      clear: both;
+    }
+    
+    .user-message {
+      background-color: #0084ff;
+      color: #fff;
+      margin-left: auto;
+      border-bottom-right-radius: 0;
+    }
+    
+    .assistant-message {
+      background-color: #e4e6eb;
+      color: #000;
+      margin-right: auto;
+      border-bottom-left-radius: 0;
+    }
+    
+    footer {
+      border-top: 1px solid #ccc;
+      padding: 10px;
+      display: flex;
+    }
+    
+    input[type="text"] {
+      flex: 1;
+      padding: 10px;
+      font-size: 1em;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      outline: none;
+    }
+    
+    button {
+      background-color: #000;
+      color: #fff;
+      font-size: 1em;
+      border: none;
+      padding: 10px 20px;
+      margin-left: 10px;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+    
+    button:hover {
+      background-color: #444;
+    }
+  </style>
 </head>
 <body>
-    <h1>Codex Arcana - Tarot Oracle</h1>
-    <p>Ask a tarot-related question:</p>
-    
-    <input type="text" id="query" placeholder="What does The Fool represent?">
-    <button onclick="sendQuery()">Ask</button>
+  <header>
+    <h1>Codex Arcana</h1>
+    <p><i>Ask the tarot your question...</i></p>
+  </header>
+  
+  <div id="chat-container"></div>
+  
+  <footer>
+    <input type="text" id="query" placeholder="Type your tarot question here..." />
+    <button id="sendButton">Send</button>
+  </footer>
+  
+  <script>
+    const chatContainer = document.getElementById("chat-container");
+    const queryInput = document.getElementById("query");
+    const sendButton = document.getElementById("sendButton");
 
-    <h2>Results:</h2>
-    <div id="results"></div>
+    // Function to add a message to the chat container
+    function addMessage(content, sender) {
+      const messageDiv = document.createElement("div");
+      messageDiv.classList.add("message");
+      if (sender === "user") {
+        messageDiv.classList.add("user-message");
+      } else if (sender === "assistant") {
+        messageDiv.classList.add("assistant-message");
+      }
+      messageDiv.textContent = content;
+      chatContainer.appendChild(messageDiv);
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
 
-    <script>
-        function sendQuery() {
-            let query = document.getElementById("query").value;
-            fetch("/query", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ query: query })
-            })
-            .then(response => response.json())
-            .then(data => {
-                let resultsDiv = document.getElementById("results");
-                resultsDiv.innerHTML = "";
-                data.results.forEach((result, index) => {
-                    resultsDiv.innerHTML += `<p><strong>Result ${index + 1}:</strong> ${result.content}</p>`;
-                });
-            })
-            .catch(error => console.error("Error:", error));
+    // Function to send a query to the backend
+    function sendQuery() {
+      const query = queryInput.value.trim();
+      if (!query) {
+        alert("Please enter a tarot question.");
+        return;
+      }
+      addMessage(query, "user");
+      queryInput.value = "";
+
+      fetch("/query", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ query: query })
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
         }
-    </script>
+        return response.json();
+      })
+      .then(data => {
+        if (!data.synthesis || data.synthesis.trim() === "") {
+          addMessage("No results found. Try rephrasing your question.", "assistant");
+        } else {
+          addMessage(data.synthesis, "assistant");
+        }
+      })
+      .catch(error => {
+        console.error("Error:", error);
+        addMessage("An error occurred while fetching the tarot reading.", "assistant");
+      });
+    }
+
+    // Event listeners for the send button and Enter key
+    sendButton.addEventListener("click", sendQuery);
+    queryInput.addEventListener("keypress", function(event) {
+      if (event.key === "Enter") {
+        sendQuery();
+      }
+    });
+  </script>
 </body>
 </html>
