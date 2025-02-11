@@ -37,7 +37,7 @@ ALTERNATIVE_CARD_NAMES = {
     # Add more alternative names as needed
 }
 
-def truncate_by_tokens(text, max_tokens=250):
+def truncate_by_tokens(text, max_tokens=350):
     tokens = tokenizer.tokenize(text)
     print("Retrieved chunks token count:", len(tokens))
     if len(tokens) > max_tokens:
@@ -101,23 +101,29 @@ def preprocess_query(query):
         query_type = "single-card"
     else:
         query_type = "general"
-    return {"cards": mentioned_cards, "type": query_type, "positions": positions}
+        
+    result = {"cards": mentioned_cards, "type": query_type, "positions": positions}
+    print("Preprocess Query Output:", result)
+    
+    return result
 
 def get_card_image(card_name):
     # Construct image filename from card name; e.g., "The Fool" -> "the_fool.jpg"
-    filename = card_name.lower().replace(" ", "_") + ".jpg"
+    filename = card_name.lower().replace(" ", "_") + ".png"
     return f"/static/cards/{filename}"
 
 def generate_synthesis(cards, context, retrieved_chunks):
     retrieved_chunks = truncate_by_tokens(retrieved_chunks, max_tokens=350)
     card_list = ', '.join(cards) if cards else 'none'
-    # Updated prompt to handle three-card spread with individual analyses and a combined reflective summary
+    # Updated prompt to handle three-card spread with individual analyses and a combined reflective summary,
+    # and to instruct the model to use only the provided context and retrieved information.
     if len(cards) == 3:
         system_prompt = f"""
 You are an insightful tarot interpreter renowned for clarity, depth, and originality.
 For this three-card spread, please provide an individual analysis for each card mentioned ({card_list}).
 For each card, detail its unique symbolism, positional meaning (if any), and contextual relevance.
 After analyzing each card individually, provide a concluding summary that synthesizes these interpretations and offers reflective insights for the user's personal journey.
+Base your analysis solely on the provided context and retrieved information below. Do not use any external or pre-existing knowledge.
 Avoid generic mystical openings or clichés.
 Focus directly on analyzing the unique qualities and interactions of the cards and deliver practical, original insights in a refined, understated tone.
 Context: {context}
@@ -128,6 +134,7 @@ Now, produce an original interpretation without echoing these instructions.
         system_prompt = f"""
 You are an insightful tarot interpreter renowned for clarity, depth, and originality.
 Provide a focused, comprehensive reading based solely on the specific cards mentioned ({card_list}).
+Base your analysis solely on the provided context and retrieved information below. Do not use any external or pre-existing knowledge.
 Avoid generic mystical openings or clichés.
 Focus directly on analyzing the unique qualities and interactions of the cards and deliver practical, original insights in a refined, understated tone.
 Please provide a detailed interpretation with extended analysis.
@@ -184,6 +191,7 @@ def query_vector_db():
     else:
         context_message = "No specific card was identified."
 
+    # RAG Retrieval and Re-ranking
     results = vector_db.similarity_search(user_query, k=5)
     query_embedding = embeddings.embed_query(user_query)
     ranked_results = sorted(
@@ -191,6 +199,11 @@ def query_vector_db():
         key=lambda doc: util.cos_sim(query_embedding, embeddings.embed_query(doc.page_content)),
         reverse=True
     )
+    # Log similarity scores for debugging purposes
+    for idx, doc in enumerate(ranked_results):
+        score = util.cos_sim(query_embedding, embeddings.embed_query(doc.page_content))
+        print(f"Document {idx+1} similarity score: {score}")
+
     top_results = ranked_results[:3]
     retrieved_chunks = " ".join([result.page_content for result in top_results])
     print("Retrieved Chunks:", retrieved_chunks)

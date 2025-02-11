@@ -5,12 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Codex Arcana - AI Tarot Oracle</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Sorts+Mill+Goudy&display=swap');
 
     body {
-      font-family: 'Playfair Display', serif;
-      background-color: #ffffff;
-      color: #000;
+      font-family: 'Sorts Mill Goudy', serif;
+      background-color: #121212;
+      color: #E0E0E0;
       margin: 0;
       padding: 0;
       display: flex;
@@ -21,14 +21,38 @@
     header {
       padding: 20px;
       text-align: center;
-      border-bottom: 1px solid #ccc;
+      background-color: #1E1E1E;
+      border-bottom: 1px solid #333;
+    }
+    
+    /* Container for card images */
+    #card-images-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      padding: 10px;
+      background-color: #1E1E1E;
+      border-bottom: 1px solid #333;
+    }
+    
+    .card-image {
+      margin: 10px;
+      text-align: center;
+    }
+    
+    .card-image img {
+      max-width: 100px;
+      border: 1px solid #333;
+      border-radius: 5px;
+      display: block;
+      margin: 0 auto 5px;
     }
     
     #chat-container {
       flex: 1;
       padding: 20px;
       overflow-y: auto;
-      background-color: #f5f5f5;
+      background-color: #181818;
     }
     
     .message {
@@ -40,50 +64,40 @@
     }
     
     .user-message {
-      background-color: #0084ff;
-      color: #fff;
+      background-color: #333333;
+      color: #E0E0E0;
       margin-left: auto;
       border-bottom-right-radius: 0;
     }
     
     .assistant-message {
-      background-color: #e4e6eb;
-      color: #000;
+      background-color: #2A2A2A;
+      color: #E0E0E0;
       margin-right: auto;
       border-bottom-left-radius: 0;
     }
     
-    .card-image-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      margin-bottom: 10px;
-    }
-    .card-image-container img {
-      max-width: 100px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      margin-bottom: 5px;
-    }
-    
     footer {
-      border-top: 1px solid #ccc;
+      border-top: 1px solid #333;
       padding: 10px;
       display: flex;
+      background-color: #1E1E1E;
     }
     
     input[type="text"] {
       flex: 1;
       padding: 10px;
       font-size: 1em;
-      border: 1px solid #ccc;
+      border: 1px solid #333;
       border-radius: 5px;
       outline: none;
+      background-color: #2A2A2A;
+      color: #E0E0E0;
     }
     
     button {
-      background-color: #000;
-      color: #fff;
+      background-color: #444;
+      color: #E0E0E0;
       font-size: 1em;
       border: none;
       padding: 10px 20px;
@@ -93,15 +107,18 @@
     }
     
     button:hover {
-      background-color: #444;
+      background-color: #555;
     }
   </style>
 </head>
 <body>
   <header>
     <h1>Codex Arcana</h1>
-    <p><i>Ask and you shall know</i></p>
+    <p><i>Ask the tarot your question...</i></p>
   </header>
+  
+  <!-- Container for displaying card images -->
+  <div id="card-images-container"></div>
   
   <div id="chat-container"></div>
   
@@ -112,6 +129,7 @@
   
   <script>
     const chatContainer = document.getElementById("chat-container");
+    const cardImagesContainer = document.getElementById("card-images-container");
     const queryInput = document.getElementById("query");
     const sendButton = document.getElementById("sendButton");
 
@@ -129,11 +147,13 @@
       chatContainer.scrollTop = chatContainer.scrollHeight;
     }
 
-    // Function to add card images to the chat container
+    // Function to add card images to the dedicated container
     function addCardImages(cards) {
+      // Clear previous card images
+      cardImagesContainer.innerHTML = "";
       cards.forEach(card => {
         const cardDiv = document.createElement("div");
-        cardDiv.classList.add("card-image-container");
+        cardDiv.classList.add("card-image");
         
         const img = document.createElement("img");
         img.src = card.image;
@@ -144,8 +164,7 @@
         caption.textContent = card.name;
         cardDiv.appendChild(caption);
         
-        chatContainer.appendChild(cardDiv);
-        chatContainer.scrollTop = chatContainer.scrollHeight;
+        cardImagesContainer.appendChild(cardDiv);
       });
     }
 
