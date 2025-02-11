@@ -53,6 +53,19 @@
       border-bottom-left-radius: 0;
     }
     
+    .card-image-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .card-image-container img {
+      max-width: 100px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      margin-bottom: 5px;
+    }
+    
     footer {
       border-top: 1px solid #ccc;
       padding: 10px;
@@ -87,7 +100,7 @@
 <body>
   <header>
     <h1>Codex Arcana</h1>
-    <p><i>Ask the tarot your question...</i></p>
+    <p><i>Ask and you shall know</i></p>
   </header>
   
   <div id="chat-container"></div>
@@ -116,6 +129,26 @@
       chatContainer.scrollTop = chatContainer.scrollHeight;
     }
 
+    // Function to add card images to the chat container
+    function addCardImages(cards) {
+      cards.forEach(card => {
+        const cardDiv = document.createElement("div");
+        cardDiv.classList.add("card-image-container");
+        
+        const img = document.createElement("img");
+        img.src = card.image;
+        img.alt = card.name;
+        cardDiv.appendChild(img);
+        
+        const caption = document.createElement("p");
+        caption.textContent = card.name;
+        cardDiv.appendChild(caption);
+        
+        chatContainer.appendChild(cardDiv);
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+      });
+    }
+
     // Function to send a query to the backend
     function sendQuery() {
       const query = queryInput.value.trim();
@@ -138,6 +171,11 @@
         return response.json();
       })
       .then(data => {
+        // Display card images if provided
+        if (data.cards && data.cards.length > 0) {
+          addCardImages(data.cards);
+        }
+        // Then display the tarot synthesis
         if (!data.synthesis || data.synthesis.trim() === "") {
           addMessage("No results found. Try rephrasing your question.", "assistant");
         } else {

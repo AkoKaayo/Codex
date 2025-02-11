@@ -28,6 +28,15 @@ vector_db = Chroma(persist_directory=VECTOR_STORE_PATH, embedding_function=embed
 # Initialize the tokenizer (using the same MODEL_NAME for consistency)
 tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
 
+# Define alternative card names mapping
+ALTERNATIVE_CARD_NAMES = {
+    "9 of wands": "Nine of Wands",
+    "le mat": "The Fool",
+    "i, le batteur, the magician": "The Magician",
+    "i, le batleur, the magician": "The Magician"
+    # Add more alternative names as needed
+}
+
 def truncate_by_tokens(text, max_tokens=250):
     tokens = tokenizer.tokenize(text)
     print("Retrieved chunks token count:", len(tokens))
@@ -39,7 +48,7 @@ def truncate_by_tokens(text, max_tokens=250):
     return text
 
 def preprocess_query(query):
-    # Full list of tarot cards (Major and Minor Arcana)
+    # Full list of tarot cards (Major and Minor Arcana) in canonical form
     tarot_cards = [
         "The Fool", "The Magician", "The High Priestess", "The Empress", "The Emperor",
         "The Hierophant", "The Lovers", "The Chariot", "Strength", "The Hermit",
@@ -59,9 +68,20 @@ def preprocess_query(query):
         "Nine of Pentacles", "Ten of Pentacles",
         "Page of Pentacles", "Knight of Pentacles", "Queen of Pentacles", "King of Pentacles"
     ]
-    mentioned_cards = [card for card in tarot_cards if card.lower() in query.lower()]
-    positions = {}
+    mentioned_cards = []
     lower_query = query.lower()
+
+    # Check for canonical card names
+    for card in tarot_cards:
+        if card.lower() in lower_query and card not in mentioned_cards:
+            mentioned_cards.append(card)
+
+    # Check for alternative names and map them to canonical names
+    for alt, canonical in ALTERNATIVE_CARD_NAMES.items():
+        if alt in lower_query and canonical not in mentioned_cards:
+            mentioned_cards.append(canonical)
+
+    positions = {}
     if "past" in lower_query:
         positions["past"] = True
     if "present" in lower_query:
@@ -82,6 +102,11 @@ def preprocess_query(query):
     else:
         query_type = "general"
     return {"cards": mentioned_cards, "type": query_type, "positions": positions}
+
+def get_card_image(card_name):
+    # Construct image filename from card name; e.g., "The Fool" -> "the_fool.jpg"
+    filename = card_name.lower().replace(" ", "_") + ".jpg"
+    return f"/static/cards/{filename}"
 
 def generate_synthesis(cards, context, retrieved_chunks):
     retrieved_chunks = truncate_by_tokens(retrieved_chunks, max_tokens=350)
@@ -170,10 +195,15 @@ def query_vector_db():
     retrieved_chunks = " ".join([result.page_content for result in top_results])
     print("Retrieved Chunks:", retrieved_chunks)
     synthesis = generate_synthesis(cards, context_message, retrieved_chunks)
+    
+    # Prepare card image info for the frontend
+    cards_with_images = [{"name": card, "image": get_card_image(card)} for card in cards]
+
     response = {
         "query": user_query,
         "context": context_message,
-        "synthesis": synthesis
+        "synthesis": synthesis,
+        "cards": cards_with_images
     }
     return jsonify(response)
 
