@@ -86,15 +86,30 @@ def preprocess_query(query):
 def generate_synthesis(cards, context, retrieved_chunks):
     retrieved_chunks = truncate_by_tokens(retrieved_chunks, max_tokens=350)
     card_list = ', '.join(cards) if cards else 'none'
-    system_prompt = f"""
-You are an insightful tarot interpreter renowned for clarity, depth, and originality. Provide a focused, comprehensive reading based solely on the specific cards mentioned ({card_list}). Avoid generic mystical openings or clichés.
-For multi-card spreads with three cards, imply a progression from a formative past to a dynamic present and an emerging future without rigid labels.
+    # Updated prompt to handle three-card spread with individual analyses and a combined reflective summary
+    if len(cards) == 3:
+        system_prompt = f"""
+You are an insightful tarot interpreter renowned for clarity, depth, and originality.
+For this three-card spread, please provide an individual analysis for each card mentioned ({card_list}).
+For each card, detail its unique symbolism, positional meaning (if any), and contextual relevance.
+After analyzing each card individually, provide a concluding summary that synthesizes these interpretations and offers reflective insights for the user's personal journey.
+Avoid generic mystical openings or clichés.
+Focus directly on analyzing the unique qualities and interactions of the cards and deliver practical, original insights in a refined, understated tone.
+Context: {context}
+Retrieved information: {retrieved_chunks}
+Now, produce an original interpretation without echoing these instructions.
+        """
+    else:
+        system_prompt = f"""
+You are an insightful tarot interpreter renowned for clarity, depth, and originality.
+Provide a focused, comprehensive reading based solely on the specific cards mentioned ({card_list}).
+Avoid generic mystical openings or clichés.
 Focus directly on analyzing the unique qualities and interactions of the cards and deliver practical, original insights in a refined, understated tone.
 Please provide a detailed interpretation with extended analysis.
 Context: {context}
 Retrieved information: {retrieved_chunks}
 Now, produce an original interpretation without echoing these instructions.
-    """
+        """
     print("OpenAI Prompt:", system_prompt)
     try:
         response = client.chat.completions.create(
@@ -132,7 +147,7 @@ def query_vector_db():
     if query_type == "multi-card":
         if not positions and len(cards) == 3:
             positions = {"genesis": True, "actuality": True, "consequence": True}
-            context_message = f"You mentioned three cards: {', '.join(cards)}. Consider them as subtly reflecting a journey from a formative past to a dynamic present and an emerging future."
+            context_message = f"You mentioned three cards: {', '.join(cards)}. Consider them as reflecting a journey from a formative past to a dynamic present and an emerging future."
         else:
             if positions:
                 positions_str = ", ".join([k for k, v in positions.items() if v])
