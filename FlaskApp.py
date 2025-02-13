@@ -32,12 +32,13 @@ tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
 ALTERNATIVE_CARD_NAMES = {
     "9 of wands": "Nine of Wands",
     "le mat": "The Fool",
-    "i, le batteur, the magician": "The Magician",
-    "i, le batleur, the magician": "The Magician"
+    "le batleur": "The Magician",
+    "the pope": "The Hierophant",
+    "the priest": "The Hierophant",
     # Add more alternative names as needed
 }
 
-def truncate_by_tokens(text, max_tokens=350):
+def truncate_by_tokens(text, max_tokens=250):
     tokens = tokenizer.tokenize(text)
     print("Retrieved chunks token count:", len(tokens))
     if len(tokens) > max_tokens:
@@ -47,9 +48,13 @@ def truncate_by_tokens(text, max_tokens=350):
         return truncated_text
     return text
 
+import re
+
 def preprocess_query(query):
-    # Full list of tarot cards (Major and Minor Arcana) in canonical form
-    tarot_cards = [
+    lower_query = query.lower()
+    
+    # Canonical list of tarot cards (Major and Minor Arcana)
+    canonical_cards = [
         "The Fool", "The Magician", "The High Priestess", "The Empress", "The Emperor",
         "The Hierophant", "The Lovers", "The Chariot", "Strength", "The Hermit",
         "The Wheel of Fortune", "Justice", "The Hanged Man", "Death", "Temperance",
@@ -68,47 +73,93 @@ def preprocess_query(query):
         "Nine of Pentacles", "Ten of Pentacles",
         "Page of Pentacles", "Knight of Pentacles", "Queen of Pentacles", "King of Pentacles"
     ]
-    mentioned_cards = []
-    lower_query = query.lower()
-
-    # Check for canonical card names
-    for card in tarot_cards:
-        if card.lower() in lower_query and card not in mentioned_cards:
-            mentioned_cards.append(card)
-
-    # Check for alternative names and map them to canonical names
-    for alt, canonical in ALTERNATIVE_CARD_NAMES.items():
-        if alt in lower_query and canonical not in mentioned_cards:
-            mentioned_cards.append(canonical)
-
+    
+    # Build a dictionary for minor arcana lookups:
+    minor_arcana = {}
+    for card in canonical_cards:
+        parts = card.split(" of ")
+        if len(parts) == 2:
+            value, suit = parts
+            minor_arcana[(value.lower(), suit.lower())] = card
+    
+    matches = []  # List of tuples (start_index, card)
+    
+    # Regex pattern for phrases like "2 of spades" or "ace of hearts"
+    pattern = r'\b([0-9]+|[a-z]+)\s+of\s+([a-z]+)\b'
+    digit_to_word = {
+        "2": "Two", "3": "Three", "4": "Four", "5": "Five",
+        "6": "Six", "7": "Seven", "8": "Eight", "9": "Nine", "10": "Ten"
+    }
+    suit_alternatives = {
+        "spades": "swords",
+        "hearts": "cups",
+        "clubs": "wands",
+        "diamonds": "pentacles"
+    }
+    
+    for m in re.finditer(pattern, lower_query):
+        value, suit = m.group(1), m.group(2)
+        start = m.start()
+        # Convert digit to word if needed
+        if value.isdigit():
+            value_word = digit_to_word.get(value, value)
+        else:
+            value_word = value.capitalize()
+        # Map alternative suit names if needed
+        canonical_suit = suit_alternatives.get(suit, suit)
+        key = (value_word.lower(), canonical_suit.lower())
+        if key in minor_arcana:
+            matches.append((start, minor_arcana[key]))
+    
+    # Alias mapping: for example "the pope" maps to "The Hierophant"
+    alias_map = {
+        "the pope": "The Hierophant"
+    }
+    for alias, card in alias_map.items():
+        for m in re.finditer(r'\b' + re.escape(alias) + r'\b', lower_query):
+            start = m.start()
+            matches.append((start, card))
+    
+    # Also add any full canonical card names directly mentioned in the query,
+    # but only if not already captured, along with their position.
+    for card in canonical_cards:
+        pos = lower_query.find(card.lower())
+        if pos != -1:
+            # Check if this card is already in matches
+            if not any(existing_card == card for _, existing_card in matches):
+                matches.append((pos, card))
+    
+    # Sort matches by their start position
+    matches.sort(key=lambda x: x[0])
+    found_cards = [card for _, card in matches]
+    
+    # Remove duplicates while preserving order
+    seen = set()
+    ordered_cards = []
+    for card in found_cards:
+        if card not in seen:
+            seen.add(card)
+            ordered_cards.append(card)
+    
+    # Detect positional cues
     positions = {}
-    if "past" in lower_query:
-        positions["past"] = True
-    if "present" in lower_query:
-        positions["present"] = True
-    if "future" in lower_query:
-        positions["future"] = True
-    if "left" in lower_query:
-        positions["left"] = True
-    if "right" in lower_query:
-        positions["right"] = True
-    if "center" in lower_query:
-        positions["center"] = True
+    for pos in ["past", "present", "future", "left", "right", "center"]:
+        if pos in lower_query:
+            positions[pos] = True
 
-    if len(mentioned_cards) > 1:
+    if len(ordered_cards) > 1:
         query_type = "multi-card"
-    elif len(mentioned_cards) == 1:
+    elif len(ordered_cards) == 1:
         query_type = "single-card"
     else:
         query_type = "general"
-        
-    result = {"cards": mentioned_cards, "type": query_type, "positions": positions}
-    print("Preprocess Query Output:", result)
     
+    result = {"cards": ordered_cards, "type": query_type, "positions": positions}
+    print("Preprocess Query Output:", result)
     return result
 
 def get_card_image(card_name):
-    # Construct image filename from card name; e.g., "The Fool" -> "the_fool.jpg"
+    # Construct image filename from card name; e.g., "The Fool" -> "the_fool.png"
     filename = card_name.lower().replace(" ", "_") + ".png"
     return f"/static/cards/{filename}"
 
@@ -192,7 +243,7 @@ def query_vector_db():
         context_message = "No specific card was identified."
 
     # RAG Retrieval and Re-ranking
-    results = vector_db.similarity_search(user_query, k=5)
+    results = vector_db.similarity_search(user_query, k=8)
     query_embedding = embeddings.embed_query(user_query)
     ranked_results = sorted(
         results,
