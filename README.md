@@ -1,120 +1,182 @@
-Here is the **full `README.md` file** for your project. This document provides a comprehensive overview of the **Codex Arcana** project, including setup instructions, usage, and future enhancements.  
+Below is an updated README.md file for your project. You can copy and paste this into your repository:
+
+```markdown
+# Codex Arcana: AI Tarot Oracle
+
+Codex Arcana is an AI-powered tarot oracle that generates insightful tarot readings based solely on user queries and an indexed source text (a tarot book). It extracts tarot card names from user input, retrieves relevant passages from the book using vector search, and synthesizes detailed readings with individual card analyses and integrated summaries.
 
 ---
 
-### **Full `README.md`**
-```md
-# **Codex Arcana - AI-Powered Tarot Oracle** 🔮
+## Features
 
-## **Overview**
-Codex Arcana is an AI-powered tarot oracle that interprets tarot card meanings using **LangChain**, **RAG (Retrieval-Augmented Generation)**, and **ChromaDB**. It extracts tarot knowledge from **Jodorowsky and Camoin's teachings** and enables users to **query the tarot wisdom dynamically**.
+- **Query Preprocessing:**  
+  Extracts tarot card names (including alternative names and positional cues) from user queries.  
+  *Ambiguous queries* (those without clear card references) either default to a one-card reading (if phrased as a question) or prompt the user to be more specific.
 
-## **Project Features**
-✅ Extracts tarot meanings from a structured book using **LangChain**  
-✅ Stores extracted tarot data in a **vector database** for retrieval  
-✅ Uses **Hugging Face embeddings** for semantic search  
-✅ Provides a **Flask API and web interface** for user interaction  
-✅ Allows easy **fine-tuning** and model swapping for improved accuracy  
+- **Retrieval & Re-ranking (RAG):**  
+  Uses a vector store (via Chroma) with HuggingFace embeddings to retrieve context from the source text, re-ranking the retrieved chunks based on cosine similarity.
+
+- **Synthesis Prompt:**  
+  Generates detailed tarot readings using GPT-3.5-turbo.  
+  Supports specific spreads:
+  - **3-Card Spread:** Cards are interpreted progressively (e.g., past, present, future).
+  - **5-Card Spread (Plus Layout):** Cards are arranged in a plus configuration:
+    - **Row 1:** 1 card (centered)
+    - **Row 2:** 3 cards (left, center, right)
+    - **Row 3:** 1 card (centered)
+  - **Random Card:** Returns a single card reading.
+
+- **User Interface:**  
+  - Responsive chat area for displaying user prompts and generated readings.
+  - Card preview area showing card images retrieved by the system.
+  - **Speed Dial Buttons:** Quick-access buttons for "Random Card", "3-Card Spread", and "5-Card Spread".
+  - **Modal Card Zoom:** Click on any card image to view it in a fullscreen modal (resized to fit within 80% of the viewport height).
+
+- **Error Handling:**  
+  Provides user-friendly error messages and suggestions if the query lacks clear card references.
 
 ---
 
-## **Installation & Setup**
-### **1️⃣ Install Dependencies**
-Ensure you have Python **3.10+** installed, then install required libraries:
-```bash
-pip install langchain langchain-community chromadb flask sentence-transformers pdfplumber
+## Setup Instructions
+
+### Prerequisites
+
+- Python 3.8 or higher
+- [pip](https://pip.pypa.io/en/stable/)
+- An OpenAI API key
+
+### Installation
+
+1. **Clone the repository:**
+
+   ```bash
+   git clone https://github.com/yourusername/codex-arcana.git
+   cd codex-arcana
+   ```
+
+2. **Create and activate a virtual environment:**
+
+   ```bash
+   python -m venv venv
+   # On Windows:
+   venv\Scripts\activate
+   # On macOS/Linux:
+   source venv/bin/activate
+   ```
+
+3. **Install dependencies:**
+
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+   *(Make sure your `requirements.txt` includes packages such as Flask, flask-cors, openai, langchain_community, sentence-transformers, transformers, etc.)*
+
+4. **Set your OpenAI API Key:**
+
+   Set the environment variable `OPENAI_API_KEY` in your terminal:
+
+   ```bash
+   export OPENAI_API_KEY="your_openai_api_key_here"
+   ```
+
+   *(On Windows, use `set OPENAI_API_KEY="your_openai_api_key_here"`)*
+
+5. **Ensure your vector store and source text (e.g., tarot book PDF) are in the appropriate directories (e.g., `data/vectorstore`, `data/book.pdf`).**
+
+---
+
+## Running the Application
+
+1. **Start the Flask Application:**
+
+   ```bash
+   python flaskapp.py
+   ```
+
+2. **Access the Interface:**
+
+   Open your web browser and navigate to [http://127.0.0.1:5000](http://127.0.0.1:5000).
+
+---
+
+## Usage
+
+- **Manual Input:**  
+  Type a tarot question in the input field (e.g., "What does The Fool mean?") and press Enter or click the "Send" button.
+
+- **Speed Dial Options:**  
+  Use the buttons on the right panel for quick queries:
+  - **Random Card:** Returns a one-card reading.
+  - **3-Card Spread:** Returns a three-card reading interpreted as past, present, and future.
+  - **5-Card Spread:** Returns five cards arranged in a plus layout:
+    - Top row: 1 card (centered)
+    - Middle row: 3 cards (left, center, right)
+    - Bottom row: 1 card (centered)
+
+- **Card Zoom:**  
+  Click on any card image to open a modal with a zoomed-in view.
+
+- **Ambiguous Queries:**  
+  If your query does not contain a clear card reference, the system will either default to a one-card reading (if the query appears as a question) or prompt you to include a card name or use the speed dial options.
+
+---
+
+## Configuration
+
+- **Vector Store:**  
+  Configured to load from `data/vectorstore` using the `langchain_community` package.
+  
+- **Embeddings Model:**  
+  Uses `sentence-transformers/all-MiniLM-L12-v2` for query and document embeddings.
+  
+- **Token Limits:**  
+  The system truncates retrieved context to 250-500 tokens (adjustable in `truncate_by_tokens()`).
+
+- **Spread Overrides:**  
+  - "3 card spread" returns 3 cards.
+  - "5 card spread" returns 5 cards with a `"plus"` layout.
+  - "Random card" returns 1 card.
+
+Feel free to adjust these parameters in the code as needed.
+
+---
+
+## Integration Testing & QA
+
+- **End-to-End Testing:**  
+  Test with a variety of queries, including:
+  - Specific card queries (e.g., "What does The Fool mean?")
+  - Spread commands (e.g., "3 card spread", "5 card spread")
+  - Ambiguous queries (e.g., "Tell me something")
+  
+- **UI/UX Checks:**  
+  Verify that:
+  - Chat messages and card previews update correctly.
+  - Speed dial buttons trigger the expected readings.
+  - The modal displays a zoomed-in view of card images.
+  
+- **Error Handling:**  
+  Ensure that if a query is ambiguous, the system prompts you to include a valid card reference or use the speed dial options.
+
+---
+
+## Future Improvements
+
+- Enhance error messages and fallback logic.
+- Expand the range of alternative card names.
+- Refine the UI for better responsiveness and accessibility.
+- Deploy the application on a production server with appropriate monitoring.
+
+---
+
+## License
+
+Codex Arcana © 2025 by Kaayo is licensed under Creative Commons Attribution-NonCommercial 4.0 International 
+
+---
+
+Happy reading and exploring your tarot insights with Codex Arcana!
 ```
 
----
-
-### **2️⃣ Load & Process the Tarot Book**
-Run the **PDF processing script** to extract tarot card data into structured text chunks:
-```bash
-python3 PyPDFSplitter.py
-```
-
----
-
-### **3️⃣ Create Embeddings & Vector Store**
-Generate semantic embeddings for the extracted tarot data and store them in **ChromaDB**:
-```bash
-python3 EmbeddingCreator.py
-```
-
----
-
-### **4️⃣ Run the Flask Web App**
-Launch the **Flask-powered user interface** to interact with the tarot knowledge base:
-```bash
-python3 FlaskApp.py
-```
-Once running, open [http://127.0.0.1:5000/](http://127.0.0.1:5000/) in your browser.
-
----
-
-## **Usage**
-1. **Ask Tarot Questions**  
-   - Enter any tarot-related question in the UI, such as:
-     ```
-     What does The Fool represent?
-     How does The Lovers card influence a reading?
-     What is the connection between The Moon and The Sun?
-     ```
-2. **Retrieve Relevant Excerpts**  
-   - The app will return tarot interpretations and relationships **from the book**.
-
----
-
-## **Project Structure**
-```
-codex_arcana/
-│── data/                     # Stores book, vector database, and extracted knowledge
-│   ├── book.pdf              # The original tarot knowledge source
-│   ├── vectorstore/          # ChromaDB storage for embeddings
-│── templates/                 # HTML frontend for the Flask UI
-│   ├── index.html             # Web interface for querying tarot knowledge
-│── PyPDFSplitter.py           # Extracts tarot text from the PDF
-│── EmbeddingCreator.py        # Creates embeddings & stores them in ChromaDB
-│── FlaskApp.py                # Flask-based web application
-│── README.md                  # Project documentation (this file)
-│── requirements.txt           # Python dependencies list
-│── venv/                      # Python virtual environment (optional)
-```
-
----
-
-## **Customization**
-### **🔹 Swap the Embedding Model**
-Want to test different Hugging Face models?  
-Modify `EmbeddingCreator.py` and change:
-```python
-MODEL_NAME = "sentence-transformers/all-MiniLM-L12-v2"
-```
-Other good models:
-- `sentence-transformers/all-mpnet-base-v2` (High accuracy)
-- `sentence-transformers/paraphrase-MiniLM-L6-v2` (Good for rephrased queries)
-
----
-
-## **Future Enhancements**
-🚀 **Fine-tune embeddings** on tarot-specific text  
-🚀 **Improve UI/UX** with tarot-themed aesthetics  
-🚀 **Multi-agent retrieval** for **deep spread analysis**  
-🚀 **Voice-enabled queries** using speech-to-text  
-
----
-
-## **Contributing**
-Want to enhance Codex Arcana?  
-1. Fork the project  
-2. Create a feature branch (`git checkout -b feature-xyz`)  
-3. Submit a pull request  
-
----
-
-## **License**
-This project is licensed under the **MIT License**.
-
----
-🔮 **Codex Arcana - The Marseilles AI Tarot Oracle** 🔮
-```
+Feel free to adjust any sections to match your project's specifics. Let me know if you need further modifications or additional sections!

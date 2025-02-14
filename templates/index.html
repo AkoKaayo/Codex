@@ -5,9 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Codex Arcana</title>
   <!-- Google Fonts: IBM Plex Serif (ExtraLight 200) for answers, IBM Plex Mono for input and user prompt, and Sorts Mill Goudy for general text -->
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:wght@200&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Sorts+Mill+Goudy&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:wght@200&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Sorts+Mill+Goudy&display=swap" rel="stylesheet" />
   <style>
     body {
       font-family: 'Sorts Mill Goudy', serif;
@@ -31,12 +31,32 @@
       margin: 0;
     }
     
+    /* Speed Dial Buttons Container (inside cards-wrapper) */
+    #speed-dial {
+      display: flex;
+      justify-content: center;
+      margin-top: 10px;
+    }
+    #speed-dial button {
+      margin: 0 5px;
+      padding: 8px 12px;
+      font-family: 'IBM Plex Mono', monospace;
+      background-color: #444;
+      color: #E0E0E0;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    #speed-dial button:hover {
+      background-color: #555;
+    }
+    
     /* Main content area */
     #main-content {
       flex: 1;
       display: flex;
       overflow: hidden;
-      padding: 0 0px;
+      padding: 0;
     }
     
     /* Chat area (left column) 450px wide */
@@ -55,24 +75,34 @@
       overflow-y: auto;
     }
     
-    /* Cards area (right column) */
+    /* Cards area (right column) with column layout */
     #cards-wrapper {
       flex: 1;
       background-color: #121212;
       overflow-y: auto;
       padding: 20px;
       display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    /* Container for card images */
+    #card-images-container {
+      width: 100%;
+      display: flex;
       flex-wrap: wrap;
       align-items: center;
       justify-content: center;
     }
     
-    /* Card image style: center images, no captions */
+    /* Default Card image style: center images, no captions */
     .card-image {
       flex: 1 1 30%;
       max-width: 30%;
       margin: 10px;
       text-align: center;
+      cursor: pointer;
     }
     
     .card-image img {
@@ -80,7 +110,28 @@
       border-radius: 0;
     }
     
-    /* Footer (input area) fixed at 60px tall, no top border */
+    /* Plus layout for 5 card spread: row 1 with one card centered, row 2 with three cards, row 3 with one card centered */
+    .plus-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      grid-template-rows: auto auto auto;
+      gap: 10px;
+      width: 100%;
+      margin-top: 20px;
+      grid-template-areas:
+        ". top ."
+        "left center right"
+        ". bottom .";
+      justify-items: center;
+      align-items: center;
+    }
+    .plus-layout .card-image:nth-child(1) { grid-area: top; }
+    .plus-layout .card-image:nth-child(2) { grid-area: left; }
+    .plus-layout .card-image:nth-child(3) { grid-area: center; }
+    .plus-layout .card-image:nth-child(4) { grid-area: right; }
+    .plus-layout .card-image:nth-child(5) { grid-area: bottom; }
+    
+    /* Footer (input area) fixed at 60px tall */
     footer {
       height: 60px;
       background-color: #000;
@@ -93,12 +144,12 @@
       width: 100%;
       display: flex;
       align-items: center;
-      padding: 10 0px;
+      padding: 10px 0;
       box-sizing: border-box;
     }
     
-    /* Textarea: uses IBM Plex Mono, no round corners, red border on focus */
-    #input-container textarea {
+    /* Textarea styling */
+    #query {
       flex: 1;
       font-family: 'IBM Plex Mono', monospace;
       font-size: 1em;
@@ -113,11 +164,27 @@
       box-sizing: border-box;
     }
     
-    #input-container textarea:focus {
+    #query:focus {
       border-color: red;
       outline: none;
     }
-
+    
+    /* Send button styling */
+    #sendButton {
+      margin-left: 10px;
+      padding: 10px 15px;
+      background-color: #444;
+      color: #fff;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 1em;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    
+    #sendButton:hover {
+      background-color: #555;
+    }
     
     /* Message styles */
     .message {
@@ -127,7 +194,7 @@
       white-space: pre-wrap;
     }
     
-    /* Assistant message uses IBM Plex Serif ExtraLight 200, no rounded corners */
+    /* Assistant message styling */
     .assistant-message {
       background-color: #2A2A2A;
       color: #E0E0E0;
@@ -135,15 +202,45 @@
       border-radius: 0;
       font-family: 'IBM Plex Serif', serif;
       font-weight: 200;
+      font-size: 0.9em;
     }
     
-    /* User prompt: uses IBM Plex Mono */
+    /* User prompt styling */
     .user-prompt {
       font-family: 'IBM Plex Mono', monospace;
       font-size: 0.8em;
       color: #bbb;
       margin: 5px 0;
       text-align: left;
+    }
+    
+    /* Modal for Card Zoom */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 100;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.8);
+    }
+    .modal-content {
+      margin: 5% auto;
+      display: block;
+      max-width: 90%;
+      max-height: 80vh;
+      object-fit: contain;
+    }
+    .close {
+      position: absolute;
+      top: 20px;
+      right: 35px;
+      color: #fff;
+      font-size: 40px;
+      font-weight: bold;
+      cursor: pointer;
     }
   </style>
 </head>
@@ -158,23 +255,45 @@
       <div id="chat-container"></div>
     </div>
     <div id="cards-wrapper">
-      <!-- Card images will be injected here -->
+      <!-- Container for card images -->
+      <div id="card-images-container"></div>
+      <!-- Speed Dial Buttons at the bottom of right panel -->
+      <div id="speed-dial">
+        <button id="random-card">Random Card</button>
+        <button id="three-card-spread">3-Card Spread</button>
+        <button id="five-card-spread">5-Card Spread</button>
+      </div>
     </div>
   </div>
   
-  <!-- Footer with input field at the bottom -->
+  <!-- Footer with input field -->
   <footer>
     <div id="input-container">
       <textarea id="query" placeholder="Ask and you shall know" autofocus></textarea>
-      <div id="sendButton"></div>
+      <button id="sendButton">Send</button>
     </div>
   </footer>
   
+  <!-- Modal for Card Zoom -->
+  <div id="card-modal" class="modal">
+    <span class="close">&times;</span>
+    <img class="modal-content" id="modal-image">
+  </div>
+  
   <script>
     const chatContainer = document.getElementById("chat-container");
+    const cardImagesContainer = document.getElementById("card-images-container");
     const cardsWrapper = document.getElementById("cards-wrapper");
     const queryInput = document.getElementById("query");
     const sendButton = document.getElementById("sendButton");
+    const randomCardButton = document.getElementById("random-card");
+    const threeCardButton = document.getElementById("three-card-spread");
+    const fiveCardButton = document.getElementById("five-card-spread");
+    
+    // Modal elements
+    const modal = document.getElementById("card-modal");
+    const modalImage = document.getElementById("modal-image");
+    const closeModal = document.querySelector("#card-modal .close");
 
     // Ensure the input text always starts with a capital letter on blur
     queryInput.addEventListener("blur", function() {
@@ -182,36 +301,6 @@
         queryInput.value = queryInput.value.charAt(0).toUpperCase() + queryInput.value.slice(1);
       }
     });
-
-    // Function to format answer text by bolding card names
-    function formatAnswer(text) {
-      // List of canonical card names (can be expanded as needed)
-      const canonicalCards = [
-        "The Fool", "The Magician", "The High Priestess", "The Empress", "The Emperor",
-        "The Hierophant", "The Lovers", "The Chariot", "Strength", "The Hermit",
-        "The Wheel of Fortune", "Justice", "The Hanged Man", "Death", "Temperance",
-        "The Devil", "The Tower", "The Star", "The Moon", "The Sun", "Judgment", "The World",
-        "Ace of Wands", "Two of Wands", "Three of Wands", "Four of Wands", "Five of Wands",
-        "Six of Wands", "Seven of Wands", "Eight of Wands", "Nine of Wands", "Ten of Wands",
-        "Page of Wands", "Knight of Wands", "Queen of Wands", "King of Wands",
-        "Ace of Cups", "Two of Cups", "Three of Cups", "Four of Cups", "Five of Cups",
-        "Six of Cups", "Seven of Cups", "Eight of Cups", "Nine of Cups", "Ten of Cups",
-        "Page of Cups", "Knight of Cups", "Queen of Cups", "King of Cups",
-        "Ace of Swords", "Two of Swords", "Three of Swords", "Four of Swords", "Five of Swords",
-        "Six of Swords", "Seven of Swords", "Eight of Swords", "Nine of Swords", "Ten of Swords",
-        "Page of Swords", "Knight of Swords", "Queen of Swords", "King of Swords",
-        "Ace of Pentacles", "Two of Pentacles", "Three of Pentacles", "Four of Pentacles",
-        "Five of Pentacles", "Six of Pentacles", "Seven of Pentacles", "Eight of Pentacles",
-        "Nine of Pentacles", "Ten of Pentacles",
-        "Page of Pentacles", "Knight of Pentacles", "Queen of Pentacles", "King of Pentacles"
-      ];
-      // For each card name, wrap it in <b> tags
-      canonicalCards.forEach(card => {
-        const regex = new RegExp("\\b" + card + "\\b", "g");
-        text = text.replace(regex, "<b>" + card + "</b>");
-      });
-      return text;
-    }
 
     // Function to add a user prompt (displayed above the assistant's answer)
     function addUserPrompt(promptText) {
@@ -235,9 +324,43 @@
       }
     }
 
-    // Function to add card images to the cards wrapper (centered, no captions)
-    function addCardImages(cards) {
-      cardsWrapper.innerHTML = "";
+    // Function to format answer text by bolding card names
+    function formatAnswer(text) {
+      const canonicalCards = [
+        "The Fool", "The Magician", "The High Priestess", "The Empress", "The Emperor",
+        "The Hierophant", "The Lovers", "The Chariot", "Strength", "The Hermit",
+        "The Wheel of Fortune", "Justice", "The Hanged Man", "Death", "Temperance",
+        "The Devil", "The Tower", "The Star", "The Moon", "The Sun", "Judgment", "The World",
+        "Ace of Wands", "Two of Wands", "Three of Wands", "Four of Wands", "Five of Wands",
+        "Six of Wands", "Seven of Wands", "Eight of Wands", "Nine of Wands", "Ten of Wands",
+        "Page of Wands", "Knight of Wands", "Queen of Wands", "King of Wands",
+        "Ace of Cups", "Two of Cups", "Three of Cups", "Four of Cups", "Five of Cups",
+        "Six of Cups", "Seven of Cups", "Eight of Cups", "Nine of Cups", "Ten of Cups",
+        "Page of Cups", "Knight of Cups", "Queen of Cups", "King of Cups",
+        "Ace of Swords", "Two of Swords", "Three of Swords", "Four of Swords", "Five of Swords",
+        "Six of Swords", "Seven of Swords", "Eight of Swords", "Nine of Swords", "Ten of Swords",
+        "Page of Swords", "Knight of Swords", "Queen of Swords", "King of Swords",
+        "Ace of Pentacles", "Two of Pentacles", "Three of Pentacles", "Four of Pentacles",
+        "Five of Pentacles", "Six of Pentacles", "Seven of Pentacles", "Eight of Pentacles",
+        "Nine of Pentacles", "Ten of Pentacles",
+        "Page of Pentacles", "Knight of Pentacles", "Queen of Pentacles", "King of Pentacles"
+      ];
+      canonicalCards.forEach(card => {
+        const regex = new RegExp("\\b" + card + "\\b", "g");
+        text = text.replace(regex, "<b>" + card + "</b>");
+      });
+      return text;
+    }
+
+    // Function to add card images to the card-images-container
+    function addCardImages(cards, layout) {
+      cardImagesContainer.innerHTML = "";
+      // Add layout class if necessary
+      if (layout === "plus") {
+        cardImagesContainer.classList.add("plus-layout");
+      } else {
+        cardImagesContainer.classList.remove("plus-layout");
+      }
       cards.forEach(card => {
         const cardDiv = document.createElement("div");
         cardDiv.classList.add("card-image");
@@ -247,17 +370,15 @@
         img.alt = card.name;
         cardDiv.appendChild(img);
         
-        cardsWrapper.appendChild(cardDiv);
+        cardImagesContainer.appendChild(cardDiv);
       });
     }
 
-    // Function to set loading state on send button
-    function setLoadingState(isLoading) {
-      if (isLoading) {
-        sendButton.classList.add("loading");
-      } else {
-        sendButton.classList.remove("loading");
-      }
+    // Function to clear previous reading (chat messages and card previews)
+    function clearPreviousReading() {
+      chatContainer.innerHTML = "";
+      cardImagesContainer.innerHTML = "";
+      cardImagesContainer.classList.remove("plus-layout");
     }
 
     // Function to send a query to the backend
@@ -267,10 +388,9 @@
         alert("Please enter a tarot question.");
         return;
       }
-      // Add the user prompt above the assistant's answer
+      clearPreviousReading();
       addUserPrompt(query);
       queryInput.value = "";
-      setLoadingState(true);
       fetch("/query", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -283,32 +403,66 @@
         return response.json();
       })
       .then(data => {
-        setLoadingState(false);
         if (data.cards && data.cards.length > 0) {
-          addCardImages(data.cards);
+          addCardImages(data.cards, data.layout);
         } else {
-          cardsWrapper.innerHTML = "";
+          cardImagesContainer.innerHTML = "";
         }
         if (!data.synthesis || data.synthesis.trim() === "") {
-          addAssistantMessage("No results found. Try rephrasing your question.");
+          if (data.error) {
+            addAssistantMessage(data.error);
+          } else {
+            addAssistantMessage("No results found. Try rephrasing your question.");
+          }
         } else {
           addAssistantMessage(data.synthesis);
         }
       })
       .catch(error => {
-        setLoadingState(false);
         console.error("Error:", error);
         addAssistantMessage("An error occurred while fetching the tarot reading.");
       });
     }
 
     sendButton.addEventListener("click", sendQuery);
-    queryInput.addEventListener("keypress", function(event) {
+    queryInput.addEventListener("keydown", function(event) {
       if (event.key === "Enter" && !event.shiftKey) {
         event.preventDefault();
         sendQuery();
       }
     });
+    
+    // Speed Dial Buttons Event Listeners
+    randomCardButton.addEventListener("click", () => {
+      queryInput.value = "Random card";
+      sendQuery();
+    });
+    threeCardButton.addEventListener("click", () => {
+      queryInput.value = "3 card spread";
+      sendQuery();
+    });
+    fiveCardButton.addEventListener("click", () => {
+      queryInput.value = "5 card spread";
+      sendQuery();
+    });
+    
+    // Card Zoom Modal
+    closeModal.addEventListener("click", () => {
+      modal.style.display = "none";
+    });
+    
+    document.addEventListener("click", (event) => {
+      if (event.target.tagName === "IMG" && event.target.parentElement.classList.contains("card-image")) {
+        modal.style.display = "block";
+        modalImage.src = event.target.src;
+      }
+    });
   </script>
+  
+  <!-- Modal for Card Zoom -->
+  <div id="card-modal" class="modal">
+    <span class="close">&times;</span>
+    <img class="modal-content" id="modal-image">
+  </div>
 </body>
 </html>

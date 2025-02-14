@@ -1,5 +1,6 @@
 import re
 import os
+import random
 from openai import OpenAI
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 if not os.getenv("OPENAI_API_KEY"):
@@ -15,6 +16,27 @@ from transformers import AutoTokenizer  # Import the tokenizer
 # Paths and configuration
 VECTOR_STORE_PATH = "data/vectorstore"
 MODEL_NAME = "sentence-transformers/all-MiniLM-L12-v2"
+
+# Global canonical cards list
+CANONICAL_CARDS = [
+    "The Fool", "The Magician", "The High Priestess", "The Empress", "The Emperor",
+    "The Hierophant", "The Lovers", "The Chariot", "Strength", "The Hermit",
+    "The Wheel of Fortune", "Justice", "The Hanged Man", "Death", "Temperance",
+    "The Devil", "The Tower", "The Star", "The Moon", "The Sun", "Judgment", "The World",
+    "Ace of Wands", "Two of Wands", "Three of Wands", "Four of Wands", "Five of Wands",
+    "Six of Wands", "Seven of Wands", "Eight of Wands", "Nine of Wands", "Ten of Wands",
+    "Page of Wands", "Knight of Wands", "Queen of Wands", "King of Wands",
+    "Ace of Cups", "Two of Cups", "Three of Cups", "Four of Cups", "Five of Cups",
+    "Six of Cups", "Seven of Cups", "Eight of Cups", "Nine of Cups", "Ten of Cups",
+    "Page of Cups", "Knight of Cups", "Queen of Cups", "King of Cups",
+    "Ace of Swords", "Two of Swords", "Three of Swords", "Four of Swords", "Five of Swords",
+    "Six of Swords", "Seven of Swords", "Eight of Swords", "Nine of Swords", "Ten of Swords",
+    "Page of Swords", "Knight of Swords", "Queen of Swords", "King of Swords",
+    "Ace of Pentacles", "Two of Pentacles", "Three of Pentacles", "Four of Pentacles",
+    "Five of Pentacles", "Six of Pentacles", "Seven of Pentacles", "Eight of Pentacles",
+    "Nine of Pentacles", "Ten of Pentacles",
+    "Page of Pentacles", "Knight of Pentacles", "Queen of Pentacles", "King of Pentacles"
+]
 
 # Initialize Flask app and enable CORS for all routes
 app = Flask(__name__, static_folder="static")
@@ -48,31 +70,11 @@ def truncate_by_tokens(text, max_tokens=250):
         return truncated_text
     return text
 
-import re
-
 def preprocess_query(query):
     lower_query = query.lower()
     
-    # Canonical list of tarot cards (Major and Minor Arcana)
-    canonical_cards = [
-        "The Fool", "The Magician", "The High Priestess", "The Empress", "The Emperor",
-        "The Hierophant", "The Lovers", "The Chariot", "Strength", "The Hermit",
-        "The Wheel of Fortune", "Justice", "The Hanged Man", "Death", "Temperance",
-        "The Devil", "The Tower", "The Star", "The Moon", "The Sun", "Judgment", "The World",
-        "Ace of Wands", "Two of Wands", "Three of Wands", "Four of Wands", "Five of Wands",
-        "Six of Wands", "Seven of Wands", "Eight of Wands", "Nine of Wands", "Ten of Wands",
-        "Page of Wands", "Knight of Wands", "Queen of Wands", "King of Wands",
-        "Ace of Cups", "Two of Cups", "Three of Cups", "Four of Cups", "Five of Cups",
-        "Six of Cups", "Seven of Cups", "Eight of Cups", "Nine of Cups", "Ten of Cups",
-        "Page of Cups", "Knight of Cups", "Queen of Cups", "King of Cups",
-        "Ace of Swords", "Two of Swords", "Three of Swords", "Four of Swords", "Five of Swords",
-        "Six of Swords", "Seven of Swords", "Eight of Swords", "Nine of Swords", "Ten of Swords",
-        "Page of Swords", "Knight of Swords", "Queen of Swords", "King of Swords",
-        "Ace of Pentacles", "Two of Pentacles", "Three of Pentacles", "Four of Pentacles",
-        "Five of Pentacles", "Six of Pentacles", "Seven of Pentacles", "Eight of Pentacles",
-        "Nine of Pentacles", "Ten of Pentacles",
-        "Page of Pentacles", "Knight of Pentacles", "Queen of Pentacles", "King of Pentacles"
-    ]
+    # Use the global canonical cards list
+    canonical_cards = CANONICAL_CARDS
     
     # Build a dictionary for minor arcana lookups:
     minor_arcana = {}
@@ -100,18 +102,16 @@ def preprocess_query(query):
     for m in re.finditer(pattern, lower_query):
         value, suit = m.group(1), m.group(2)
         start = m.start()
-        # Convert digit to word if needed
         if value.isdigit():
             value_word = digit_to_word.get(value, value)
         else:
             value_word = value.capitalize()
-        # Map alternative suit names if needed
         canonical_suit = suit_alternatives.get(suit, suit)
         key = (value_word.lower(), canonical_suit.lower())
         if key in minor_arcana:
             matches.append((start, minor_arcana[key]))
     
-    # Alias mapping: for example "the pope" maps to "The Hierophant"
+    # Alias mapping: e.g., "the pope" maps to "The Hierophant"
     alias_map = {
         "the pope": "The Hierophant"
     }
@@ -119,17 +119,16 @@ def preprocess_query(query):
         for m in re.finditer(r'\b' + re.escape(alias) + r'\b', lower_query):
             start = m.start()
             matches.append((start, card))
+    if "the pope" in lower_query and not any(card == "The Hierophant" for _, card in matches):
+        matches.append((lower_query.find("the pope"), "The Hierophant"))
     
     # Also add any full canonical card names directly mentioned in the query,
     # but only if not already captured, along with their position.
     for card in canonical_cards:
         pos = lower_query.find(card.lower())
-        if pos != -1:
-            # Check if this card is already in matches
-            if not any(existing_card == card for _, existing_card in matches):
-                matches.append((pos, card))
+        if pos != -1 and not any(existing_card == card for _, existing_card in matches):
+            matches.append((pos, card))
     
-    # Sort matches by their start position
     matches.sort(key=lambda x: x[0])
     found_cards = [card for _, card in matches]
     
@@ -154,29 +153,51 @@ def preprocess_query(query):
     else:
         query_type = "general"
     
-    result = {"cards": ordered_cards, "type": query_type, "positions": positions}
+    # Override for speed dial commands or ambiguous queries:
+    if lower_query.strip() == "3 card spread":
+        ordered_cards = random.sample(canonical_cards, 3)
+        query_type = "multi-card"
+        positions = {"past": True, "present": True, "future": True}
+        result = {"cards": ordered_cards, "type": query_type, "positions": positions}
+    elif lower_query.strip() == "5 card spread":
+        # For plus layout, return 5 cards arranged as: row1: center; row2: left, center, right; row3: center.
+        ordered_cards = random.sample(canonical_cards, 5)
+        query_type = "multi-card"
+        result = {"cards": ordered_cards, "type": query_type, "positions": positions, "layout": "plus"}
+    elif lower_query.strip() == "random card":
+        ordered_cards = [random.choice(canonical_cards)]
+        query_type = "single-card"
+        result = {"cards": ordered_cards, "type": query_type, "positions": positions}
+    elif len(ordered_cards) == 0:
+        if ("?" in lower_query) or any(word in lower_query for word in ["what", "tell me", "how", "why"]):
+            ordered_cards = [random.choice(canonical_cards)]
+            query_type = "single-card"
+            result = {"cards": ordered_cards, "type": query_type, "positions": positions}
+        else:
+            result = {"error": "Your query did not contain any valid card references. Please include at least one card name or use the speed dial options.", "cards": [], "type": query_type, "positions": positions}
+    else:
+        result = {"cards": ordered_cards, "type": query_type, "positions": positions}
+    
     print("Preprocess Query Output:", result)
     return result
 
 def get_card_image(card_name):
-    # Construct image filename from card name; e.g., "The Fool" -> "the_fool.png"
     filename = card_name.lower().replace(" ", "_") + ".png"
     return f"/static/cards/{filename}"
 
 def generate_synthesis(cards, context, retrieved_chunks):
-    retrieved_chunks = truncate_by_tokens(retrieved_chunks, max_tokens=350)
+    retrieved_chunks = truncate_by_tokens(retrieved_chunks, max_tokens=500)
     card_list = ', '.join(cards) if cards else 'none'
-    # Updated prompt to handle three-card spread with individual analyses and a combined reflective summary,
-    # and to instruct the model to use only the provided context and retrieved information.
     if len(cards) == 3:
         system_prompt = f"""
 You are an insightful tarot interpreter renowned for clarity, depth, and originality.
 For this three-card spread, please provide an individual analysis for each card mentioned ({card_list}).
+Interpret the cards in a progressive manner and read it as a sentence: consider the first card as representing the beginning (or the genesis), the second as representing the current state (or the means of deployment), and the third as representing the result (or emerging outcomes).
 For each card, detail its unique symbolism, positional meaning (if any), and contextual relevance.
-After analyzing each card individually, provide a concluding summary that synthesizes these interpretations and offers reflective insights for the user's personal journey.
+After analyzing each card individually, integrate these interpretations into a cohesive, unified narrative that reflects the overall journey.
 Base your analysis solely on the provided context and retrieved information below. Do not use any external or pre-existing knowledge.
 Avoid generic mystical openings or clichés.
-Focus directly on analyzing the unique qualities and interactions of the cards and deliver practical, original insights in a refined, understated tone.
+Focus directly on the unique qualities and interactions of the cards and deliver practical, original insights in a refined, understated tone.
 Context: {context}
 Retrieved information: {retrieved_chunks}
 Now, produce an original interpretation without echoing these instructions.
@@ -187,7 +208,7 @@ You are an insightful tarot interpreter renowned for clarity, depth, and origina
 Provide a focused, comprehensive reading based solely on the specific cards mentioned ({card_list}).
 Base your analysis solely on the provided context and retrieved information below. Do not use any external or pre-existing knowledge.
 Avoid generic mystical openings or clichés.
-Focus directly on analyzing the unique qualities and interactions of the cards and deliver practical, original insights in a refined, understated tone.
+Focus on analyzing the unique qualities and interactions of the cards and deliver practical, original insights in a refined, understated tone.
 Please provide a detailed interpretation with extended analysis.
 Context: {context}
 Retrieved information: {retrieved_chunks}
@@ -211,6 +232,11 @@ Now, produce an original interpretation without echoing these instructions.
 def home():
     return render_template("index.html")
 
+# New function: clear previous reading (chat messages and card previews)
+def clearPreviousReading():
+    # This function is implemented on the frontend in JavaScript.
+    pass
+
 @app.route("/query", methods=["POST"])
 @cross_origin()
 def query_vector_db():
@@ -223,6 +249,9 @@ def query_vector_db():
         return jsonify({"error": "Query is missing"}), 400
 
     query_info = preprocess_query(user_query)
+    if "error" in query_info:
+        return jsonify(query_info)
+    
     cards = query_info["cards"]
     query_type = query_info["type"]
     positions = query_info["positions"]
@@ -242,7 +271,7 @@ def query_vector_db():
     else:
         context_message = "No specific card was identified."
 
-    # RAG Retrieval and Re-ranking
+    # RAG Retrieval and Re-ranking:
     results = vector_db.similarity_search(user_query, k=8)
     query_embedding = embeddings.embed_query(user_query)
     ranked_results = sorted(
@@ -250,7 +279,6 @@ def query_vector_db():
         key=lambda doc: util.cos_sim(query_embedding, embeddings.embed_query(doc.page_content)),
         reverse=True
     )
-    # Log similarity scores for debugging purposes
     for idx, doc in enumerate(ranked_results):
         score = util.cos_sim(query_embedding, embeddings.embed_query(doc.page_content))
         print(f"Document {idx+1} similarity score: {score}")
@@ -267,7 +295,8 @@ def query_vector_db():
         "query": user_query,
         "context": context_message,
         "synthesis": synthesis,
-        "cards": cards_with_images
+        "cards": cards_with_images,
+        "layout": query_info.get("layout", "default")
     }
     return jsonify(response)
 
