@@ -157,11 +157,16 @@ def preprocess_query(query):
     if lower_query.strip() == "3 card spread":
         ordered_cards = random.sample(canonical_cards, 3)
         query_type = "multi-card"
-        positions = {"past": True, "present": True, "future": True}
+        positions = {"genesis": True, "actuality": True, "consequence": True}
         result = {"cards": ordered_cards, "type": query_type, "positions": positions}
     elif lower_query.strip() == "5 card spread":
-        # For plus layout, return 5 cards arranged as: row1: center; row2: left, center, right; row3: center.
-        ordered_cards = random.sample(canonical_cards, 5)
+        # For plus layout, explicitly assign positions:
+        # South (bottom), West (left), Centre (center), East (right), North (top)
+        south = random.choice(canonical_cards)
+        remaining = [card for card in canonical_cards if card != south]
+        # Pick four distinct cards for the remaining positions.
+        west, centre, east, north = random.sample(remaining, 4)
+        ordered_cards = [south, west, centre, east, north]
         query_type = "multi-card"
         result = {"cards": ordered_cards, "type": query_type, "positions": positions, "layout": "plus"}
     elif lower_query.strip() == "random card":
@@ -185,10 +190,26 @@ def get_card_image(card_name):
     filename = card_name.lower().replace(" ", "_") + ".png"
     return f"/static/cards/{filename}"
 
-def generate_synthesis(cards, context, retrieved_chunks):
+def generate_synthesis(cards, context, retrieved_chunks, layout=None):
     retrieved_chunks = truncate_by_tokens(retrieved_chunks, max_tokens=500)
     card_list = ', '.join(cards) if cards else 'none'
-    if len(cards) == 3:
+    # Branch for 5-card spread instructions
+    if layout == "plus" or len(cards) == 5:
+        system_prompt = f"""
+You are a tarot oracle. Interpret the following 5-card spread with the positions as defined:
+South: "What prevents me from being myself?" – This card reveals the restraint, obstacle, or blockage hindering your authentic self.
+West: "With what means can I free myself?" – This card indicates the means of liberation available to you.
+Centre: "To undertake what action?" – This card suggests the specific action you should take.
+East: "To lead into what transformation?" – This card reveals the means through which transformation can occur.
+North: "What is my purpose, my destiny to realize?" – This card unveils your ultimate purpose or destiny to be achieved.
+
+For each card, include its traditional tarot symbolism and explain its significance in its position within this spread.
+Then, provide an overall synthesis of the reading that integrates all five insights into a cohesive, articulated interpretation without repeating the prompt language.
+Context: {context}
+Retrieved information: {retrieved_chunks}
+Now, produce an original interpretation without echoing these instructions.
+        """
+    elif len(cards) == 3:
         system_prompt = f"""
 You are an insightful tarot interpreter renowned for clarity, depth, and originality.
 For this three-card spread, please provide an individual analysis for each card mentioned ({card_list}).
@@ -255,6 +276,7 @@ def query_vector_db():
     cards = query_info["cards"]
     query_type = query_info["type"]
     positions = query_info["positions"]
+    layout = query_info.get("layout", "default")
 
     if query_type == "multi-card":
         if not positions and len(cards) == 3:
@@ -286,7 +308,7 @@ def query_vector_db():
     top_results = ranked_results[:3]
     retrieved_chunks = " ".join([result.page_content for result in top_results])
     print("Retrieved Chunks:", retrieved_chunks)
-    synthesis = generate_synthesis(cards, context_message, retrieved_chunks)
+    synthesis = generate_synthesis(cards, context_message, retrieved_chunks, layout)
     
     # Prepare card image info for the frontend
     cards_with_images = [{"name": card, "image": get_card_image(card)} for card in cards]
@@ -296,7 +318,7 @@ def query_vector_db():
         "context": context_message,
         "synthesis": synthesis,
         "cards": cards_with_images,
-        "layout": query_info.get("layout", "default")
+        "layout": layout
     }
     return jsonify(response)
 
