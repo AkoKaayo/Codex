@@ -19,7 +19,6 @@
       flex-direction: column;
       height: 100vh;
     }
-    
     header {
       padding: 10px 20px;
       text-align: left;
@@ -29,7 +28,6 @@
       font-size: 1.2em;
       margin: 0;
     }
-    
     /* Main content area: left (chat), right (cards) */
     #main-content {
       flex: 1;
@@ -49,7 +47,74 @@
       padding: 20px;
       overflow-y: auto;
     }
-    
+    #chat-bottom-container {
+      padding: 20px 20px;
+      background-color: #1E1E1E;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: auto;
+    }
+    #welcome-message {
+      font-family: 'IBM Plex Serif', serif;
+      font-size: 0.9em;
+      font-weight: 200;
+      color: #E0E0E0;
+    }
+    /* Inline context container: center input + button with spacing */
+    #inline-context-container {
+      display: none; /* hidden by default */
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      margin-top: 10px;
+      gap: 15px;
+    }
+    #inline-context-container input {
+      width: 95%;
+      padding: 10px;
+      background-color: #2A2A2A;
+      border: 1px solid #333;
+      color: #E0E0E0;
+      font-family: 'IBM Plex Mono', monospace;
+    }
+    #inline-send-button {
+      width: 100%;
+      padding: 10px;
+      background-color: #444;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      font-family: 'IBM Plex Mono', monospace;
+    }
+    #inline-send-button:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+    }
+    #inline-send-button:hover:enabled {
+      background-color: #555;
+    }
+    /* Speed dial buttons styling */
+    #speed-dial-container button,
+    #just-cards-speed-dial button {
+      flex: 1;
+      padding: 10px 12px;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 0.6em;
+      background-color: #444;
+      color: #E0E0E0;
+      border: none;
+      cursor: pointer;
+    }
+    #speed-dial-container button:hover,
+    #just-cards-speed-dial button:hover {
+      background-color: #555;
+    }
+    /* Highlight style for the active/selected button */
+    .active-button {
+      background-color: #666;
+      outline: 2px solid #fff;
+    }
     /* Cards area (right) */
     #cards-wrapper {
       flex: 1;
@@ -61,20 +126,16 @@
       align-items: center;
       justify-content: flex-start;
     }
-
-    /* Container for card images */
     #card-images-container {
       width: 100%;
     }
-
-    /* Default: center card(s) for single/random card */
+    /* Default: center card(s) for single card scenario */
     #card-images-container:not(.plus-layout):not(.three-card-layout) {
       display: flex;
       align-items: center;
       justify-content: center;
       flex-wrap: wrap;
     }
-    
     .card-image {
       margin: 10px;
       text-align: center;
@@ -85,18 +146,11 @@
       width: 100%;
       height: auto;
       display: block;
-      border-radius: 0;
     }
-    
-    /* 5-card cross layout (plus-layout)
-       Grid areas for 5 cards:
-         Top row: Card E
-         Middle row: Card B (left), Card C (center), Card D (right)
-         Bottom row: Card A
-    */
+    /* 5-card cross layout (plus-layout) */
     #card-images-container.plus-layout {
       display: grid;
-      width: fit-content; 
+      width: fit-content;
       grid-template-columns: 1fr 1fr 1fr;
       grid-template-rows: auto auto auto;
       gap: 10px;
@@ -108,95 +162,35 @@
       justify-items: center;
       align-items: center;
     }
-    #card-images-container.plus-layout .card-image:nth-child(1) { grid-area: a; }
-    #card-images-container.plus-layout .card-image:nth-child(2) { grid-area: b; }
-    #card-images-container.plus-layout .card-image:nth-child(3) { grid-area: c; }
-    #card-images-container.plus-layout .card-image:nth-child(4) { grid-area: d; }
-    #card-images-container.plus-layout .card-image:nth-child(5) { grid-area: e; }
-    /* Optional: Remove extra margins so the gap defines spacing */
+    #card-images-container.plus-layout .card-image:nth-child(1) {
+      grid-area: a;
+    }
+    #card-images-container.plus-layout .card-image:nth-child(2) {
+      grid-area: b;
+    }
+    #card-images-container.plus-layout .card-image:nth-child(3) {
+      grid-area: c;
+    }
+    #card-images-container.plus-layout .card-image:nth-child(4) {
+      grid-area: d;
+    }
+    #card-images-container.plus-layout .card-image:nth-child(5) {
+      grid-area: e;
+    }
     #card-images-container.plus-layout .card-image {
       margin: 0;
     }
-    
     /* 3-card layout (three-card-layout) */
     #card-images-container.three-card-layout {
       display: flex;
       justify-content: center;
-      align-items: center;
       gap: 10px;
-      margin-top: 20px;
-      flex-wrap: wrap;
     }
     #card-images-container.three-card-layout .card-image {
-      max-width: 180px;
-      flex: 0 0 auto;
+      width: fit-content;
+      flex: auto;
     }
-    
-    /* Footer with speed dial and input area */
-    footer {
-      background-color: #000;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-    }
-    #speed-dial-container {
-      display: flex;
-      justify-content: center;
-      padding: 10px 0;
-    }
-    #speed-dial-container button {
-      margin: 0 5px;
-      padding: 8px 12px;
-      font-family: 'IBM Plex Mono', monospace;
-      background-color: #444;
-      color: #E0E0E0;
-      border: none;
-      cursor: pointer;
-    }
-    #speed-dial-container button:hover {
-      background-color: #555;
-    }
-    #input-container {
-      width: 100%;
-      display: flex;
-      align-items: center;
-      padding: 10px 0;
-      box-sizing: border-box;
-    }
-    #query {
-      flex: 1;
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 1em;
-      background-color: #2A2A2A;
-      color: #E0E0E0;
-      border: 1px solid #333;
-      border-radius: 0;
-      resize: vertical;
-      min-height: 60px;
-      max-height: 150px;
-      padding: 15px;
-      box-sizing: border-box;
-    }
-    #query:focus {
-      border-color: red;
-      outline: none;
-    }
-    #sendButton {
-      margin-left: 10px;
-      padding: 10px 15px;
-      background-color: #444;
-      color: #fff;
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 1em;
-      border: none;
-      cursor: pointer;
-    }
-    #sendButton:hover {
-      background-color: #555;
-    }
-    
-    /* Chat message styles */
+    /* Chat messages */
     .message {
       margin: 10px 0;
       max-width: 90%;
@@ -214,12 +208,11 @@
     }
     .user-prompt {
       font-family: 'IBM Plex Mono', monospace;
-      font-size: 0.8em;
+      font-size: 1em;
       color: #bbb;
       margin: 5px 0;
       text-align: left;
     }
-    
     /* Modal for Card Zoom */
     .modal {
       display: none;
@@ -254,124 +247,141 @@
   <header>
     <h1>Codex Arcana</h1>
   </header>
-  
+
   <div id="main-content">
     <!-- Left column: Chat -->
     <div id="chat-wrapper">
       <div id="chat-container"></div>
+
+      <div id="chat-bottom-container">
+        <div id="welcome-message"></div>
+
+        <!-- Inline context input appears here when user picks a spread -->
+        <div id="inline-context-container">
+          <input type="text" id="context-input" placeholder="Type to make a question or seek advice..." />
+          <button id="inline-send-button" disabled>Ask the Tarot</button>
+        </div>
+
+        <!-- Speed dial container (API calls) -->
+        <div id="speed-dial-container" style="margin-top: 10px; display: flex; gap: 10px;">
+          <button id="btn-random-card">Single Card Read</button>
+          <button id="btn-three-card">Three Card Read</button>
+          <button id="btn-five-card">Five Card Read</button>
+        </div>
+        <!-- New "Just Cards" speed dial buttons (client-side only) -->
+        <div id="just-cards-speed-dial" style="margin-top: 0px; display: flex; gap: 10px;">
+          <button id="btn-just-single">Single Card Spread</button>
+          <button id="btn-just-three">Three Card Spread</button>
+          <button id="btn-just-five">Five Card Spread</button>
+        </div>
+      </div>
     </div>
+
     <!-- Right column: Cards -->
     <div id="cards-wrapper">
       <div id="card-images-container"></div>
     </div>
   </div>
-  
-  <!-- Footer: Speed dial above the text input -->
-  <footer>
-    <div id="speed-dial-container">
-      <button id="random-card">Random Card</button>
-      <button id="three-card-spread">3-Card Spread</button>
-      <button id="five-card-spread">5-Card Spread</button>
-    </div>
-    <div id="input-container">
-      <textarea id="query" placeholder="Ask and you shall know" autofocus></textarea>
-      <button id="sendButton">Send</button>
-    </div>
-  </footer>
-  
-  <!-- Modal for Card Zoom -->
+
+  <!-- Card Zoom Modal -->
   <div id="card-modal" class="modal">
     <span class="close">&times;</span>
     <img class="modal-content" id="modal-image">
   </div>
-  
+
   <script>
+    // DOM element references
     const chatContainer = document.getElementById("chat-container");
+    const welcomeMessageDiv = document.getElementById("welcome-message");
     const cardImagesContainer = document.getElementById("card-images-container");
-    const queryInput = document.getElementById("query");
-    const sendButton = document.getElementById("sendButton");
-    const randomCardButton = document.getElementById("random-card");
-    const threeCardButton = document.getElementById("three-card-spread");
-    const fiveCardButton = document.getElementById("five-card-spread");
-    
-    // Modal elements
+
+    // API call buttons
+    const btnRandomCard = document.getElementById("btn-random-card");
+    const btnThreeCard = document.getElementById("btn-three-card");
+    const btnFiveCard = document.getElementById("btn-five-card");
+
+    // New "Just Cards" buttons (client-side)
+    const btnJustSingle = document.getElementById("btn-just-single");
+    const btnJustThree = document.getElementById("btn-just-three");
+    const btnJustFive = document.getElementById("btn-just-five");
+
+    // Inline context input elements
+    const inlineContextContainer = document.getElementById("inline-context-container");
+    const contextInput = document.getElementById("context-input");
+    const inlineSendButton = document.getElementById("inline-send-button");
+
+    // Modal elements for card zoom
     const modal = document.getElementById("card-modal");
     const modalImage = document.getElementById("modal-image");
     const closeModal = document.querySelector("#card-modal .close");
 
-    // Ensure first letter is capitalized on blur
-    queryInput.addEventListener("blur", function() {
-      if (queryInput.value.length > 0) {
-        queryInput.value = queryInput.value.charAt(0).toUpperCase() + queryInput.value.slice(1);
-      }
-    });
+    let currentSpreadType = ""; // e.g., "random card", "3 card spread", "5 card spread"
 
-    // Append cards in the exact order provided by the server.
-    // The order should be: Card A, Card B, Card C, Card D, Card E.
-    function addCardImages(cards, layout) {
-      // Clear previous content and remove layout classes.
-      cardImagesContainer.innerHTML = "";
-      cardImagesContainer.classList.remove("plus-layout", "three-card-layout");
-      
-      // Apply the correct layout class.
-      if (layout === "plus") {
-        cardImagesContainer.classList.add("plus-layout");
-      } else if (layout === "three") {
-        cardImagesContainer.classList.add("three-card-layout");
-      }
-      
-      // Append each card element in order.
-      cards.forEach(card => {
-        const cardDiv = document.createElement("div");
-        cardDiv.classList.add("card-image");
-        
-        const img = document.createElement("img");
-        img.src = card.image;
-        img.alt = card.name;
-        cardDiv.appendChild(img);
-        
-        cardImagesContainer.appendChild(cardDiv);
-      });
+    // Function to highlight the active button (for API call buttons)
+    function setActiveButton(clickedBtn) {
+      btnRandomCard.classList.remove("active-button");
+      btnThreeCard.classList.remove("active-button");
+      btnFiveCard.classList.remove("active-button");
+      clickedBtn.classList.add("active-button");
     }
 
-    // Function to add a user prompt in the chat container.
+    // Function to show a user prompt in the chat container
     function addUserPrompt(promptText) {
       const promptDiv = document.createElement("div");
       promptDiv.classList.add("user-prompt");
       promptDiv.innerText = promptText;
       chatContainer.appendChild(promptDiv);
+      chatContainer.scrollTop = chatContainer.scrollHeight;
     }
 
-    // Function to add an assistant message.
+    // Function to show an assistant (GPT) message
     function addAssistantMessage(content) {
       const messageDiv = document.createElement("div");
       messageDiv.classList.add("message", "assistant-message");
       messageDiv.innerHTML = content;
       chatContainer.appendChild(messageDiv);
-      const lastUserPrompt = document.querySelector(".user-prompt:last-child");
-      if (lastUserPrompt) {
-        chatContainer.scrollTop = lastUserPrompt.offsetTop;
-      }
+      chatContainer.scrollTop = chatContainer.scrollHeight;
     }
 
-    // Function to send the query to the backend.
-    function sendQuery() {
-      const query = queryInput.value.trim();
-      if (!query) {
-        alert("Please enter a tarot question.");
-        return;
-      }
-      // Clear previous reading.
-      chatContainer.innerHTML = "";
+    // Clear old card images
+    function clearCardImages() {
       cardImagesContainer.innerHTML = "";
       cardImagesContainer.classList.remove("plus-layout", "three-card-layout");
+    }
 
-      addUserPrompt(query);
-      queryInput.value = "";
+    // Add cards to the DOM
+    function addCardImages(cards, layout) {
+      clearCardImages();
+      if (layout === "plus") {
+        cardImagesContainer.classList.add("plus-layout");
+      } else if (layout === "three") {
+        cardImagesContainer.classList.add("three-card-layout");
+      }
+      cards.forEach(card => {
+        const cardDiv = document.createElement("div");
+        cardDiv.classList.add("card-image");
+        const img = document.createElement("img");
+        img.src = card.image;
+        img.alt = card.name;
+        cardDiv.appendChild(img);
+        cardImagesContainer.appendChild(cardDiv);
+      });
+    }
+
+    // Main function to send the query to the backend (API call)
+    function sendQuery(queryString) {
+      // Clear chat & images for each new reading
+      chatContainer.innerHTML = "";
+      welcomeMessageDiv.innerText = "";
+      clearCardImages();
+
+      // Add user's query to chat
+      addUserPrompt(queryString);
+
       fetch("/query", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query: query })
+        body: JSON.stringify({ query: queryString })
       })
       .then(response => {
         if (!response.ok) {
@@ -382,8 +392,6 @@
       .then(data => {
         if (data.cards && data.cards.length > 0) {
           addCardImages(data.cards, data.layout);
-        } else {
-          cardImagesContainer.innerHTML = "";
         }
         if (!data.synthesis || data.synthesis.trim() === "") {
           if (data.error) {
@@ -401,40 +409,157 @@
       });
     }
 
-    sendButton.addEventListener("click", sendQuery);
-    queryInput.addEventListener("keydown", function(event) {
-      if (event.key === "Enter" && !event.shiftKey) {
+    // Show an inline text input for user to type the question (for API calls)
+    function showInlineContext(spreadType) {
+      welcomeMessageDiv.innerText = "";
+      currentSpreadType = spreadType;
+      contextInput.value = "";
+      inlineSendButton.disabled = true;
+      inlineContextContainer.style.display = "flex";
+      contextInput.focus();
+    }
+
+    // Enable or disable the Send button based on input length
+    function handleInputChange() {
+      const userText = contextInput.value.trim();
+      inlineSendButton.disabled = (userText.length === 0);
+    }
+
+    // Handle inline context submission (for API calls)
+    function handleContextSubmission() {
+      const userContext = contextInput.value.trim();
+      if (userContext.length === 0) return;
+      inlineContextContainer.style.display = "none";
+      let finalQuery = currentSpreadType;
+      if (userContext) {
+        finalQuery += " about " + userContext;
+      }
+      sendQuery(finalQuery);
+    }
+
+    // API call button event listeners
+    btnRandomCard.addEventListener("click", () => {
+      setActiveButton(btnRandomCard);
+      showInlineContext("random card");
+    });
+    btnThreeCard.addEventListener("click", () => {
+      setActiveButton(btnThreeCard);
+      showInlineContext("3 card spread");
+    });
+    btnFiveCard.addEventListener("click", () => {
+      setActiveButton(btnFiveCard);
+      showInlineContext("5 card spread");
+    });
+
+    // Inline context send button events
+    inlineSendButton.addEventListener("click", handleContextSubmission);
+    contextInput.addEventListener("keydown", function(event) {
+      if (event.key === "Enter") {
         event.preventDefault();
-        sendQuery();
+        handleContextSubmission();
       }
     });
-    
-    // Speed dial buttons.
-    randomCardButton.addEventListener("click", () => {
-      queryInput.value = "Random card";
-      sendQuery();
+    contextInput.addEventListener("input", handleInputChange);
+
+    // ----------------------------------------------------------------
+    // Client-side card drawing logic (for "Just Cards" buttons)
+    // ----------------------------------------------------------------
+
+    // Canonical deck array (client-side copy)
+    const CANONICAL_CARDS = [
+      "The Fool", "The Magician", "The High Priestess", "The Empress", "The Emperor",
+      "The Hierophant", "The Lovers", "The Chariot", "Strength", "The Hermit",
+      "The Wheel of Fortune", "Justice", "The Hanged Man", "Death", "Temperance",
+      "The Devil", "The Tower", "The Star", "The Moon", "The Sun", "Judgment", "The World",
+      "Ace of Wands", "Two of Wands", "Three of Wands", "Four of Wands", "Five of Wands",
+      "Six of Wands", "Seven of Wands", "Eight of Wands", "Nine of Wands", "Ten of Wands",
+      "Page of Wands", "Knight of Wands", "Queen of Wands", "King of Wands",
+      "Ace of Cups", "Two of Cups", "Three of Cups", "Four of Cups", "Five of Cups",
+      "Six of Cups", "Seven of Cups", "Eight of Cups", "Nine of Cups", "Ten of Cups",
+      "Page of Cups", "Knight of Cups", "Queen of Cups", "King of Cups",
+      "Ace of Swords", "Two of Swords", "Three of Swords", "Four of Swords", "Five of Swords",
+      "Six of Swords", "Seven of Swords", "Eight of Swords", "Nine of Swords", "Ten of Swords",
+      "Page of Swords", "Knight of Swords", "Queen of Swords", "King of Swords",
+      "Ace of Pentacles", "Two of Pentacles", "Three of Pentacles", "Four of Pentacles",
+      "Five of Pentacles", "Six of Pentacles", "Seven of Pentacles", "Eight of Pentacles",
+      "Nine of Pentacles", "Ten of Pentacles",
+      "Page of Pentacles", "Knight of Pentacles", "Queen of Pentacles", "King of Pentacles"
+    ];
+
+    // Utility function to get a card image URL (mirroring server logic)
+    function getCardImage(cardName) {
+      return "/static/cards/" + cardName.toLowerCase().replace(/ /g, "_") + ".png";
+    }
+
+    // Function to draw cards client-side based on spread type
+    function drawCardsForSpreadClient(spreadType) {
+      function getRandomCard() {
+        return CANONICAL_CARDS[Math.floor(Math.random() * CANONICAL_CARDS.length)];
+      }
+      if (spreadType === "5-card") {
+        let chosen = [];
+        while (chosen.length < 5) {
+          let card = getRandomCard();
+          if (!chosen.includes(card)) chosen.push(card);
+        }
+        return { cards: chosen, layout: "plus" };
+      } else if (spreadType === "3-card") {
+        let chosen = [];
+        while (chosen.length < 3) {
+          let card = getRandomCard();
+          if (!chosen.includes(card)) chosen.push(card);
+        }
+        return { cards: chosen, layout: "three" };
+      } else { // single card
+        return { cards: [getRandomCard()], layout: "default" };
+      }
+    }
+
+    // Function to display just the cards without an API call or inline context
+    function displayJustCards(spreadTypeKey) {
+      // Clear previous chat and hide inline context
+      chatContainer.innerHTML = "";
+      inlineContextContainer.style.display = "none";
+      welcomeMessageDiv.innerText = (spreadTypeKey === "single" ? "Single card spread" :
+                                     spreadTypeKey === "3-card" ? "Three card spread" :
+                                     "Five card spread");
+
+      const result = drawCardsForSpreadClient(spreadTypeKey);
+      const cards = result.cards.map(card => ({
+        name: card,
+        image: getCardImage(card)
+      }));
+      addCardImages(cards, result.layout);
+    }
+
+    // Event listeners for the new "Just Cards" buttons
+    btnJustSingle.addEventListener("click", () => {
+      displayJustCards("single");
     });
-    threeCardButton.addEventListener("click", () => {
-      queryInput.value = "3 card spread";
-      sendQuery();
+    btnJustThree.addEventListener("click", () => {
+      displayJustCards("3-card");
     });
-    fiveCardButton.addEventListener("click", () => {
-      queryInput.value = "5 card spread";
-      sendQuery();
+    btnJustFive.addEventListener("click", () => {
+      displayJustCards("5-card");
     });
-    
-    // Card Zoom Modal.
+
+    // ----------------------------------------------------------------
+    // Modal for Card Zoom
+    // ----------------------------------------------------------------
     closeModal.addEventListener("click", () => {
       modal.style.display = "none";
     });
     document.addEventListener("click", (event) => {
-      if (
-        event.target.tagName === "IMG" &&
-        event.target.parentElement.classList.contains("card-image")
-      ) {
+      if (event.target.tagName === "IMG" &&
+          event.target.parentElement.classList.contains("card-image")) {
         modal.style.display = "block";
         modalImage.src = event.target.src;
       }
+    });
+
+    // Show welcome message on page load
+    document.addEventListener("DOMContentLoaded", () => {
+      welcomeMessageDiv.innerText = "Welcome to Codex Arcana! Click one of the buttons below to get started. Use the Read options if you seek an interpretation or Spread to a quick draw form the deck. As above, so below. Ask and you shall know.";
     });
   </script>
 </body>

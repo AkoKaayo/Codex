@@ -4,20 +4,34 @@ import random
 from openai import OpenAI
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 if not os.getenv("OPENAI_API_KEY"):
-    print("WARNING: OpenAI API key is not set. Set the OPENAI_API_KEY environment variable or assign it directly in the code.")
+    print("WARNING: OpenAI API key is not set. "
+          "Set the OPENAI_API_KEY environment variable or assign it directly in the code.")
 
 from flask import Flask, request, jsonify, render_template
 from flask_cors import CORS, cross_origin
 from langchain_community.vectorstores import Chroma
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from sentence_transformers import util
-from transformers import AutoTokenizer  # Import the tokenizer
+from transformers import AutoTokenizer
+
+# ------------- BASIC CONFIG ---------------
 
 # Paths and configuration
 VECTOR_STORE_PATH = "data/vectorstore"
 MODEL_NAME = "sentence-transformers/all-MiniLM-L12-v2"
 
-# Global canonical cards list
+app = Flask(__name__, static_folder="static")
+CORS(app, resources={r"/*": {"origins": "*"}})
+
+print(f"Loading embedding model: {MODEL_NAME}")
+embeddings = HuggingFaceEmbeddings(model_name=MODEL_NAME)
+print(f"Loading vector database from: {VECTOR_STORE_PATH}")
+vector_db = Chroma(persist_directory=VECTOR_STORE_PATH, embedding_function=embeddings)
+
+# Initialize the tokenizer
+tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
+
+# Our canonical deck
 CANONICAL_CARDS = [
     "The Fool", "The Magician", "The High Priestess", "The Empress", "The Emperor",
     "The Hierophant", "The Lovers", "The Chariot", "Strength", "The Hermit",
@@ -38,29 +52,10 @@ CANONICAL_CARDS = [
     "Page of Pentacles", "Knight of Pentacles", "Queen of Pentacles", "King of Pentacles"
 ]
 
-# Initialize Flask app and enable CORS for all routes
-app = Flask(__name__, static_folder="static")
-CORS(app, resources={r"/*": {"origins": "*"}})
+# ------------- UTILITIES ---------------
 
-print(f"Loading embedding model: {MODEL_NAME}")
-embeddings = HuggingFaceEmbeddings(model_name=MODEL_NAME)
-print(f"Loading vector database from: {VECTOR_STORE_PATH}")
-vector_db = Chroma(persist_directory=VECTOR_STORE_PATH, embedding_function=embeddings)
-
-# Initialize the tokenizer (using the same MODEL_NAME for consistency)
-tokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)
-
-# Define alternative card names mapping
-ALTERNATIVE_CARD_NAMES = {
-    "9 of wands": "Nine of Wands",
-    "le mat": "The Fool",
-    "le batleur": "The Magician",
-    "the pope": "The Hierophant",
-    "the priest": "The Hierophant",
-    # Add more alternative names as needed
-}
-
-def truncate_by_tokens(text, max_tokens=250):
+def truncate_by_tokens(text, max_tokens=1000):
+    """Truncates retrieved chunks so we don’t exceed the prompt limit."""
     tokens = tokenizer.tokenize(text)
     print("Retrieved chunks token count:", len(tokens))
     if len(tokens) > max_tokens:
@@ -70,177 +65,146 @@ def truncate_by_tokens(text, max_tokens=250):
         return truncated_text
     return text
 
-def preprocess_query(query):
-    lower_query = query.lower()
-    
-    # Use the global canonical cards list
-    canonical_cards = CANONICAL_CARDS
-    
-    # Build a dictionary for minor arcana lookups:
-    minor_arcana = {}
-    for card in canonical_cards:
-        parts = card.split(" of ")
-        if len(parts) == 2:
-            value, suit = parts
-            minor_arcana[(value.lower(), suit.lower())] = card
-    
-    matches = []  # List of tuples (start_index, card)
-    
-    # Regex pattern for phrases like "2 of spades" or "ace of hearts"
-    pattern = r'\b([0-9]+|[a-z]+)\s+of\s+([a-z]+)\b'
-    digit_to_word = {
-        "2": "Two", "3": "Three", "4": "Four", "5": "Five",
-        "6": "Six", "7": "Seven", "8": "Eight", "9": "Nine", "10": "Ten"
-    }
-    suit_alternatives = {
-        "spades": "swords",
-        "hearts": "cups",
-        "clubs": "wands",
-        "diamonds": "pentacles"
-    }
-    
-    for m in re.finditer(pattern, lower_query):
-        value, suit = m.group(1), m.group(2)
-        start = m.start()
-        if value.isdigit():
-            value_word = digit_to_word.get(value, value)
-        else:
-            value_word = value.capitalize()
-        canonical_suit = suit_alternatives.get(suit, suit)
-        key = (value_word.lower(), canonical_suit.lower())
-        if key in minor_arcana:
-            matches.append((start, minor_arcana[key]))
-    
-    # Alias mapping: e.g., "the pope" maps to "The Hierophant"
-    alias_map = {
-        "the pope": "The Hierophant"
-    }
-    for alias, card in alias_map.items():
-        for m in re.finditer(r'\b' + re.escape(alias) + r'\b', lower_query):
-            start = m.start()
-            matches.append((start, card))
-    if "the pope" in lower_query and not any(card == "The Hierophant" for _, card in matches):
-        matches.append((lower_query.find("the pope"), "The Hierophant"))
-    
-    # Also add any full canonical card names directly mentioned in the query,
-    # but only if not already captured, along with their position.
-    for card in canonical_cards:
-        pos = lower_query.find(card.lower())
-        if pos != -1 and not any(existing_card == card for _, existing_card in matches):
-            matches.append((pos, card))
-    
-    matches.sort(key=lambda x: x[0])
-    found_cards = [card for _, card in matches]
-    
-    # Remove duplicates while preserving order
-    seen = set()
-    ordered_cards = []
-    for card in found_cards:
-        if card not in seen:
-            seen.add(card)
-            ordered_cards.append(card)
-    
-    # Detect positional cues
-    positions = {}
-    for pos in ["past", "present", "future", "left", "right", "center"]:
-        if pos in lower_query:
-            positions[pos] = True
-
-    if len(ordered_cards) > 1:
-        query_type = "multi-card"
-    elif len(ordered_cards) == 1:
-        query_type = "single-card"
-    else:
-        query_type = "general"
-    
-    # Override for speed dial commands or ambiguous queries:
-    if lower_query.strip() == "3 card spread":
-        ordered_cards = random.sample(canonical_cards, 3)
-        query_type = "multi-card"
-        positions = {"genesis": True, "actuality": True, "consequence": True}
-        result = {"cards": ordered_cards, "type": query_type, "positions": positions}
-    elif lower_query.strip() == "5 card spread":
-        # For plus layout, explicitly assign positions:
-        # South (bottom), West (left), Centre (center), East (right), North (top)
-        south = random.choice(canonical_cards)
-        remaining = [card for card in canonical_cards if card != south]
-        # Pick four distinct cards for the remaining positions.
-        west, centre, east, north = random.sample(remaining, 4)
-        ordered_cards = [south, west, centre, east, north]
-        query_type = "multi-card"
-        result = {"cards": ordered_cards, "type": query_type, "positions": positions, "layout": "plus"}
-    elif lower_query.strip() == "random card":
-        ordered_cards = [random.choice(canonical_cards)]
-        query_type = "single-card"
-        result = {"cards": ordered_cards, "type": query_type, "positions": positions}
-    elif len(ordered_cards) == 0:
-        if ("?" in lower_query) or any(word in lower_query for word in ["what", "tell me", "how", "why"]):
-            ordered_cards = [random.choice(canonical_cards)]
-            query_type = "single-card"
-            result = {"cards": ordered_cards, "type": query_type, "positions": positions}
-        else:
-            result = {"error": "Your query did not contain any valid card references. Please include at least one card name or use the speed dial options.", "cards": [], "type": query_type, "positions": positions}
-    else:
-        result = {"cards": ordered_cards, "type": query_type, "positions": positions}
-    
-    print("Preprocess Query Output:", result)
-    return result
-
 def get_card_image(card_name):
+    """Given a card name (e.g. 'The Fool'), produce the PNG filename under /static/cards."""
     filename = card_name.lower().replace(" ", "_") + ".png"
     return f"/static/cards/{filename}"
 
-def generate_synthesis(cards, context, retrieved_chunks, layout=None):
-    retrieved_chunks = truncate_by_tokens(retrieved_chunks, max_tokens=500)
-    card_list = ', '.join(cards) if cards else 'none'
-    # Branch for 5-card spread instructions
-    if layout == "plus" or len(cards) == 5:
-        system_prompt = f"""
-You are a tarot oracle. Interpret the following 5-card spread with the positions as defined:
-South: "What prevents me from being myself?" – This card reveals the restraint, obstacle, or blockage hindering your authentic self.
-West: "With what means can I free myself?" – This card indicates the means of liberation available to you.
-Centre: "To undertake what action?" – This card suggests the specific action you should take.
-East: "To lead into what transformation?" – This card reveals the means through which transformation can occur.
-North: "What is my purpose, my destiny to realize?" – This card unveils your ultimate purpose or destiny to be achieved.
+# ------------- PREPROCESSING ---------------
 
-For each card, include its traditional tarot symbolism and explain its significance in its position within this spread.
-Then, provide an overall synthesis of the reading that integrates all five insights into a cohesive, articulated interpretation without repeating the prompt language.
-Context: {context}
-Retrieved information: {retrieved_chunks}
-Now, produce an original interpretation without echoing these instructions.
-        """
-    elif len(cards) == 3:
+def parse_user_query(user_query: str):
+    """
+    Minimal logic:
+      - Detect whether user wants single, 3, or 5-card spread (based on string).
+      - Disallow explicit mention of card names in the user context.
+      - Return dict with: { 'spread_type', 'context_text', 'error'(optional) }
+    """
+    lc_query = user_query.lower().strip()
+
+    # 1) Check for presence of "random card", "3 card spread", "5 card spread"
+    if "5 card spread" in lc_query:
+        spread_type = "5-card"
+    elif "3 card spread" in lc_query:
+        spread_type = "3-card"
+    elif "random card" in lc_query:
+        spread_type = "single"
+    else:
+        # If it doesn't have any recognized spread specifier, we can default to single
+        spread_type = "single"
+
+    # 2) Extract context after "about" if present
+    context_text = ""
+    if "about" in lc_query:
+        idx = lc_query.find("about")
+        context_text = user_query[idx + len("about"):].strip()
+
+    # 3) Check if user typed any known card names in context_text
+    #    If they did, we return an error.
+    for card in CANONICAL_CARDS:
+        if card.lower() in context_text.lower():
+            return {
+                "spread_type": spread_type,
+                "context_text": context_text,
+                "error": (
+                    "Please avoid specifying exact card names. "
+                    "Just describe your situation or question."
+                ),
+            }
+
+    return {
+        "spread_type": spread_type,
+        "context_text": context_text,
+    }
+
+# ------------- CARD SELECTION & LAYOUT ---------------
+
+def draw_cards_for_spread(spread_type: str):
+    """Draw random cards (unique) for single, 3, or 5 spreads with correct layout."""
+    if spread_type == "5-card":
+        chosen_five = random.sample(CANONICAL_CARDS, 5)
+        # positions: 0 => south, 1 => west, 2 => centre, 3 => east, 4 => north
+        ordered_cards = [chosen_five[0], chosen_five[1], chosen_five[2], chosen_five[3], chosen_five[4]]
+        layout = "plus"
+        return ordered_cards, layout
+    elif spread_type == "3-card":
+        chosen_three = random.sample(CANONICAL_CARDS, 3)
+        layout = "three"
+        return chosen_three, layout
+    else:
+        # single
+        single_card = [random.choice(CANONICAL_CARDS)]
+        layout = "default"
+        return single_card, layout
+
+# ------------- GPT SYNTHESIS ---------------
+
+def generate_synthesis(spread_type, cards, user_context, retrieved_chunks):
+    """
+    Provide an interpretation strictly from the retrieved text.
+    We do NOT want external knowledge or references to other tarot systems.
+    """
+    truncated = truncate_by_tokens(retrieved_chunks, max_tokens=1000)
+    card_list = ", ".join(cards) if cards else "none"
+
+    if spread_type == "5-card":
         system_prompt = f"""
-You are an insightful tarot interpreter renowned for clarity, depth, and originality.
-For this three-card spread, please provide an individual analysis for each card mentioned ({card_list}).
-Interpret the cards in a progressive manner and read it as a sentence: consider the first card as representing the beginning (or the genesis), the second as representing the current state (or the means of deployment), and the third as representing the result (or emerging outcomes).
-For each card, detail its unique symbolism, positional meaning (if any), and contextual relevance.
-After analyzing each card individually, integrate these interpretations into a cohesive, unified narrative that reflects the overall journey.
-Base your analysis solely on the provided context and retrieved information below. Do not use any external or pre-existing knowledge.
-Avoid generic mystical openings or clichés.
-Focus directly on the unique qualities and interactions of the cards and deliver practical, original insights in a refined, understated tone.
-Context: {context}
-Retrieved information: {retrieved_chunks}
-Now, produce an original interpretation without echoing these instructions.
-        """
+You are a tarot oracle that uses ONLY the text provided below as your knowledge base.
+Strictly ignore and exclude ANY external or previous tarot knowledge beyond these retrieved contents.
+You have drawn 5 random cards: {card_list}.
+User context: {user_context}
+
+The position meanings and their corresponding cards are:
+- South ("What prevents me from being myself?"): {cards[0]}
+- West ("With what means can I free myself?"): {cards[1]}
+- Centre ("To undertake what action?"): {cards[2]}
+- East ("To lead into what transformation?"): {cards[3]}
+- North ("What is my purpose, my destiny to realize?"): {cards[4]}
+
+Strictly ignore and exclude ANY external or previous tarot knowledge beyond these retrieved contents.
+Refer ONLY to the retrieved text when interpreting each card
+Refer directly to the retrieved text for the primary meaning of any of the cards. Then, carefully extend or hypothesize how it might apply to the user’s specific question or context, without contradicting or fabricating details that conflict with the text. If the text provides absolutely no relevant leads, you may briefly explain that it doesn’t address the question directly.
+Provide a cohesive and insightful interpretation that weaves the 5 positional insights together at the end.
+
+Retrieved text:
+{truncated}
+"""
+    elif spread_type == "3-card":
+        system_prompt = f"""
+You are a tarot oracle that uses ONLY the text provided below as your knowledge base.
+Strictly ignore and exclude ANY external or previous tarot knowledge beyond these retrieved contents.
+You have drawn 3 random cards: {card_list}.
+User context: {user_context}
+
+Treat them in a 3-card spread (genesis, present situation, end result).
+Refer ONLY to the retrieved text for each card meaning.
+Refer directly to the retrieved text for the primary meaning of any of the cards. Then, carefully extend or hypothesize how it might apply to the user’s specific question or context, without contradicting or fabricating details that conflict with the text. If the text provides absolutely no relevant leads, you may briefly explain that it doesn’t address the question directly.
+Then give an interpretation in a concise and insightful manner.
+Provide a cohesive and insighful interpretation that weaves the 3 positional insights together at the end.
+
+Retrieved text:
+{truncated}
+"""
     else:
         system_prompt = f"""
-You are an insightful tarot interpreter renowned for clarity, depth, and originality.
-Provide a focused, comprehensive reading based solely on the specific cards mentioned ({card_list}).
-Base your analysis solely on the provided context and retrieved information below. Do not use any external or pre-existing knowledge.
-Avoid generic mystical openings or clichés.
-Focus on analyzing the unique qualities and interactions of the cards and deliver practical, original insights in a refined, understated tone.
-Please provide a detailed interpretation with extended analysis.
-Context: {context}
-Retrieved information: {retrieved_chunks}
-Now, produce an original interpretation without echoing these instructions.
-        """
+You are a tarot oracle that uses ONLY the text provided below as your knowledge base.
+Strictly ignore and exclude ANY external or previous tarot knowledge beyond these retrieved contents.
+You have drawn 1 card: {card_list}.
+User context: {user_context}
+
+Strictly ignore and exclude ANY external or previous tarot knowledge beyond these retrieved contents.
+Refer directly to the retrieved text for the primary meaning of any of the cards. Then, carefully extend or hypothesize how it might apply to the user’s specific question or context, without contradicting or fabricating details that conflict with the text. If the text provides absolutely no relevant leads, you may briefly explain that it doesn’t address the question directly.
+Then give an interpretation in an insightful manner.
+
+Retrieved text:
+{truncated}
+"""
+
     print("OpenAI Prompt:", system_prompt)
     try:
         response = client.chat.completions.create(
             model="gpt-3.5-turbo",
             messages=[{"role": "system", "content": system_prompt}],
-            max_tokens=500,
+            max_tokens=1000,
             temperature=0.7,
         )
         synthesis = response.choices[0].message.content.strip()
@@ -249,73 +213,64 @@ Now, produce an original interpretation without echoing these instructions.
         synthesis = "An error occurred while generating the interpretation."
     return synthesis
 
+# ------------- FLASK ROUTES ---------------
+
 @app.route("/", methods=["GET"])
 def home():
     return render_template("index.html")
 
-# New function: clear previous reading (chat messages and card previews)
-def clearPreviousReading():
-    # This function is implemented on the frontend in JavaScript.
-    pass
-
 @app.route("/query", methods=["POST"])
 @cross_origin()
 def query_vector_db():
+    """
+    1) Parse user request, detect spread type, separate context.
+    2) Draw random cards.
+    3) If user typed any card reference, error out.
+    4) Retrieve from vector DB *by card name*, not by full user query.
+    5) Combine retrieved text, build GPT prompt, respond.
+    """
     try:
         user_query = request.json.get("query", "").strip()
     except Exception as e:
         print("Error reading JSON:", e)
         return jsonify({"error": "Invalid JSON input"}), 400
+
     if not user_query:
-        return jsonify({"error": "Query is missing"}), 400
+        return jsonify({"error": "No query provided"}), 400
 
-    query_info = preprocess_query(user_query)
-    if "error" in query_info:
-        return jsonify(query_info)
-    
-    cards = query_info["cards"]
-    query_type = query_info["type"]
-    positions = query_info["positions"]
-    layout = query_info.get("layout", "default")
+    info = parse_user_query(user_query)
+    if "error" in info:
+        return jsonify({"error": info["error"]})
 
-    if query_type == "multi-card":
-        if not positions and len(cards) == 3:
-            positions = {"genesis": True, "actuality": True, "consequence": True}
-            context_message = f"You mentioned three cards: {', '.join(cards)}. Consider them as reflecting a journey from a formative past to a dynamic present and an emerging future."
-        else:
-            if positions:
-                positions_str = ", ".join([k for k, v in positions.items() if v])
-                context_message = f"You mentioned multiple cards: {', '.join(cards)}. Positional cues detected: {positions_str}."
-            else:
-                context_message = f"You mentioned multiple cards: {', '.join(cards)}."
-    elif query_type == "single-card":
-        context_message = f"You mentioned a single card: {cards[0]}."
-    else:
-        context_message = "No specific card was identified."
+    spread_type = info["spread_type"]  # "single", "3-card", or "5-card"
+    user_context = info["context_text"]  # e.g. "finances", "relationship," etc.
 
-    # RAG Retrieval and Re-ranking:
-    results = vector_db.similarity_search(user_query, k=8)
-    query_embedding = embeddings.embed_query(user_query)
-    ranked_results = sorted(
-        results,
-        key=lambda doc: util.cos_sim(query_embedding, embeddings.embed_query(doc.page_content)),
-        reverse=True
-    )
-    for idx, doc in enumerate(ranked_results):
-        score = util.cos_sim(query_embedding, embeddings.embed_query(doc.page_content))
-        print(f"Document {idx+1} similarity score: {score}")
+    # 1) Draw the random cards
+    drawn_cards, layout = draw_cards_for_spread(spread_type)
 
-    top_results = ranked_results[:3]
-    retrieved_chunks = " ".join([result.page_content for result in top_results])
+    # 2) Retrieve text for each drawn card separately
+    retrieved_texts = []
+    for card in drawn_cards:
+        # We do a similarity search using the exact card name
+        # (You can tweak k=4 or k=5 as needed)
+        card_results = vector_db.similarity_search(card, k=4)
+        # (Optional) Re-rank if you want to measure similarity
+        # For now, let's just collect them in order
+        for doc in card_results:
+            retrieved_texts.append(doc.page_content)
+
+    # Combine all retrieved chunks into one big text
+    retrieved_chunks = " ".join(retrieved_texts)
     print("Retrieved Chunks:", retrieved_chunks)
-    synthesis = generate_synthesis(cards, context_message, retrieved_chunks, layout)
-    
-    # Prepare card image info for the frontend
-    cards_with_images = [{"name": card, "image": get_card_image(card)} for card in cards]
 
+    # 3) Generate the final GPT-based interpretation from local text
+    synthesis = generate_synthesis(spread_type, drawn_cards, user_context, retrieved_chunks)
+
+    # 4) Build the final response
+    cards_with_images = [{"name": c, "image": get_card_image(c)} for c in drawn_cards]
     response = {
         "query": user_query,
-        "context": context_message,
+        "context": user_context,
         "synthesis": synthesis,
         "cards": cards_with_images,
         "layout": layout
