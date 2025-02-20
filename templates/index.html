@@ -313,6 +313,7 @@
 
     let currentSpreadType = "";
 
+    // Set active button styling
     function setActiveButton(clickedBtn) {
       btnRandomCard.classList.remove("active-button");
       btnThreeCard.classList.remove("active-button");
@@ -320,20 +321,43 @@
       clickedBtn.classList.add("active-button");
     }
 
+    // Updated: addUserPrompt now creates a user prompt with a spinner
     function addUserPrompt(promptText) {
       const promptDiv = document.createElement("div");
       promptDiv.classList.add("user-prompt");
-      promptDiv.innerText = promptText;
+
+      // Create a span for the prompt text.
+      const textSpan = document.createElement("span");
+      textSpan.innerText = promptText;
+      promptDiv.appendChild(textSpan);
+
+      // Create a span for the ASCII spinner.
+      const spinnerSpan = document.createElement("span");
+      spinnerSpan.classList.add("spinner");
+      spinnerSpan.innerText = " "; // initial empty space
+      promptDiv.appendChild(spinnerSpan);
+
       chatContainer.appendChild(promptDiv);
-      chatContainer.scrollTop = chatContainer.scrollHeight;
+      // Scroll to the top so the beginning of the new reading is visible.
+      chatContainer.scrollTop = 0;
+
+      // Start ASCII spinner animation.
+      const spinnerFrames = ["|", "/", "-", "\\"];
+      let index = 0;
+      const spinnerId = setInterval(() => {
+          spinnerSpan.innerText = " " + spinnerFrames[index];
+          index = (index + 1) % spinnerFrames.length;
+      }, 200);
+      return { promptDiv, spinnerSpan, spinnerId };
     }
 
+    // Updated: addAssistantMessage now scrolls to the top after adding the assistant's message.
     function addAssistantMessage(content) {
       const messageDiv = document.createElement("div");
       messageDiv.classList.add("message", "assistant-message");
       messageDiv.innerHTML = content;
       chatContainer.appendChild(messageDiv);
-      chatContainer.scrollTop = chatContainer.scrollHeight;
+      chatContainer.scrollTop = 0;
     }
 
     function clearCardImages() {
@@ -341,7 +365,7 @@
       cardImagesContainer.classList.remove("plus-layout", "three-card-layout");
     }
 
-    // Updated: addCardImages now only displays card images
+    // addCardImages now only displays card images.
     function addCardImages(cards, layout) {
       clearCardImages();
       if (layout === "plus") {
@@ -360,36 +384,14 @@
       });
     }
 
-    // New function: display card details in the chatbox on the left
-    function addCardDetailsToChat(cards) {
-      let details = "";
-      cards.forEach(card => {
-        details += `<strong>${card.name}</strong><br>`;
-        if (card.keywords && card.keywords.length > 0) {
-          details += `<em>Keywords:</em> ${card.keywords.join(", ")}<br>`;
-        }
-        if (card.interpretations) {
-          details += `<em>Interpretations:</em> ${card.interpretations}<br>`;
-        }
-        if (card.description) {
-          details += `<em>Description:</em> ${card.description}<br>`;
-        }
-        if (card.reading) {
-          details += `<em>Reading:</em> ${card.reading}<br>`;
-        }
-        if (card.monologue) {
-          details += `<em>Monologue:</em> ${card.monologue}<br>`;
-        }
-        details += `<br>`;
-      });
-      addAssistantMessage(details);
-    }
-
+    // sendQuery now uses addUserPrompt (with spinner) and clears the spinner when the response is received.
     function sendQuery(queryString) {
       chatContainer.innerHTML = "";
       welcomeMessageDiv.innerText = "";
       clearCardImages();
-      addUserPrompt(queryString);
+
+      // Add user prompt with spinner.
+      const userPromptObj = addUserPrompt(queryString);
 
       fetch("/query", {
         method: "POST",
@@ -403,10 +405,12 @@
         return response.json();
       })
       .then(data => {
+        // Stop and remove the spinner.
+        clearInterval(userPromptObj.spinnerId);
+        userPromptObj.spinnerSpan.remove();
+
         if (data.cards && data.cards.length > 0) {
           addCardImages(data.cards, data.layout);
-          // Move card details to the chatbox
-          addCardDetailsToChat(data.cards);
         }
         if (!data.synthesis || data.synthesis.trim() === "") {
           if (data.error) {
@@ -419,6 +423,8 @@
         }
       })
       .catch(error => {
+        clearInterval(userPromptObj.spinnerId);
+        userPromptObj.spinnerSpan.remove();
         console.error("Error:", error);
         addAssistantMessage("An error occurred while fetching the tarot reading.");
       });
