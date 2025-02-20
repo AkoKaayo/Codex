@@ -1,0 +1,285 @@
+# minor_arcana_swords.yml
+
+overview: |
+  The Swords in the Minor Arcana symbolise the entire realm of intellectual life and the Logos. 
+  From the Ace (the raw potential of thought) through the Ten (the culmination and transformation), 
+  each card illustrates a distinct stage in the evolution of mind. At its most elevated, this 
+  evolution leads to a contemplative emptiness (in the Eights) or a unitive clarity (in the Tens). 
+  However, the path of Swords may also involve fanaticism, paralysis, conflict, or crisis of 
+  understanding if misapplied. Ultimately, the journey invites the adept to balance reason with 
+  receptivity, forging a flexible but unshakeable intellect.
+
+suit: "Swords"
+
+cards:
+  - number: "Ace"
+    name: "Ace of Swords"
+    keywords:
+      - "Great intellectual potential"
+      - "Mental capacity"
+      - "Discernment"
+      - "Victory by clarity"
+      - "Verbal power"
+    interpretations: |
+      The Ace of Swords represents immense intellectual potential, a new surge of mental clarity, 
+      and the capacity for decisive thought. It is akin to the Ten of Wands in that it signals a 
+      powerful transition for the intellect, moving from raw potential into direct action. 
+      
+      In a positive sense, it can signify victory through intelligence, cunning, or sheer 
+      intellectual determination. Negatively, it may manifest as verbal aggression, overestimation 
+      of the mind’s abilities, or a dismissive attitude toward the material realm.
+    description: |
+      Depicted as a single blade — often piercing a crown — the Ace of Swords highlights 
+      the power of clear, incisive thought to overcome confusion. Symbolically, it conveys 
+      the journey from unstructured mental energy to refined decisiveness. By grasping the sword, 
+      one chooses discernment and resolve over uncertainty and chaos.
+    reading: |
+      In a reading, the Ace of Swords heralds a breakthrough in mental focus: an opportunity 
+      to cut through doubts. It encourages taking a stand based on logic and reason. If negative 
+      influences surround it, beware of harsh words or a dogmatic tendency to ignore emotional 
+      nuance.
+    monologue: |
+      "I am the first spark of pure reason. Grasp my hilt and let your thoughts shine like a 
+      newly forged blade, sweeping aside all confusion with lucid certainty. Yet use my power 
+      with care—words can heal or harm, and the intellect untempered by compassion becomes a 
+      double-edged sword."
+
+  - number: "Two"
+    name: "Two of Swords"
+    keywords:
+      - "Accumulation of ideas"
+      - "Preparation"
+      - "Mental hesitation"
+      - "Passive intellect"
+      - "Daydream"
+    interpretations: |
+      The Two of Swords signifies a receptive state of mind in which numerous ideas collect without 
+      yet being put into action. It is a phase of gathering knowledge or formulating plans. This 
+      intellectual passivity can be beneficial—granting you time to reflect—or it can lead to 
+      procrastination or an inability to choose a course. 
+      
+      Negatively, it points to a lazy mind, indecision, or being stuck in daydreams without 
+      forward progress. People under its influence may hop from one topic to another, never 
+      settling on a definitive outcome.
+    description: |
+      Commonly illustrated with a large central flower of eight petals, the Two of Swords evokes 
+      a mind brimming with unrealised potential. The swords crossing or interlacing indicate 
+      dual perspectives or multiple paths, waiting for a decisive break.
+    reading: |
+      In a spread, this card advises patience and further thought. Although mental resources 
+      are plentiful, you must organise or refine them to avoid drifting aimlessly. Once you 
+      clarify your aim, the mind’s latent energy can be harnessed for concrete results.
+    monologue: |
+      "I am the pause before action, where thoughts swirl in a calm spiral. Embrace my stillness— 
+      gather your wits, weigh the possibilities—then let a single, decisive intention emerge."
+
+  - number: "Three"
+    name: "Three of Swords"
+    keywords:
+      - "Fanatic intellectual burst"
+      - "Immature thought"
+      - "Mental enthusiasm"
+      - "Impulsive ideas"
+      - "First opinions"
+    interpretations: |
+      The Three of Swords refers to the intense, almost fanatical emergence of primary ideas and 
+      first opinions. This can be a highly creative or fervent stage, where the mind leaps from 
+      mere daydream to initial action. However, it also risks fanaticism, confusion between 
+      believing and knowing, or a lack of follow-through.
+    description: |
+      Often depicted with three swords or vivid shapes that evoke an upsurge of mental energy, 
+      the card underscores a dynamic shift from passive reflection (seen in the Two) toward 
+      urgent expression. Enthusiasm dominates here, but so does the potential for scattered 
+      or ill-considered reasoning.
+    reading: |
+      In a reading, the Three of Swords invites you to harness your excitement responsibly. 
+      Directed well, it can lead to innovation; unchecked, it may foster impulsive decisions 
+      or zealotry. Self-awareness is crucial in preventing a brilliant start from fizzling out.
+    monologue: |
+      "I am the wild spark of new ideas—unrestrained, passionate, and raw. Burst forth in 
+      creation if you dare, but remember: unanchored fervour can blind you to reality’s limits."
+
+  - number: "Four"
+    name: "Four of Swords"
+    keywords:
+      - "Intellectual stability"
+      - "Rationalism"
+      - "Mental organisation"
+      - "Conservative mind"
+      - "Practical thought"
+    interpretations: |
+      The Four of Swords indicates an intellect settling into structure, forging a balanced, 
+      methodical approach to problem-solving. This is the rational mind—capable of interacting 
+      with material life clearly and effectively. Yet if left unchecked, it might become staid, 
+      overly conservative, or closed to intuition.
+    description: |
+      Depictions typically emphasise calm and order: the swords may be arranged in a resting 
+      pattern, conveying a well-structured mental framework. While necessary for stability, 
+      such structure can stifle creativity if it becomes rigid.
+    reading: |
+      In a reading, the Four of Swords advises practical, grounded thinking. Now is a time to 
+      solidify plans and approach challenges with a well-organised strategy. Watch for signs 
+      of mental inflexibility or rationalist arrogance.
+    monologue: |
+      "I provide the calm vantage point from which your thoughts settle into clarity. Yet if 
+      you cling too tightly, order hardens into a cage. Embrace discipline, but let wonder 
+      breathe beneath the surface."
+
+  - number: "Five"
+    name: "Five of Swords"
+    keywords:
+      - "Emerging viewpoint"
+      - "New ideal"
+      - "Conflict of perspectives"
+      - "Intellectual transformation"
+      - "Possible cynicism"
+    interpretations: |
+      The Five of Swords depicts the entrance of a fresh perspective or ideal that challenges 
+      the old. The mind begins shifting, sometimes clashing with established beliefs. This can 
+      be a marvellous evolution of thought—yet cynicism or duplicity may also ensue, particularly 
+      if new insights disturb entrenched loyalties.
+    description: |
+      Imagery often shows the swords interlaced with a revealing gap above or around the central 
+      blade, symbolising a newly uncovered intellectual path. The tension between old stability 
+      and new possibility can be productive or fracturing, depending on one’s openness.
+    reading: |
+      In a reading, the Five of Swords suggests a new vision stirring in your intellectual world. 
+      Be mindful of potential conflicts with those unwilling to adapt. Handled with honesty, 
+      this shift can lead to greater clarity and personal growth.
+    monologue: |
+      "My fresh insight cuts through your older views—embrace or resist, the change is here. 
+      If you yield gracefully, your mind transcends old limits. If you hold tight to illusions, 
+      I may wound more than I enlighten."
+
+  - number: "Six"
+    name: "Six of Swords"
+    keywords:
+      - "Joy in thought"
+      - "Refinement"
+      - "Peaceful transition"
+      - "Poetry"
+      - "Intellectual beauty"
+    interpretations: |
+      The Six of Swords ushers in intellectual pleasure and gentle refinement. Having begun 
+      to integrate new ideas (in the Five), the mind now appreciates the beauty of well-ordered 
+      thought, sometimes in near-poetic forms. However, self-absorption or aesthetic elitism 
+      can arise if caution is neglected.
+    description: |
+      Visual depictions might suggest a calm crossing—some symbolise a serene voyage or 
+      arrangement of swords that reflect poetic symmetry. This hush of mind fosters 
+      imaginative depth and measured thinking.
+    reading: |
+      When the Six of Swords appears, it implies a tranquil shift toward more elegant, 
+      contemplative thought. Embrace the grace in your intellectual pursuits, but avoid 
+      distancing yourself from practical realities or the opinions of others.
+    monologue: |
+      "Savour the simple joy of thought grown subtle and clear. Let me show you the soft 
+      gleam of each well-formed idea—yet remember, too, that beauty shared is lovelier 
+      than beauty hoarded."
+
+  - number: "Seven"
+    name: "Seven of Swords"
+    keywords:
+      - "Highly active mind"
+      - "Receptive intellect"
+      - "Stepping outward"
+      - "Service to others"
+      - "Possible misuse of knowledge"
+    interpretations: |
+      The Seven of Swords denotes an intellect that is both active and newly receptive, bridging 
+      internal insight and external engagement. It can mark self-transcendence and a desire to 
+      serve. On the darker side, knowledge might be weaponised or used for self-serving ends.
+    description: |
+      The artwork frequently shows a prominent blue sword or a pivotal blade that hints 
+      at meditative clarity, now directed outward. The mind, no longer content with 
+      introspection alone, may yearn to share or impose its insights.
+    reading: |
+      In a spread, the Seven of Swords advises focusing your mental prowess on beneficial pursuits. 
+      Seek to uplift rather than dominate. Keep watch for any temptation to manipulate facts 
+      for personal advantage.
+    monologue: |
+      "I have discovered the power beyond my own walls. Through me, your mind can heal 
+      or harm. Choose integrity, for intellect fused with compassion reshapes the world 
+      in uplifting ways."
+
+  - number: "Eight"
+    name: "Eight of Swords"
+    keywords:
+      - "Intellectual perfection"
+      - "Emptiness"
+      - "Deep meditation"
+      - "Void"
+      - "Potential block"
+    interpretations: |
+      The Eight of Swords symbolises the pinnacle of intellectual receptivity—true emptiness. 
+      In this profound meditation, dualities vanish, and a near-Buddhist realisation of 
+      voidness arises. The negative side is mental blockage, fear of letting go, or an 
+      inability to function in daily life if one clings exclusively to emptiness.
+    description: |
+      Often shown with minimal external flourish, the Eight of Swords highlights the serene 
+      state of a mind stripped of extraneous concepts. Yet the blankness can be either 
+      illuminating or paralysing, depending on perspective.
+    reading: |
+      In a reading, this card indicates that you stand on the verge of an extraordinary 
+      inward breakthrough. Embrace the silence, but remember to remain lovingly connected 
+      to external reality.
+    monologue: |
+      "I am the hushed centre, where words dissolve into luminous quiet. Let go of all 
+      self-concepts, and you shall glimpse the infinite within. Yet do not flee the 
+      living world—emptiness is a gate, not a home."
+
+  - number: "Nine"
+    name: "Nine of Swords"
+    keywords:
+      - "New understanding"
+      - "Breaking old habits"
+      - "Intense crisis"
+      - "Mental uncertainty"
+      - "Approaching illumination"
+    interpretations: |
+      The Nine of Swords portrays the decisive fracture of outdated thought patterns, heralding 
+      a fresh clarity. It often aligns with crisis: fear, depression, or mental upheaval 
+      can accompany the final shedding of illusions. 
+      
+      Nonetheless, this metamorphosis paves the way for enlightenment—when old concepts 
+      shatter, new insight blooms.
+    description: |
+      Imagery generally emphasises a sword (or swords) in motion, sometimes with cracks 
+      indicating the collapse of entrenched mental walls. The emphasis is on resolutely 
+      facing the pain of transformation.
+    reading: |
+      In a spread, the Nine of Swords indicates that whilst you may be weighed down by 
+      anxiety or heartbreak, a breakthrough is imminent. If you let the crisis run its 
+      course, renewed clarity will follow.
+    monologue: |
+      "I am the dreaded hour when illusions crumble. Dare to face my darkness, for 
+      with each fragment of thought you cast aside, the mind stands closer to liberation."
+
+  - number: "Ten"
+    name: "Ten of Swords"
+    keywords:
+      - "Completion of transformation"
+      - "Intellectual maturity"
+      - "Dual blades"
+      - "Androgynous unity"
+      - "Freedom from self"
+    interpretations: |
+      The Ten of Swords signifies the culmination of the Swords cycle. Instead of one blade, 
+      there are now two—feminine and masculine, or receptive and active—meeting in harmonious 
+      union. This is full intellectual maturity, where the mind transcends personal bias and 
+      integrates the viewpoint of the Other.
+      
+      Negatively, it can point to failure to adapt or the refusal to accept new mental 
+      unifications. Conflict arises if the subject cannot reconcile differences.
+    description: |
+      Typically illustrated with two swords exiting or transcending a boundary (often an oval), 
+      the Ten of Swords affirms that limitations have been surpassed. It is the intellect 
+      freed from its old shell, poised to explore reality unbound.
+    reading: |
+      In a reading, the Ten of Swords proclaims that an intellectual cycle has ended. You are 
+      invited to stand firm in your newly gained wisdom and press onward, no longer chained 
+      by old assumptions. This is both an ending and a potent new beginning.
+    monologue: |
+      "I am the final chord of thought’s grand symphony. Where once there was only one 
+      perspective, now there are two, seamlessly entwined. Embrace the fullness of your 
+      hard-won insight and step into the world reborn."

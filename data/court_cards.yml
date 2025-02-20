@@ -1,0 +1,197 @@
+# court_cards.yml
+
+overview: |
+  The Court Cards represent the personified archetypes within the Minor Arcana—figures who embody mature aspects of the elemental energies of each suit. They are the pages, knights, queens, and kings who guide us through the realms of intellect (Swords), emotion (Cups), creativity and desire (Wands), and material existence (Pentacles). Each Court Card offers insights into character, interpersonal dynamics, and the evolution from youthful potential to fully realised maturity. Their rich symbolism and narrative details complement the numbered cards and integrate with the overall structure of the Tarot.
+
+suits:
+  - suit: "Swords"
+    description: |
+      In the realm of Swords, the Court Cards embody the evolution of intellectual energy—from the inquisitive and sometimes impulsive youth to the wise and authoritative master of reason. They illustrate how the mind learns to balance critical analysis with empathy and clear judgement.
+    cards:
+      - name: "Page of Swords / Valet d'Épées"
+        keywords: ["Youthful curiosity", "Alertness", "Cleverness", "Restless mind", "Initiative"]
+        interpretations: |
+          The Page of Swords signifies the budding intellect, brimming with curiosity and a desire to learn. Often representing a messenger or a student of life, this card is associated with new ideas and the initial spark of critical thought. It warns, however, of impatience and a tendency to be overly reactive.
+        description: |
+          Depicted as a young figure brandishing a sword with keen eyes and an inquisitive gaze, the Page of Swords symbolises the fresh, untested power of the mind. His stance is both alert and uncertain—a reminder that youthful intellect is full of promise but must be tempered with experience.
+        reading: |
+          In a reading, the Page of Swords encourages you to seek knowledge and communicate your ideas, while cautioning against impulsiveness. It may also indicate that new information is coming your way or that you should question established assumptions.
+        monologue: |
+          "I am the bright spark of curiosity, eager to challenge and explore. Though my mind is unseasoned, every question I ask lights the way to wisdom—if you learn to temper my fire with patience."
+      
+      - name: "Knight of Swords / Chevalier d'Épées"
+        keywords: ["Dynamic action", "Bold pursuit", "Intellectual courage", "Impulsiveness", "Determination"]
+        interpretations: |
+          The Knight of Swords represents a forceful, energetic approach to ideas. He is the embodiment of bold action and swift decision-making, though his haste can sometimes lead to rashness or conflict.
+        description: |
+          Portrayed as a determined rider charging forward with his sword raised high, the Knight of Swords epitomises decisive intellectual action. His presence suggests that the mind is ready to cut through uncertainty—but warns that speed without forethought may yield unintended consequences.
+        reading: |
+          In a reading, the Knight of Swords advises rapid movement and assertiveness in your plans. Ensure that your decisions are backed by clear thinking to avoid impulsive errors.
+        monologue: |
+          "I charge ahead with the force of truth. Yet my speed is both my strength and my flaw—guide me with reason, and together we shall carve a path of clarity."
+      
+      - name: "Queen of Swords / Reine d'Épées"
+        keywords: ["Wisdom", "Perceptiveness", "Clarity", "Independence", "Intellectual maturity"]
+        interpretations: |
+          The Queen of Swords symbolises a mature, discerning intellect that is both compassionate and unyielding. She represents the balance of reason and empathy, offering honest, direct communication.
+        description: |
+          Often shown as a regal figure with penetrating eyes and an elegant bearing, the Queen of Swords stands for clarity and truth. Her calm, measured demeanour reflects the attainment of wisdom through experience, and she is unafraid to speak the truth even when it is difficult.
+        reading: |
+          In a reading, the Queen of Swords suggests that you seek clarity and assertive truth in your interactions. Her advice is to cut through illusions with compassion and precision.
+        monologue: |
+          "I am the embodiment of truth, tempered by compassion. Let my clarity guide you to decisions that are as fair as they are wise."
+      
+      - name: "King of Swords / Roi d'Épées"
+        keywords: ["Authority", "Judgement", "Strategic thinking", "Ethical leadership", "Intellectual mastery"]
+        interpretations: |
+          The King of Swords represents the pinnacle of intellectual authority—a master of strategy, ethics, and reason. He calls upon you to govern your thoughts with both discipline and fairness.
+        description: |
+          Illustrated as a dignified ruler wielding a mighty sword, the King of Swords commands respect and clarity. His presence is a reminder that true power lies in balanced judgement and the disciplined application of knowledge.
+        reading: |
+          In a reading, the King of Swords advises you to take a leadership role in your intellectual or professional life. He encourages you to apply your wisdom judiciously and to act with integrity.
+        monologue: |
+          "I am the final arbiter of your mental realm, a beacon of judicious power. Govern your thoughts with my authority, and let reason and ethics light your way."
+  
+  - suit: "Cups"
+    description: |
+      The Cups embody the full spectrum of emotional life—from the tender stirrings of youthful love to the deep, nurturing compassion of mature relationships. The Court Cards in this suit reveal the evolution of the heart, offering insights into sensitivity, empathy, and emotional mastery.
+    cards:
+      - name: "Page of Cups / Valet de Coupes"
+        keywords: ["Emotional sensitivity", "Imagination", "Artistic impulse", "Youthful empathy", "Innocence"]
+        interpretations: |
+          The Page of Cups symbolises a fresh, unfiltered emotional awareness. Representing a youthful, creative spirit, this card invites openness to the wonders of love and artistic expression. It also cautions against being overly impressionable or naive.
+        description: |
+          Depicted as a gentle figure holding a cup with water and sometimes a fish emerging from it, the Page of Cups embodies the tender beginnings of emotional and creative life. His expression is one of wonder and curiosity, a testament to the purity of heart before life hardens it.
+        reading: |
+          In a reading, the Page of Cups encourages you to listen to your intuition and embrace creative inspiration. It signals the arrival of a gentle, nurturing message—one that may open up new avenues in relationships or artistic endeavours.
+        monologue: |
+          "I am the first whisper of love, a tender muse that stirs your soul. Embrace my gentle call, for in my simplicity lies the boundless potential of the heart."
+      
+      - name: "Knight of Cups / Chevalier de Coupes"
+        keywords: ["Romantic pursuit", "Emotional idealism", "Passionate drive", "Charm", "Yearning"]
+        interpretations: |
+          The Knight of Cups represents the dynamic, sometimes impulsive drive of the heart. He is a passionate messenger, often symbolising romance, creative inspiration, and the pursuit of a deeply felt ideal. Yet his intensity may also lead to inconsistency or escapism.
+        description: |
+          Portrayed as a dashing figure riding forward with a cup held high, the Knight of Cups channels emotional energy into bold action. His journey is one of both passion and vulnerability, marking the transition from dreaming to daring.
+        reading: |
+          In a reading, the Knight of Cups calls on you to pursue your romantic or creative goals with vigour. It suggests that the time for action in love or art has come, but also advises caution to avoid impulsivity.
+        monologue: |
+          "I gallop on the winds of emotion, my heart ablaze with passion and promise. Follow me into the realm of romance, but steer with care—only true love can withstand the rush of desire."
+      
+      - name: "Queen of Cups / Reine de Coupes"
+        keywords: ["Emotional maturity", "Compassion", "Intuition", "Nurturing", "Healing"]
+        interpretations: |
+          The Queen of Cups symbolises a mature, empathetic approach to emotion. She represents the nurturing power of the heart, offering healing, understanding, and a deep connection to the intuitive realm. Her presence encourages trust and compassion.
+        description: |
+          Often shown as a regal figure with a serene expression, the Queen of Cups exudes warmth and empathy. Her calm, reflective gaze invites you to connect with your inner self, suggesting that true wisdom is found in compassionate understanding.
+        reading: |
+          In a reading, the Queen of Cups advises you to trust your intuition and care for those around you. Her influence is that of a wise counsellor, urging you to balance your emotional needs with empathy for others.
+        monologue: |
+          "I am the gentle guardian of the heart, nurturing both love and wisdom. In my embrace, let your emotions flow freely and heal the wounds of the past."
+      
+      - name: "King of Cups / Roi de Coupes"
+        keywords: ["Emotional balance", "Wisdom in love", "Diplomacy", "Mature compassion", "Leadership in relationships"]
+        interpretations: |
+          The King of Cups represents the mature mastery of emotion—balancing passion with reason, and heart with mind. He is the archetype of a compassionate leader who rules with both empathy and fairness, harmonising conflicting feelings.
+        description: |
+          Depicted as a dignified figure holding a cup, the King of Cups embodies emotional authority. His calm demeanor and measured words reflect the wisdom that comes from life’s experiences, guiding others with gentle strength.
+        reading: |
+          In a reading, the King of Cups suggests that you harness your emotional intelligence to resolve conflicts or nurture relationships. He calls for balanced, mature communication and a steady hand in both personal and professional spheres.
+        monologue: |
+          "I am the master of feeling, a beacon of calm amidst the storm of passion. Let my balanced heart guide you to a place where love and wisdom intertwine."
+
+  - suit: "Wands"
+    description: |
+      Wands capture the force of creative and sexual energy. The Court Cards in this suit represent the progression from youthful inspiration to mature leadership in creativity. They embody the spark, the dynamic pursuit, and the eventual mastery of the vital force that drives both artistic expression and desire.
+    cards:
+      - name: "Page of Wands / Valet de Bâtons"
+        keywords: ["Creative enthusiasm", "Adventurous spirit", "Inspiration", "Impulsive creativity", "Youthful drive"]
+        interpretations: |
+          The Page of Wands is the herald of creative potential. Brimming with enthusiasm and spontaneity, he embodies the initial surge of inspiration. His energy is raw and unrefined, signifying a time of exploration and daring—though it may also veer into impulsiveness if not channelled wisely.
+        description: |
+          Depicted as a young, vibrant figure holding a wand aloft, the Page of Wands symbolises the exciting onset of creative energy. His expression is one of wonder and readiness, inviting new adventures in art, love, and life.
+        reading: |
+          In a reading, the Page of Wands encourages you to embrace your creative impulses and take risks. His energy signals the beginning of an exciting project or relationship, but also advises caution against recklessness.
+        monologue: |
+          "I am the spark of unbridled inspiration, eager to lead you on adventures untold. Let your passion guide you, but remember—true creativity flourishes when tempered with courage and wisdom."
+      
+      - name: "Knight of Wands / Chevalier de Bâtons"
+        keywords: ["Bold action", "Passionate pursuit", "Dynamic drive", "Impulsive energy", "Courage"]
+        interpretations: |
+          The Knight of Wands represents the energetic, daring pursuit of creative or sexual desires. He is dynamic and fearless, charging forward with zeal, yet his impulsiveness can sometimes lead him astray.
+        description: |
+          Typically portrayed as a daring rider astride a spirited steed, the Knight of Wands is the embodiment of passionate, almost reckless energy. His determined gaze and swift movement convey a readiness to conquer obstacles in the name of creative fulfilment.
+        reading: |
+          In a reading, the Knight of Wands urges you to act boldly in pursuit of your passions. However, he also warns against rash decisions—ensure that your enthusiasm is balanced by strategic thought.
+        monologue: |
+          "I charge forth on wings of fire, carrying the torch of passion into the unknown. Let your daring spirit rise, but temper it with wisdom, for bold leaps must be guided by purpose."
+      
+      - name: "Queen of Wands / Reine de Bâtons"
+        keywords: ["Charismatic leadership", "Creative mastery", "Passion", "Warmth", "Intuitive guidance"]
+        interpretations: |
+          The Queen of Wands epitomises the mature, confident expression of creative and sexual energy. She is warm, charismatic, and deeply intuitive, representing both the nurturing and commanding aspects of passion.
+        description: |
+          Often depicted as a regal and radiant figure surrounded by lush foliage, the Queen of Wands exudes strength and vitality. Her presence suggests a harmonious blend of energy and wisdom, with a focus on inspiring others and fostering creative growth.
+        reading: |
+          In a reading, the Queen of Wands advises you to embrace your inner fire and lead with both passion and compassion. Her influence is uplifting, guiding you to manifest your creative vision while remaining grounded.
+        monologue: |
+          "I am the flame that lights your creative soul, bold and benevolent. With warmth and wisdom, I invite you to lead your life with passion and integrity, transforming every endeavour into art."
+      
+      - name: "King of Wands / Roi de Bâtons"
+        keywords: ["Visionary leadership", "Creative authority", "Decisiveness", "Passionate command", "Inspiration"]
+        interpretations: |
+          The King of Wands represents the apex of creative energy—a visionary leader who wields passion with decisive authority. He is both an innovator and a mentor, uniting inspiration with practicality.
+        description: |
+          Shown as a powerful, confident figure commanding respect, the King of Wands embodies the culmination of creative endeavour. His presence is magnetic, drawing others to follow his lead, and his stance conveys that creative and sexual energies, when mastered, can shape destiny.
+        reading: |
+          In a reading, the King of Wands calls you to harness your creative power in a leadership role. He encourages you to take bold, decisive action in your projects and relationships, using your inspiration to drive transformative results.
+        monologue: |
+          "I am the visionary who rules with both passion and reason. Embrace your creative might, and let your inner fire forge a legacy that transforms the world around you."
+
+  - suit: "Pentacles"
+    description: |
+      The Pentacles reflect the realm of material reality, grounding the energy of the Tarot in physical existence. The Court Cards in this suit illustrate the evolution of practical wisdom—from eager beginnings to mature mastery of the tangible world. They are concerned with resourcefulness, wealth, health, and the sustaining power of the Earth.
+    cards:
+      - name: "Page of Pentacles / Valet de Pentacles"
+        keywords: ["Diligence", "Curiosity", "Practical learning", "Material potential", "Eager student"]
+        interpretations: |
+          The Page of Pentacles is a youthful figure eager to learn about the material world. He represents the initial spark of interest in practical matters such as finances, health, and career. His energy is diligent and methodical, though sometimes he may be overly focused on the details at the expense of broader vision.
+        description: |
+          Typically portrayed as a student or apprentice, the Page of Pentacles holds a coin or a small pentacle as a symbol of his budding connection to the earthly realm. His expression is one of curiosity and readiness to absorb knowledge, suggesting that every material resource holds the promise of growth.
+        reading: |
+          In a reading, the Page of Pentacles encourages you to be open to learning practical lessons. He may signal the start of a new job, an investment in your health, or an opportunity to build material stability—provided you approach it with both enthusiasm and care.
+        monologue: |
+          "I am the humble seeker of earthly wisdom, eager to learn and to grow. Open your mind to the riches around you, and let your practical heart guide you to prosperity."
+      
+      - name: "Knight of Pentacles / Chevalier de Pentacles"
+        keywords: ["Steadfastness", "Reliability", "Perseverance", "Methodical action", "Practicality"]
+        interpretations: |
+          The Knight of Pentacles represents the reliable, steady application of effort in the material realm. He is the diligent worker who advances slowly but surely, ensuring that every endeavour is built on a solid foundation. While his persistence is commendable, he may also be seen as unimaginative or overly cautious.
+        description: |
+          Often depicted riding a sturdy steed, the Knight of Pentacles holds symbols of wealth and sustenance. His measured pace reflects a careful, methodical approach to achieving success—emphasising that true material gain requires patience and perseverance.
+        reading: |
+          In a reading, the Knight of Pentacles suggests that steady, focused effort is necessary. He encourages you to invest time and energy in building your foundation, whether in your career, finances, or personal health, even if progress seems slow.
+        monologue: |
+          "I am the embodiment of persistence and practical wisdom. With steady hands and unwavering determination, I show you that lasting success is forged in the quiet, relentless march of effort."
+      
+      - name: "Queen of Pentacles / Reine de Pentacles"
+        keywords: ["Nurturing", "Resourcefulness", "Home and family", "Practical wisdom", "Earthly abundance"]
+        interpretations: |
+          The Queen of Pentacles symbolises mature, nurturing energy in the material domain. She embodies a deep understanding of the practical aspects of life—managing resources with care, supporting her home and family, and ensuring that physical needs are met in a balanced, compassionate manner.
+        description: |
+          Portrayed as a gracious and grounded figure, the Queen of Pentacles holds symbols of fertility and abundance. Her presence is warm and stabilising, offering a model of how to harmonise material wealth with care for the environment and the well-being of those around her.
+        reading: |
+          In a reading, the Queen of Pentacles invites you to nurture your physical world—whether it be through family, career, or health. She advises you to invest in your long-term security, blending practical wisdom with a generous spirit.
+        monologue: |
+          "I am the heart of home and the guardian of earthly abundance. Nurture your world with care, and in return, discover a wealth that nourishes both body and soul."
+      
+      - name: "King of Pentacles / Roi de Pentacles"
+        keywords: ["Material mastery", "Financial authority", "Business acumen", "Generosity", "Stability"]
+        interpretations: |
+          The King of Pentacles stands as the archetypal master of the material realm. He represents a balanced authority over wealth, practical wisdom, and the disciplined use of resources. While his success can provide stability and security, his rigid focus on material gain may sometimes hinder emotional or spiritual growth.
+        description: |
+          Shown as a commanding figure surrounded by symbols of wealth—coins, a flourishing garden, or a sturdy throne—the King of Pentacles exudes authority and success. His measured, deliberate manner reflects a lifetime of mastering the practical aspects of life, ensuring that his kingdom is both prosperous and well-managed.
+        reading: |
+          In a reading, the King of Pentacles advises you to take charge of your material resources with confidence and fairness. His influence suggests that financial stability, business acumen, or even family legacy is at your command—but always with an eye towards ethical stewardship.
+        monologue: |
+          "I am the sovereign of substance, the master of earth’s riches. Command your destiny with wisdom and generosity, for in balanced stewardship lies the true secret of abundance."

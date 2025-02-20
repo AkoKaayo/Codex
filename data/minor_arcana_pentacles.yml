@@ -1,0 +1,384 @@
+# minor_arcana_pentacles.yml
+
+overview: |
+  The Pentacles in the Minor Arcana symbolise the entire domain of material life: 
+  body, health, money, and worldly resources. They emphasise tangible reality as 
+  both a gift and a challenge. From the Ace (where matter reveals the seed of 
+  spiritual unity) to the Ten (where earthly cycles reach completion), Pentacles 
+  remind us that material existence can be a sacred path—provided we let its 
+  lessons transform us rather than enslave us.
+
+suit: "Pentacles"
+
+cards:
+  - number: "Ace"
+    name: "Ace of Pentacles"
+    keywords:
+      - "Material potential"
+      - "Health"
+      - "Resources"
+      - "Lotus of matter"
+      - "Infinite possibility"
+    interpretations: |
+      The Ace of Pentacles signifies an abundant wellspring of physical and 
+      material potential. It can foretell wealth, robust health, and tangible 
+      prospects, yet also invites us to spiritualise matter and to discover 
+      the divine seed within the material world. Negatively, it cautions 
+      against an obsession with possessions or a lack of grounding in practical 
+      affairs.
+    description: |
+      Commonly illustrated lying horizontally (unlike the more vertical Aces of 
+      Swords, Cups, Wands), the Ace of Pentacles evokes humility and the 
+      transformative capacity inherent in matter. Often depicted with a flower 
+      (like a lotus) at its centre, it suggests that from the mud of the earthly 
+      plane can spring the “diamond” of consciousness.
+      
+      Three concentric circles or rings typically represent the outer garden of 
+      earthly concerns, a middle zone reflecting the practical, and an inner 
+      red circle symbolising divine essence. In some depictions, the red centre 
+      contains a cross or four petals, pointing to the four cardinal elements 
+      of matter. Alchemists saw this as a promise that by materialising the 
+      spirit (and spiritualising matter), humankind could discover the 
+      philosopher’s stone.
+    reading: |
+      In a reading, the Ace of Pentacles suggests new opportunities in finances, 
+      career, or bodily well-being. It hints at undiscovered potential in the 
+      physical world that can flower into spiritual fulfilment if nurtured.  
+      Turn your attention to practicality, yet remain open to the divine spark 
+      hidden in mundane reality.
+    monologue: |
+      "I lie close to the earth, holding a secret seed. Within my stillness dwells 
+      a sacred gem—material wealth waiting to be awakened. Honour me with wise 
+      stewardship, and the flower of spirit shall bloom from the soil of matter."
+
+  - number: "Two"
+    name: "Two of Pentacles"
+    keywords:
+      - "Unfinalised contract"
+      - "Preparation"
+      - "Balancing resources"
+      - "Transition from past to future"
+      - "Infinite ribbon"
+    interpretations: |
+      The Two of Pentacles represents a state in which a financial or material 
+      agreement has not yet crystallised—anticipation is high, but outcome 
+      remains uncertain. It could be forging a new partnership, bridging 
+      yourself and an investment, or finalising a work deal. Negatively, 
+      it may show reluctance to commit, whimsical handling of practical 
+      affairs, or a danger of perpetual indecision.
+    description: |
+      Often illustrated by two large coins connected by a ribbon or infinity 
+      sign, the card highlights the potential synergy—and tension—of joining 
+      two separate circles. Some depictions add dates or references that imply 
+      passage from older frameworks (death) to the domain of creation (the 
+      eternal or the divine). 
+      
+      The sinuous line that weaves between the pentacles symbolises growth, 
+      a continuity that can transform matter into something higher. 
+      Its numerological hints (like 13 for transformation and 26 for 
+      divinity) emphasise that the path from old to new is both an 
+      inner and outer process.
+    reading: |
+      In a reading, the Two of Pentacles suggests you are juggling financial 
+      or bodily concerns, working on an as-yet unfinished deal, or preparing 
+      to commit. Manage your affairs calmly—turn your potential stress 
+      into a dance that propels you forward instead of weighing you down.
+    monologue: |
+      "I glide between two worlds, binding them with a living thread. 
+      Embrace my playful balance, for I can lift you into fresh prosperity 
+      if you dare to finalise your wavering steps."
+
+  - number: "Three"
+    name: "Three of Pentacles"
+    keywords:
+      - "First returns"
+      - "Uncertain gains or losses"
+      - "Collaboration"
+      - "Material venture"
+      - "Risky beginning"
+    interpretations: |
+      The Three of Pentacles indicates the birth of a material project or 
+      partnership. It might be an initial investment yielding its first 
+      profits—or losses. It symbolises the impetus to transform resources 
+      into tangible outcome, be it a business, a building, or the literal 
+      formation of new life in the womb. If negative, it warns of hasty 
+      gambles, false starts, or fiascos from ill-prepared schemes.
+    description: |
+      Commonly, three coins are shown in a triangular arrangement, 
+      emphasising how the synergy of two can produce something new. 
+      Leaves or sprouts sometimes appear, symbolising the uncertain 
+      fruits. The outcome is not predetermined; it largely depends 
+      on wise caretaking, as well as luck.
+    reading: |
+      In a reading, the Three of Pentacles calls you to nurture your 
+      material beginnings. Manage the risk with diligence—fledgling 
+      endeavours need knowledge and careful tending to flourish. 
+      Adopt patience, but do not be too timid to act.
+    monologue: |
+      "I am your first step into the world’s marketplace— 
+      uncertain, yes, but brimming with creative chance. 
+      Invest mindfully, or risk sowing seeds to be lost 
+      on barren ground."
+
+  - number: "Four"
+    name: "Four of Pentacles"
+    keywords:
+      - "Material stability"
+      - "Security"
+      - "Routine"
+      - "Health"
+      - "Tight control"
+    interpretations: |
+      The Four of Pentacles shows the mastery of resources and 
+      finances, a protective domain ensuring daily subsistence. 
+      Physical well-being or consistent income is implied. 
+      Such security fosters strong foundations but can also 
+      breed stagnation if one clings too tightly, refusing 
+      to let money or energy circulate. 
+    description: |
+      Often depicted with a phoenix or a central emblem (perhaps 
+      referencing the mythical bird renewing itself by fire), 
+      the Four of Pentacles reminds us that every stable 
+      structure encloses impermanence. Prosperity endures 
+      only if it flows rather than being locked away in 
+      pure accumulation.
+    reading: |
+      In a spread, this card can be a sign of stability or 
+      consolidation—like a secure job, a healthy body, or 
+      reliable family support. But it also warns: 
+      be generous, remain flexible. Do not let protective 
+      instincts freeze you into possessiveness or short-sighted 
+      caution.
+    monologue: |
+      "I am the fortress of your wellbeing, the calm vantage 
+      of sufficiency. Let me ground you, but never imprison you; 
+      no vault stands forever if life’s stream is cut off."
+
+  - number: "Five"
+    name: "Five of Pentacles"
+    keywords:
+      - "New ideal in matter"
+      - "Bridge between old and new"
+      - "Spirituality in the physical"
+      - "Risk of swindles"
+      - "Temptation or aspiration"
+    interpretations: |
+      The Five of Pentacles conjures a moment when solid 
+      material security confronts a bold new vision—be it 
+      ecological consciousness, altruistic business, or 
+      an invention bridging matter and spirit. It is 
+      the impetus to lift financial or bodily concerns 
+      onto a higher plane. 
+      
+      Negatively, illusions, betrayal, or self-delusion 
+      can occur if the “ideal” is a lure. 
+      One might gamble away resources on unfounded 
+      promises.
+    description: |
+      Visually, the four corners typically hold pentacles 
+      signifying established reality, while a central 
+      symbol stands for the emergent vision that yearns 
+      to break free. Leaves or lines may show a transitional 
+      impetus from old constraints to new realms. 
+    reading: |
+      In a reading, the Five of Pentacles challenges you 
+      to elevate everyday life with an ideal or to invest 
+      in something that benefits more than just yourself. 
+      But watch for illusions—scrutinise big promises 
+      before leaping.
+    monologue: |
+      "Upon the solid earth I raise a dream, calling you 
+      to transform your mundane assets into the seeds 
+      of a higher calling. Yet walk with caution— 
+      not all shining roads lead to honest lands."
+
+  - number: "Six"
+    name: "Six of Pentacles"
+    keywords:
+      - "Material pleasure"
+      - "Prosperity"
+      - "Sharing wealth"
+      - "Embodied joy"
+      - "Risk of self-indulgence"
+    interpretations: |
+      The Six of Pentacles symbolises a joyous union with 
+      bodily or financial abundance—like a satisfying flow 
+      of salary, successful enterprise, or contentment in 
+      one’s health. In the best sense, it fosters generosity, 
+      encouraging you to share surplus with others. 
+      
+      Negatively, it can turn into vanity or narcissistic 
+      enjoyment that excludes broader compassion. It may 
+      also speak of illusions that money alone solves 
+      every problem.
+    description: |
+      Often, six pentacles appear in a pleasing arrangement 
+      with bright leaves or symmetrical patterns, reflecting 
+      a balanced material life. If the layout looks too 
+      closed in on itself, it suggests a self-absorbed 
+      bubble that fails to reach beyond its own comfort.
+    reading: |
+      In a reading, the Six of Pentacles invites you to 
+      relish your physical or financial blessings. However, 
+      you are also asked to consider the needs of the 
+      community—wealth or wellness are best sustained 
+      through generosity and empathy.
+    monologue: |
+      "Feel the warmth of plenty coursing through your hands; 
+      let it lift your spirit. Yet do not lock the doors— 
+      feast well, but remember your neighbours hunger for 
+      life’s sweetness too."
+
+  - number: "Seven"
+    name: "Seven of Pentacles"
+    keywords:
+      - "Action of spirit in matter"
+      - "Work for humanity"
+      - "Generosity"
+      - "Alchemical synergy"
+      - "Danger of exploitation"
+    interpretations: |
+      The Seven of Pentacles highlights how resources 
+      or business can blend with higher principles— 
+      philanthropy, enlightened commerce, or a holistic 
+      approach to the body. If well-guided, it fosters 
+      success that benefits not just the self but the 
+      collective. 
+      
+      Yet exploited by greed, it may turn to rapacious 
+      behaviour, such as multinational predators 
+      ravaging ecosystems or a neglectful caretaker 
+      draining health from the body.
+    description: |
+      Typically, seven pentacles form a central triangle 
+      (the mind/spirit) within a framing square (earthly 
+      realism). This geometry indicates the intellect 
+      or soul acting dynamically upon physical reality. 
+      Abundance is possible, but success ties intimately 
+      to ethics and compassion.
+    reading: |
+      In a reading, the Seven of Pentacles advises you 
+      to invest your resources (time, health, money) 
+      with a spiritual or humanistic dimension. Combine 
+      realistic planning with genuine altruism—then 
+      you can find a synergy that elevates all around you.
+    monologue: |
+      "I channel your highest aims into the soil of 
+      the real. Will you sow life-giving seeds or 
+      devour the earth in short-sighted profit? 
+      I hold potential for grand works— 
+      choose the path that honours all."
+
+  - number: "Eight"
+    name: "Eight of Pentacles"
+    keywords:
+      - "Abundance"
+      - "Harmonious world"
+      - "Perfect balance"
+      - "Physical prosperity"
+      - "Danger of overindulgence"
+    interpretations: |
+      The Eight of Pentacles represents the full bloom 
+      of material success—health, wealth, order— 
+      where the synergy of body and environment thrives. 
+      This card can point to paradise on earth, a family 
+      or enterprise that runs smoothly, a stable job, 
+      or an eco-friendly approach to life. 
+      
+      Yet if the caretaker grows complacent or exploitative, 
+      trouble lurks. Even perfection must keep evolving, 
+      or it may collapse from rigidity.
+    description: |
+      Often arranged in two squares of four pentacles 
+      or a symmetrical figure, the Eight evokes 
+      completeness and a dynamic equilibrium reminiscent 
+      of mother nature’s tapestry. Leaves or a central 
+      cross can emphasise the universal harmony.
+    reading: |
+      In a reading, the Eight of Pentacles heralds 
+      material and bodily equilibrium. If you act 
+      responsibly, you can sustain it. If not, 
+      even great success can tarnish. 
+      Stay humble, keep refining what you have, 
+      and share your bounty.
+    monologue: |
+      "I offer you a flourishing oasis, ripe with 
+      life and ease. Tend it faithfully—no garden 
+      remains perfect if the gardener forgets 
+      the changing seasons."
+
+  - number: "Nine"
+    name: "Nine of Pentacles"
+    keywords:
+      - "Birth or crisis"
+      - "Potential shift"
+      - "Inheritance or major loss"
+      - "Material metamorphosis"
+      - "Emerging new dimension"
+    interpretations: |
+      The Nine of Pentacles stands at the threshold 
+      of an old cycle’s end and a new beginning. 
+      It may symbolise literal birth (a baby’s head 
+      appears from the womb), or figurative birth 
+      like a fresh job, winning a lawsuit or lottery, 
+      or a forced move following financial ruin. 
+      This crisis is both destruction and creation, 
+      a release from stagnation.
+    description: |
+      Commonly, the arrangement of nine coins forms 
+      an oval or womb-like shape with a central pentacle 
+      emerging as though it were a child’s head. 
+      Leaves or lines may show the flux from stable 
+      perfection (eight) to sudden transformation (ten). 
+      Everything waits for the final push to cross 
+      into new terrain.
+    reading: |
+      In a reading, the Nine of Pentacles suggests 
+      an imminent change in your material situation— 
+      it could be an inheritance, a pregnancy, 
+      a new business, or the collapse of an old structure, 
+      all opening a door to an uncharted reality.
+    monologue: |
+      "Standing at the womb’s brink, I bear your old 
+      world to its radical renewal. Will you lament 
+      the passing or rejoice in fresh breath? 
+      My labour can be painful, but life must ever 
+      press forward."
+
+  - number: "Ten"
+    name: "Ten of Pentacles"
+    keywords:
+      - "Completion of a cycle"
+      - "Material legacy"
+      - "Awaiting spiritual next step"
+      - "Imprisonment if clung to"
+      - "Gateway to new realm"
+    interpretations: |
+      The Ten of Pentacles completes the material cycle 
+      with a sealed totality of wealth or earthly success. 
+      Four coins in the corners anchor it, while the 
+      remaining six form an oval or mandorla in the centre. 
+      This culminating form can be liberating if you 
+      let it lead to the next stage (like the Ace of Wands, 
+      or Swords). If greed or fear keeps you here, you 
+      become trapped.
+    description: |
+      Often, a white axis or bridging line is depicted, 
+      linking two pentacles at the top or bottom, 
+      pointing to a transition beyond mere matter. 
+      You have reached the maximum of your current 
+      worldly journey. The question remains: 
+      will you evolve or freeze?
+    reading: |
+      In a reading, the Ten of Pentacles speaks of a 
+      finalised legacy—like a comfortable retirement, 
+      a family fortune, or stable business. But 
+      it also invites you to let go and move forward 
+      so that new growth (Ace of Wands or Swords) 
+      may emerge.
+    monologue: |
+      "I present your earth-bound story’s grand finale— 
+      wealth, health, or all you once craved. Yet 
+      I yearn to open another door. Release me and 
+      ascend, or clutch me till your treasure 
+      turns to shackles."

@@ -1,0 +1,210 @@
+# major_arcana_2.yml
+
+- arcana_number: "XI"
+  series: "XI-XX"
+  name: "Strength / La Force"
+  keywords:
+    - "Creative Beginning"
+    - "New Energy"
+    - "Animal Nature"
+    - "Wild Beast"
+    - "Courage"
+    - "Heroism"
+    - "Self-Discipline"
+    - "Instinct"
+  interpretations: |
+    Traditional interpretations include: Creative Potential, Courage, Vitality, New Beginnings, Instinctive Energy, and the harmonious balance between mind and animal impulse.
+  description: |
+    Strength, the first card of the second decimal series and numbered eleven, opens the path for unconscious energies. Whereas The Magician works from the waist upward, Strength channels energy from the waist downward, embracing the primal forces of nature. Her hat, reminiscent of the infinity symbol, and the unique details in her posture – including a single visible foot with six toes – underscore her role as the mediator between instinct and conscious will.
+  reading: |
+    In a reading, Strength suggests the emergence of vital energy and the need to reconcile inner animal impulses with higher conscious goals. It often relates to issues of sexual expression or the need to harness raw power for creative ends.
+  monologue: |
+    "I am the threshold of untamed energy. From the depths of instinct, I rise to meet the light of consciousness. Embrace your inner wildness, for it is the very spark that ignites transformation. Let my strength guide you to channel your primal force into creative, life-affirming action."
+---
+
+- arcana_number: "XII"
+  series: "XI-XX"
+  name: "The Hanged Man / Le Pendu"
+  keywords:
+    - "Halt"
+    - "Meditation"
+    - "Gift of the Self"
+    - "Sacrifice"
+    - "Gestation"
+    - "Suspension"
+    - "Rest"
+    - "Delay"
+  interpretations: |
+    Traditional interpretations include a necessary pause, self-sacrifice, and the deep inner work that precedes transformation. It represents a moment of gestation and suspension that prepares one for the next stage.
+  description: |
+    The Hanged Man, corresponding to the second degree of the second decimal series, is depicted suspended upside down by a rope. His immobilised posture – with one leg extended and the other bent, and his hands crossed behind him – symbolises a deliberate halt. This suspension is akin to a foetus preparing to leave the womb, marking a crucial pause for internal realignment.
+  reading: |
+    In a reading, The Hanged Man advises that the moment for action is not yet ripe. It calls for introspection, meditation, and the acceptance of necessary delay before progress can resume.
+  monologue: |
+    "I choose stillness so that I may see more deeply. In my suspended state, I invite you to pause and look within. Embrace this moment of rest, for in letting go, you pave the way for true transformation."
+---
+
+- arcana_number: "XIII"
+  series: "XI-XX"
+  name: "The Nameless Arcanum / L'Arcane sans Nom"
+  keywords:
+    - "Transformation"
+    - "Revolution"
+    - "Mutation"
+    - "Cleansing"
+    - "Elimination"
+    - "Destruction"
+  interpretations: |
+    Traditional interpretations stress profound transformation and revolutionary cleansing, often misunderstood as ‘Death’ but in truth a process of radical renewal and purification.
+  description: |
+    The Nameless Arcanum, numbered thirteen, challenges the superficial reading of 'Death'. Instead, it symbolises a deep cleansing, a revolutionary act that clears away all that prevents growth. The scythe-wielding skeleton, though fearsome, is rendered in flesh colours to remind us that this transformation is part of organic life. Multiple faces and symbolic elements highlight the multifaceted nature of change.
+  reading: |
+    In a reading, this card signals an intense, transformative process – a necessary purge of outdated energies to make way for new growth.
+  monologue: |
+    "Do not fear my presence, for I am not the end but the beginning of renewal. I am the purging force that eradicates all that hinders your evolution. Embrace my revolution, and you shall witness the rebirth of your true self."
+---
+
+- arcana_number: "XV"
+  series: "XI-XX"
+  name: "The Devil / Le Diable"
+  keywords:
+    - "Unconscious Forces"
+    - "Passion"
+    - "Attachment"
+    - "Temptation"
+    - "Subconscious"
+    - "Sexuality"
+    - "Creativity"
+  interpretations: |
+    Traditional interpretations include themes of temptation, dependency, and the hidden, shadowy forces of the subconscious. The Devil warns of self-destructive attachments while also unveiling the vast creative potential latent in our darker impulses.
+  description: |
+    The Devil, though originally linked to the fifth degree of the first decimal series, appears here as a force that draws one into the depths of the subconscious. With bat wings and a torch (with a green handle) in hand, his image combines human and animal elements. Multiple eyes on his face reveal his desire to confront hidden fears, and while he is associated with negative traits such as deceit and dependency, he also symbolises the potent creative energy that can be harnessed when one faces one’s inner darkness.
+  reading: |
+    In a reading, The Devil may indicate temptations, unhealthy attachments, or the lure of material excess. It challenges the subject to confront and integrate their shadow side in order to unlock transformative creativity.
+  monologue: |
+    "I am Lucifer, the light-bearer, unbound by conventional morality. I tempt you to confront the hidden forces within, for it is only by embracing your shadow that you can truly unleash your creative power. Face me, and transform your deepest fears into a wellspring of liberation."
+---
+
+- arcana_number: "XVI"
+  series: "XI-XX"
+  name: "The Tower / La Maison Dieu"
+  keywords:
+    - "Opening"
+    - "Emergence"
+    - "Rupture"
+    - "Revelation"
+    - "Dismantling"
+    - "Transformation"
+  interpretations: |
+    Traditional interpretations often associate The Tower with catastrophe, yet it is better understood as the sudden emergence of what was imprisoned—a rupture that, though disruptive, clears the way for renewal and reorganisation.
+  description: |
+    The Tower represents the collapse of outdated structures. Its imagery of a tower—symbolic of the body—being bathed in a purifying light suggests that destruction is not merely punitive but liberatory. Rather than depicting absolute ruin, it shows figures engaged in a dynamic, almost celebratory release as old paradigms crumble to reveal the fertile ground for new growth.
+  reading: |
+    In a reading, The Tower may signal sudden, dramatic change or an unexpected rupture that, while initially disorienting, is essential for transformation and renewal.
+  monologue: |
+    "I am not the harbinger of doom, but the catalyst for rebirth. Within my destruction lies the seed of new creation. Embrace the upheaval, for it is through the breaking down of old structures that your true self can emerge in splendour."
+---
+
+- arcana_number: "XVII"
+  series: "XI-XX"
+  name: "The Star / L'Etoile"
+  keywords:
+    - "Inspiration"
+    - "Guidance"
+    - "Cosmic Energy"
+    - "Fertility"
+    - "Hope"
+    - "Sacredness"
+    - "Union"
+  interpretations: |
+    Traditional interpretations include success, luck, and the channeling of universal energy into personal renewal. The Star symbolises finding one’s place in the world and the nurturing of creative and spiritual growth.
+  description: |
+    The Star is deeply connected to the cosmos. One of her vases appears fused to her body, while the other extends outward, symbolising the dual role of receiving and giving celestial energy. An orange moon on her brow signifies intuitive wisdom, while the imagery of fertile nature underscores her nurturing power.
+  reading: |
+    In a reading, The Star heralds hope, healing, and the realisation of one’s rightful place. It suggests a time of spiritual and creative renewal, where cosmic energy flows to sustain life.
+  monologue: |
+    "I am the luminous guide that reveals the hidden currents of the cosmos. In my light, your inner garden is nourished, and hope is rekindled. Embrace the celestial energy that flows through you, and let it lead you to a profound realisation of your unique place in the universe."
+---
+
+- arcana_number: "XVIII"
+  series: "XI-XX"
+  name: "The Moon / La Lune"
+  keywords:
+    - "Receptivity"
+    - "Intuition"
+    - "Feminine Power"
+    - "Mystery"
+    - "Dream"
+    - "Uncertainty"
+    - "Phases"
+  interpretations: |
+    Traditional interpretations connect The Moon with intuition, dreams, and the subconscious. It reveals the hidden mysteries of the soul and suggests both creative potential and the risk of delusion.
+  description: |
+    The Moon represents the ultimate feminine archetype, symbolising receptivity and the world of dreams. Its crescent shape, viewed in profile, hints at mysteries that lie beneath the surface of everyday reality. The card features two animals – possibly dogs or wolves – howling at the moon, symbolising dual aspects of our emotional life. The interplay of blue, green, and red hues reflects the delicate balance between spiritual intuition and the tangible world.
+  reading: |
+    In a reading, The Moon invites exploration of the subconscious and calls for the integration of hidden truths with conscious life. It may indicate dreams, uncertainties, or a need to confront internal fears.
+  monologue: |
+    "I am the keeper of the night and the guardian of your dreams. In my gentle glow, the hidden parts of your soul come to light. Trust your intuition, and delve into the mysteries that lie beneath. I offer you the chance to embrace both your light and your shadow, revealing the truth that dwells within."
+---
+
+- arcana_number: "XVIIII"
+  series: "XI-XX"
+  name: "The Sun / Le Soleil"
+  keywords:
+    - "Paternal Archetype"
+    - "New Construction"
+    - "Light"
+    - "Love"
+    - "Awakening"
+    - "Success"
+    - "Evolution"
+  interpretations: |
+    Traditional interpretations view The Sun as the symbol of life, universal warmth, and the bringer of clarity. It represents the ultimate expression of cosmic light and the fulfilment of creative potential.
+  description: |
+    The Sun gazes directly at the observer with radiant intensity. It is the embodiment of universal love and the paternal archetype, offering clarity, vitality, and the promise of new beginnings. Its bright yellow light dispels darkness, while the harmonious interplay of celestial and earthly energies affirms its role as the harbinger of realisation.
+  reading: |
+    In a reading, The Sun signals a time of success, renewal, and the emergence of a new phase. It is a promise of light overcoming darkness, of clarity in both thought and emotion.
+  monologue: |
+    "I am the brilliant force that sustains life. In my warmth, all shadows vanish and every possibility is illuminated. I herald the dawn of a new era, where your potential is fully realised. Let my light guide you to the joyous, unbridled celebration of life."
+---
+
+- arcana_number: "XX"
+  series: "XI-XX"
+  name: "Judgment / Le Jugement"
+  keywords:
+    - "New Consciousness"
+    - "Call"
+    - "Birth"
+    - "Renaissance"
+    - "Vocation"
+    - "Union"
+    - "Transcendence"
+  interpretations: |
+    Traditional interpretations include a powerful call to awakening, the emergence of a new self, and the final integration of all aspects of being. It is the moment when one is called to embrace one’s true vocation.
+  description: |
+    Judgment concentrates all the Tarot’s energy into one clarion call. Following the introspection of The Moon and the clarity of The Sun, it heralds the birth of a new consciousness. An angel with a trumpet symbolises this awakening, signalling that it is time for a profound transformation where the inner self is finally integrated.
+  reading: |
+    In a reading, Judgment is a call to recognise one’s true path, to let go of the past, and to embrace a rebirth that is both spiritual and practical.
+  monologue: |
+    "Hear my trumpet – I am the call that awakens you to your true self. In the convergence of all that you have been, I herald a new beginning. Cast aside your old identity and step boldly into the light of renewal. I am the summons to transformation, the birth cry of your inner dawn."
+---
+
+- arcana_number: "XXI"
+  series: "XI-XX"
+  name: "The World / Le Monde"
+  keywords:
+    - "Total Realisation"
+    - "Fulfilment"
+    - "Universality"
+    - "Success"
+    - "Dance"
+    - "Ecstasy"
+    - "Union"
+  interpretations: |
+    Traditional interpretations present The World as the culmination of the Tarot, symbolising complete fulfilment, unity, and the realisation of one's highest potential. It signifies that all parts have merged into a harmonious whole.
+  description: |
+    The World, bearing the number twenty-one, epitomises supreme realisation. At its centre, a dancing figure – usually female – is encircled by a crown of light-blue leaves. In one hand she holds a receptive vessel and in the other an active wand, symbolising the union of opposites. This mandorla-like figure reminds us that, in totality, all elements of existence coalesce into a perfect, unified whole.
+  reading: |
+    In a reading, The World signifies that a long journey has reached its end in complete fulfilment. It is a sign of achievement, holistic integration, and the harmonious culmination of all energies.
+  monologue: |
+    "I am the totality of all existence, the dance of the universe made manifest. In my embrace, every fragment of your being finds its rightful place. I am the eternal celebration of life – the union of all opposites into one perfect harmony. Embrace me, and experience the fullness of your potential, the joyous realisation of your true self."

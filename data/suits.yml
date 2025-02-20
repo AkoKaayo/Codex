@@ -1,0 +1,37 @@
+# suits.yml
+
+- suit: "Sword"
+  element: "Air"
+  description: |
+    The Sword is the traditional symbol of the Word—a weapon forged, tempered, and sharpened much like one hones their intelligence through language. It represents intellectual energy and, as seen in the apex of mental development, seeks a higher perspective.
+  final_stage: |
+    At the final stage of its development (linked to the mature expression in degree 10), the Sword’s intellectual energy recognizes the need for complementarity. In this phase, it discovers the existence of the Other and directs its appeal toward the emotional energy of the Cup.
+  commentary: |
+    This suit emphasizes thought and communication. The final transformation marks the transition from isolated intellect to an awareness that connects with deeper, feeling-based energy.
+
+- suit: "Cup"
+  element: "Water"
+  description: |
+    The Cup, symbolized by the Christian Grail, is a chalice entirely receptive in nature. It represents emotional energy, the capacity for love, and the nurturing of feelings—qualities essential for personal and relational growth.
+  final_stage: |
+    Upon reaching its final stage (as reflected in degree 10), the Cup’s emotional energy becomes so enriched that it catalyzes creation in the physical realm. It makes a purposeful appeal to the material energy of the Pentacles.
+  commentary: |
+    The Cup governs the realm of feelings and emotional receptivity. Its mature phase signifies the transformation of raw emotion into a force that can manifest concrete, tangible change.
+
+- suit: "Wand"
+  element: "Fire"
+  description: |
+    The Wand grows naturally—it is not manufactured but chosen and pruned. It symbolizes the raw power of creativity and sexuality, capturing the spontaneous desire and artistic inspiration that drive personal expression.
+  final_stage: |
+    When the Wand reaches its final stage (mirroring the culmination found in degree 10), it undergoes a transformative sublimation. In this process, it splits, revealing an androgynous essence, and its creative urge shifts to appeal to the intellectual energy of the Sword.
+  commentary: |
+    Representing dynamic creative impulses, the Wand’s mature transformation underscores the interplay between raw desire and the structured realm of thought, closing the cyclical loop.
+
+- suit: "Pentacle"
+  element: "Earth"
+  description: |
+    The Pentacle is both received (like the mineral inherent in the earth) and partially forged (as in the striking of coins). It embodies physical energy, addressing the needs of the body, financial matters, and territorial imperatives.
+  final_stage: |
+    At its final stage (aligned with the mature expression in degree 10), the Pentacle confronts the necessity of transformation. Its physical energy is channeled into creative manifestation, appealing to the dynamic, inventive force of the Wands.
+  commentary: |
+    The Pentacle grounds the Tarot in the material world. In its mature phase, it transforms static matter into a dynamic source of creativity, linking the tangible with the imaginative.

@@ -1,0 +1,312 @@
+# major_arcana_1.yml
+
+- arcana_number: "Alpha"
+  series: "I-X"
+  name: "The Fool / Le Mat"
+  keywords:
+    - "Freedom"
+    - "Energy"
+    - "Travel"
+    - "Seeking"
+    - "Origin"
+    - "Wandering"
+    - "Essence"
+    - "Liberating Force"
+    - "The Irrational"
+    - "Chaos"
+    - "Flight"
+    - "Madness"
+  interpretations: |
+    Traditional interpretations include: Long Journey, Long Hike, Madness, Wandering, Instability, Overflowing Imagination, Joie de Vivre, Liberation, Pilgrimage, No Fixed Dwelling, Holy Beggar, Acrobat, Nomad, Emigrant, Delirium, Need to Take Action, Vitality, Freedom, Idealism, Prophet, March Toward Evolution, Visionary, Divine Energy, Input of Energy (if The Fool is looking toward a card), Liberation or Flight (if he is moving away from a card).
+  description: |
+    The Fool has a name but is not defined by a number – it is the sole Major Arcana card without a numerical value. He represents the original boundless energy, total freedom, madness, disorder, chaos, and even the fundamental creative urge. In traditional card games, he gave rise to figures such as the Joker or wild-cards, which can assume any other card’s role without ever being identical.
+    
+    This card exudes energy: a figure strides resolutely, wearing red shoes, and planting a red staff into the ground with each step. Is his path direct, or does he circle endlessly around his staff? The Fool is the eternal traveller, a pilgrim with no ties or nationality, perhaps even a madman headed toward destruction. In its highest interpretation, he is an individual who, having abandoned all demands and taboos, is free to draw liberating strength from the energy flow.
+    
+    His flesh-coloured beggar’s pouch glows with an inner yellow light. The light-blue staff, ending in a spoon-like shape, serves as a receptive axis that carries the light of Consciousness—the essential substratum of experience. A tiny green leaf hidden in his hand symbolises eternity.
+    
+    Adorned with tiny jester’s bells, one can imagine that the music he creates is the music of the spheres—cosmic harmony. His staff bears a small triangle of three dots; one bell shows a white circle divided by three lines, evoking the Christian Trinity, the first three Sephirot of the Kabbalah, or the fundamental processes of creation, conservation, and dissolution.
+    
+    On his belt, four small yellow bells may correspond to the four centres of the human being (intellectual, emotional, sexual/creative, and corporeal), as also symbolised by the four worlds of the Kabbalah.
+    
+    Following him is an animal – perhaps a dog or an ape – whose positioning suggests that it represents the past, guiding or accompanying him on his journey.
+    
+    His costume, primarily red and green with light-blue sleeves and a yellow cap featuring two half-moons (one directed skyward, one groundward), symbolises the union of animal, plant, and spiritual energies.
+  reading: |
+    In a reading, The Fool evokes an enormous burst of energy. If he looks toward a card, he charges it with creative energy; if moving away, he indicates leaving one situation to invest in another. He represents liberation, flight, and the initiatory crossing through madness and death, showing that the capacity to act emerges even from chaos.
+  monologue: |
+    "Did you know that transformation of consciousness is possible at any moment? You can change your self-perception suddenly. Many believe that taking action means triumphing over the Other – what a mistake! To act, you must shatter the imposed illusion of the ego and expand your boundaries without end.
+    
+    Enter a trance, allow yourself to be possessed by a force greater than your own – an impersonal energy that frees your original sacred madness to speak.
+    
+    Cease being merely a witness to your life; become an actor in the eternal present, where time ceases to exist.
+    
+    I am The Fool – the embodiment of pure, liberating potential. Follow my lead, and let your energy flow unrestrained into action."
+---
+
+- arcana_number: "I"
+  series: "I-X"
+  name: "The Magician / Le Bateleur"
+  keywords:
+    - "Shrewdness"
+    - "Initiation"
+    - "Beginning"
+    - "Need for Aid"
+    - "Dexterity"
+    - "Youth"
+    - "Potentiality"
+    - "Concrete Expression"
+    - "Disciple"
+    - "Malice"
+    - "Verve"
+    - "Talent"
+    - "Trickster (sacred)"
+  interpretations: |
+    Traditional interpretations include: Beginning, Prestidigitator, Con Man, Player, Hidden Depths, New Enterprise, New Studies, Professional Renewal, Relationship Beginnings, Debut, Shrewdness, Dexterity, Persuasion, Multiple Talents, Possessing All You Need to Act, and the Spiritualisation of Matter.
+  description: |
+    The Magician, bearing the number one, contains the entirety of potential – the original point from which a universe emerges. For him, all is possible. Arrayed before him on a table are various elements at his disposal, and his inexhaustible pouch suggests abundance.
+    
+    Though depicted as male, The Magician is inherently androgynous, bridging light and shadow, the unconscious and the superconscious. He holds an active wand in his left hand and a receptive pentacle in his right. The yellow coin, resembling a miniature sun, symbolises both perfection and the necessary attention to daily needs. The blue wand channels cosmic energy, and a mysterious extra flesh-coloured element hints at extraordinary dexterity.
+    
+    His table, supported by three legs (with the suggestion of a hidden fourth), symbolises the leap from possibility to action. The number three also intimates the role of the mind, with light blue connoting spiritual receptivity, while his yellow shoes imply a grounded, intelligent connection to the Earth.
+    
+    Notably, three dice on his table each show 1, 2, and 4; together, they total 21 – the same as The World (XXI) – suggesting that The Magician holds the entire Tarot within his grasp. He also wields the four Suits of the Minor Arcana, signifying that truth is achieved by transcending illusion.
+  reading: |
+    In a reading, The Magician signifies a beginning filled with rapid reasoning and abundant talent. He calls for decisive action and represents the moment when one must choose, leaving behind the limitless potential of youth for the clarity of commitment.
+  monologue: |
+    "I exist fully in the present. Every action I take is seeded in this moment – a single step that defines your future. Discard the chains of past regrets and future fears. Embrace the infinite potential that is your birthright.
+    
+    I, The Magician, stand at the crossroads of possibility and realisation. Let my example inspire you: step forward, commit to your choice, and transform the raw energy within you into tangible creation."
+---
+
+- arcana_number: "II"
+  series: "I-X"
+  name: "The High Priestess / La Papesse"
+  keywords:
+    - "Faith"
+    - "Knowledge"
+    - "Patience"
+    - "Sanctuary"
+    - "Fidelity"
+    - "Purity"
+    - "Solitude"
+    - "Silence"
+    - "Severity"
+    - "Matriarchy"
+    - "Rigor"
+    - "Gestation"
+    - "Virginity"
+    - "Cold"
+    - "Resignation"
+  interpretations: |
+    Traditional interpretations include: Accumulation, Preparation, Study, Virginity, Writing, Expectation, Constancy, Retreat, Coldness, Isolation, and the need for warm spiritual nurturing.
+  description: |
+    The High Priestess bears the number two – a number not seen as a sum (1+1) but as a pure value symbolising accumulation. Seated beside a pristine egg, she represents both her own gestation and the potential encapsulated within the egg. She is the embodiment of untainted purity and the inner well of potential that remains untouched by the world's defilements.
+    
+    Imprisoned by a curtain that descends from the heavens, she evokes images of cloisters and sacred mysteries. Often associated with the Virgin Mary or Isis, her four-pointed headdress connects her wisdom to the cardinal directions, bridging the material and the spiritual. The open book she holds – which reflects her inner self – waits to be deciphered and awakened.
+    
+    Three small crosses on her chest affirm that, though she is ensconced in matter, her essence remains divine.
+  reading: |
+    In a reading, The High Priestess may point to a significant female presence – a mother, a wise elder, or a guide – who offers a model of purity and spiritual strength. She may also indicate matters of study or introspection, urging one to seek the wisdom that lies beneath the surface.
+  monologue: |
+    "I have formed an alliance with the mystery of the divine. In me, the material world is revealed as a tapestry of sacred energy. I am the silent keeper of untarnished truth, the virginal witness to your inner potential.
+    
+    Approach me with reverence, free of worldly impurities, and I shall unveil the secrets that lie hidden within your soul."
+---
+
+- arcana_number: "III"
+  series: "I-X"
+  name: "The Empress / L'Impératrice"
+  keywords:
+    - "Fertility"
+    - "Creativity"
+    - "Seduction"
+    - "Desire"
+    - "Power"
+    - "Feelings"
+    - "Enthusiasm"
+    - "Nature"
+    - "Elegance"
+    - "Abundance"
+    - "Harvest"
+    - "Beauty"
+    - "Hatching"
+    - "Adolescence"
+  interpretations: |
+    Traditional interpretations include: Beauty, Fertility, Mistress, Motherhood, Seductiveness, Creative Burst, Charm, and the energetic transition from virginity to full creative expression.
+  description: |
+    The Empress represents the explosive third stage – where all that has been accumulated erupts into life. This card symbolises the moment when an egg bursts forth, mirroring the onset of puberty and the awakening of desire and creative power. She holds a sceptre, an emblem of authority, near her genital area, with a tiny green leaf hinting at nature’s eternal spring. A small yellow band on her sceptre suggests that her creative power is exercised with intelligence. Her open posture implies readiness for birth or self-generation, complemented by a baptismal font and a crescent moon in her red robe that recalls the High Priestess’s purity.
+    
+    Her light-blue throne, resembling heavenly wings, reinforces her role as the nurturer from whom all growth flows.
+  reading: |
+    In a reading, The Empress inspires creativity and passion. She may represent the soul of youth, urging one to embrace the exuberance of creative energy, or, for an older individual, the rebirth of a long-dormant potential.
+  monologue: |
+    "I am the embodiment of life's creative force. I burst forth in a myriad of forms, nurturing the world with my boundless energy. Let me awaken your inner garden – where passion and beauty intertwine, and where every seed of desire blossoms into a vibrant reality."
+---
+
+- arcana_number: "IIII"
+  series: "I-X"
+  name: "The Emperor / L'Empereur"
+  keywords:
+    - "Stability"
+    - "Domination"
+    - "Power"
+    - "Responsibility"
+    - "Rationalism"
+    - "Support"
+    - "Government"
+    - "Matter"
+    - "Solidity"
+    - "Leader"
+    - "Balance"
+    - "Order"
+    - "Father"
+  interpretations: |
+    Traditional interpretations include: Authority, Protection, Economic and Familial Stability, Uprightness, and sometimes the pitfalls of patriarchal dominance.
+  description: |
+    The Emperor, bearing the number four, epitomises stability – as solid as a square. The number four, reminiscent of the four legs of a table or altar, symbolises material security. It also echoes the tetragrammaton, the four-letter divine name in Hebrew tradition. A cross on his chest underscores the universal laws he upholds.
+    
+    Seated or poised to act, he displays both a receptive left hand and a dominant right hand. His red shoes, akin to those of The Fool, mark his spiritual journey, while the light-blue ground beneath him suggests a path that is both earthly and transcendent. Intricate symbols in his attire hint at the union of intellect and spirit.
+  reading: |
+    In readings, The Emperor stands for the paternal figure, a stabilising force in personal and material life. He may signal financial security, authority, or the need to structure one’s world with rational order.
+  monologue: |
+    "I am the very embodiment of strength and order. My presence banishes weakness and instils the assurance of stability. Trust in my power, for through discipline and structure, your life will find its rightful balance."
+---
+
+- arcana_number: "V"
+  series: "I-X"
+  name: "The Pope / Le Pape"
+  keywords:
+    - "Wisdom"
+    - "Ideal"
+    - "Communication"
+    - "Teaching"
+    - "Vertical"
+    - "Plan"
+    - "Mediator"
+    - "Faith"
+    - "Guide"
+    - "Example"
+    - "Marriage"
+    - "Spiritual Power"
+    - "Saintliness"
+  interpretations: |
+    Traditional interpretations include: Master, Teacher, Spiritual Guide, Intermediary, and the embodiment of the union between heaven and earth. It may also point to the influence of religious dogma and the transmission of divine wisdom.
+  description: |
+    The Pope, numbered five, bridges the material and the divine. He extends beyond the foundational stability of four to forge a path towards higher ideals. Acting as a conduit, he receives from the heavens and transmits to his disciples. His throne, adorned with a ladder and a multi-tiered cross, symbolises the ascent from matter to spirit. His dual-coloured hands and the subtle contrasts in his attire evoke the necessary balance between imparting knowledge and retaining a measure of mystery.
+  reading: |
+    In a reading, The Pope may denote a master or teacher, an idealised paternal figure, or a signifier of marriage and union. He calls for the merging of the spiritual with the practical.
+  monologue: |
+    "I am the mediator between the divine and the earthly realms. In my presence, the sacred becomes accessible, and opposites are reconciled. Embrace my guidance and allow the wisdom of the heavens to illuminate your path."
+---
+
+- arcana_number: "VI"
+  series: "I-X"
+  name: "The Lover / L'Amoureux"
+  keywords:
+    - "Union"
+    - "Emotional Life"
+    - "Choice"
+    - "Conflict"
+    - "Ambiguity"
+    - "Trio"
+    - "Social Life"
+    - "Community"
+    - "Siblings"
+    - "Passion"
+  interpretations: |
+    Traditional interpretations include: Social Interaction, Joy, New Union, Choices in Love, and the merging of emotional and sexual energies. The card reflects the complexities of interpersonal relationships and the union of multiple facets within the self.
+  description: |
+    Although named in the singular, The Lover displays multiple human figures, symbolising the interplay of diverse forces – be they internal or relational. It marks the first step into the square of Heaven, transitioning from imaginative desire to active expression. The positioning of the figures, their interlaced gestures, and subtle cues suggest a union of the intellect, the emotion, and the sexual centre.
+  reading: |
+    In a reading, The Lover prompts reflection on one’s emotional life, highlighting both union and conflict. It may signal a choice or indicate the quality of relationships within one’s social or familial circle.
+  monologue: |
+    "I am the embodiment of passion and union. I represent the delicate balance between desire and choice. Look within to discern the harmony that binds your inner forces, and let this union guide you toward a deeper, more authentic connection with both yourself and the world around you."
+---
+
+- arcana_number: "VII"
+  series: "I-X"
+  name: "The Chariot / Le Chariot"
+  keywords:
+    - "Action"
+    - "Triumph"
+    - "Victory"
+    - "Journey"
+    - "Dynamism"
+    - "Conquest"
+    - "Guidance"
+    - "Unity of Opposites"
+  interpretations: |
+    Traditional interpretations include: Victory, Successful Undertaking, Journey, and the harmonisation of internal and external energies to achieve triumph. It also symbolises the unification of contrasting forces.
+  description: |
+    The Chariot, numbered seven, epitomises decisive action. It features a noble driver—a prince crowned and resolute—steering a chariot pulled by two horses that symbolise complementary male and female energies. The chariot’s appearance, rooted in a flesh-coloured square and set against a light-blue background, suggests movement that is in tune with cosmic rhythms. Subtle elements like the stars above and the masks on his shoulders highlight the interplay between past and future, and between spirit and matter.
+  reading: |
+    In a reading, The Chariot indicates forward motion, conquest, and the successful amalgamation of internal drives into decisive action.
+  monologue: |
+    "I am the force that propels you forward. In my presence, hesitation fades and your inner power converges into one unstoppable drive. Embrace the journey, for every step you take is a triumph over inertia, a bold stride into the realm of victory."
+---
+
+- arcana_number: "VIII"
+  series: "I-X"
+  name: "Justice / La Justice"
+  keywords:
+    - "Balance"
+    - "Perfection"
+    - "Judgement"
+    - "Equality"
+    - "Clarity"
+    - "Fairness"
+  interpretations: |
+    Traditional interpretations include: Balance, Stability, Confronting Reality, Feminine Perfection, and the enactment of cosmic laws. It is concerned with the fair distribution of consequences and the quest for inner and outer harmony.
+  description: |
+    Justice, assigned the number eight, symbolises perfection through the union of two circles – one representing heaven and the other earth. Though her scales and sword are designed for symmetry, subtle asymmetries remind us that true balance often emerges through overcoming rigid uniformity. Her direct gaze acts as both mirror and call to self-assessment.
+  reading: |
+    In a reading, Justice calls for an honest evaluation of one’s actions and decisions. It urges the removal of illusion and the establishment of fairness, both externally and within oneself.
+  monologue: |
+    "I am the measure of truth, the scale upon which every deed is weighed. In my steadfast presence, falsehood is stripped away, leaving only what is just. Embrace my call to fairness and let your inner truth shine forth."
+---
+
+- arcana_number: "VIIII"
+  series: "I-X"
+  name: "The Hermit / L'Hermite"
+  keywords:
+    - "Solitude"
+    - "Wisdom"
+    - "Letting Go"
+    - "Retreat"
+    - "Reflection"
+    - "Therapy"
+    - "Crisis"
+    - "Experience"
+    - "Ancient"
+    - "Silence"
+  interpretations: |
+    Traditional interpretations include: Positive Crisis, Guidance, Solitude, Elderly Wisdom, and the necessity of retreat for inner illumination. It signifies a deliberate withdrawal to seek deeper insight.
+  description: |
+    The Hermit, numbered nine, is a unique blend of active and receptive energy – symbolised by its multiplicative nature (3×3). He retreats with a lantern that illuminates the path of inner wisdom, much like a scholar or guide. His layered, somewhat austere appearance – with dark-yellow hair and crescent moons – conveys both the chill of isolation and the warmth of profound insight.
+  reading: |
+    In a reading, The Hermit indicates a time for introspection, a necessary pause for meditation, and the pursuit of inner guidance away from external distractions.
+  monologue: |
+    "I have journeyed into the depths of silence and emerged with a light that guides you. In the stillness of solitude, I reveal the truths that dwell within. Take this moment to step back, reflect, and rediscover the wisdom that resides in your own heart."
+---
+
+- arcana_number: "X"
+  series: "I-X"
+  name: "The Wheel of Fortune / La Roue de Fortune"
+  keywords:
+    - "Fortune"
+    - "Cycle"
+    - "Change"
+    - "Renewal"
+    - "Fate"
+    - "Eternal Return"
+    - "Impasse"
+    - "Transformation"
+  interpretations: |
+    Traditional interpretations include: The end of a cycle, the beginning of a new one, and the perpetual motion of fate. It underscores that all life is in constant flux and that every end heralds a new start.
+  description: |
+    The Wheel of Fortune, numbered ten, concludes the first decimal cycle. Its circular form, complete with a handle, symbolises the turning of destiny. Though its outer sections may seem static, the central point—its heart—reveals the transformative spark that propels change. This card teaches that even apparent stasis is but a prelude to renewal.
+  reading: |
+    In a reading, The Wheel of Fortune marks a turning point. It suggests that circumstances are shifting, that a cycle is ending, and a new phase is imminent. Adaptability and acceptance of change are essential.
+  monologue: |
+    "I am the eternal cycle of life, turning inexorably with every moment. Embrace the rhythm of change, for every descent is followed by an ascent. I am the constant reminder that all things are transient, and in my turning, you find the promise of a new beginning."

@@ -252,16 +252,13 @@
     <!-- Left column: Chat -->
     <div id="chat-wrapper">
       <div id="chat-container"></div>
-
       <div id="chat-bottom-container">
         <div id="welcome-message"></div>
-
         <!-- Inline context input appears here when user picks a spread -->
         <div id="inline-context-container">
           <input type="text" id="context-input" placeholder="Type to make a question or seek advice..." />
           <button id="inline-send-button" disabled>Ask the Tarot</button>
         </div>
-
         <!-- Speed dial container (API calls) -->
         <div id="speed-dial-container" style="margin-top: 10px; display: flex; gap: 10px;">
           <button id="btn-random-card">Single Card Read</button>
@@ -276,7 +273,6 @@
         </div>
       </div>
     </div>
-
     <!-- Right column: Cards -->
     <div id="cards-wrapper">
       <div id="card-images-container"></div>
@@ -310,14 +306,13 @@
     const contextInput = document.getElementById("context-input");
     const inlineSendButton = document.getElementById("inline-send-button");
 
-    // Modal elements for card zoom
+    // Modal elements for card zoom/details
     const modal = document.getElementById("card-modal");
     const modalImage = document.getElementById("modal-image");
     const closeModal = document.querySelector("#card-modal .close");
 
-    let currentSpreadType = ""; // e.g., "random card", "3 card spread", "5 card spread"
+    let currentSpreadType = "";
 
-    // Function to highlight the active button (for API call buttons)
     function setActiveButton(clickedBtn) {
       btnRandomCard.classList.remove("active-button");
       btnThreeCard.classList.remove("active-button");
@@ -325,7 +320,6 @@
       clickedBtn.classList.add("active-button");
     }
 
-    // Function to show a user prompt in the chat container
     function addUserPrompt(promptText) {
       const promptDiv = document.createElement("div");
       promptDiv.classList.add("user-prompt");
@@ -334,7 +328,6 @@
       chatContainer.scrollTop = chatContainer.scrollHeight;
     }
 
-    // Function to show an assistant (GPT) message
     function addAssistantMessage(content) {
       const messageDiv = document.createElement("div");
       messageDiv.classList.add("message", "assistant-message");
@@ -343,13 +336,12 @@
       chatContainer.scrollTop = chatContainer.scrollHeight;
     }
 
-    // Clear old card images
     function clearCardImages() {
       cardImagesContainer.innerHTML = "";
       cardImagesContainer.classList.remove("plus-layout", "three-card-layout");
     }
 
-    // Add cards to the DOM
+    // Updated: addCardImages now only displays card images
     function addCardImages(cards, layout) {
       clearCardImages();
       if (layout === "plus") {
@@ -368,14 +360,35 @@
       });
     }
 
-    // Main function to send the query to the backend (API call)
+    // New function: display card details in the chatbox on the left
+    function addCardDetailsToChat(cards) {
+      let details = "";
+      cards.forEach(card => {
+        details += `<strong>${card.name}</strong><br>`;
+        if (card.keywords && card.keywords.length > 0) {
+          details += `<em>Keywords:</em> ${card.keywords.join(", ")}<br>`;
+        }
+        if (card.interpretations) {
+          details += `<em>Interpretations:</em> ${card.interpretations}<br>`;
+        }
+        if (card.description) {
+          details += `<em>Description:</em> ${card.description}<br>`;
+        }
+        if (card.reading) {
+          details += `<em>Reading:</em> ${card.reading}<br>`;
+        }
+        if (card.monologue) {
+          details += `<em>Monologue:</em> ${card.monologue}<br>`;
+        }
+        details += `<br>`;
+      });
+      addAssistantMessage(details);
+    }
+
     function sendQuery(queryString) {
-      // Clear chat & images for each new reading
       chatContainer.innerHTML = "";
       welcomeMessageDiv.innerText = "";
       clearCardImages();
-
-      // Add user's query to chat
       addUserPrompt(queryString);
 
       fetch("/query", {
@@ -392,6 +405,8 @@
       .then(data => {
         if (data.cards && data.cards.length > 0) {
           addCardImages(data.cards, data.layout);
+          // Move card details to the chatbox
+          addCardDetailsToChat(data.cards);
         }
         if (!data.synthesis || data.synthesis.trim() === "") {
           if (data.error) {
@@ -409,7 +424,6 @@
       });
     }
 
-    // Show an inline text input for user to type the question (for API calls)
     function showInlineContext(spreadType) {
       welcomeMessageDiv.innerText = "";
       currentSpreadType = spreadType;
@@ -419,13 +433,11 @@
       contextInput.focus();
     }
 
-    // Enable or disable the Send button based on input length
     function handleInputChange() {
       const userText = contextInput.value.trim();
       inlineSendButton.disabled = (userText.length === 0);
     }
 
-    // Handle inline context submission (for API calls)
     function handleContextSubmission() {
       const userContext = contextInput.value.trim();
       if (userContext.length === 0) return;
@@ -437,7 +449,6 @@
       sendQuery(finalQuery);
     }
 
-    // API call button event listeners
     btnRandomCard.addEventListener("click", () => {
       setActiveButton(btnRandomCard);
       showInlineContext("random card");
@@ -451,7 +462,6 @@
       showInlineContext("5 card spread");
     });
 
-    // Inline context send button events
     inlineSendButton.addEventListener("click", handleContextSubmission);
     contextInput.addEventListener("keydown", function(event) {
       if (event.key === "Enter") {
@@ -461,11 +471,7 @@
     });
     contextInput.addEventListener("input", handleInputChange);
 
-    // ----------------------------------------------------------------
-    // Client-side card drawing logic (for "Just Cards" buttons)
-    // ----------------------------------------------------------------
-
-    // Canonical deck array (client-side copy)
+    // Client-side card drawing logic for "Just Cards" buttons remains unchanged.
     const CANONICAL_CARDS = [
       "The Fool", "The Magician", "The High Priestess", "The Empress", "The Emperor",
       "The Hierophant", "The Lovers", "The Chariot", "Strength", "The Hermit",
@@ -486,12 +492,10 @@
       "Page of Pentacles", "Knight of Pentacles", "Queen of Pentacles", "King of Pentacles"
     ];
 
-    // Utility function to get a card image URL (mirroring server logic)
     function getCardImage(cardName) {
       return "/static/cards/" + cardName.toLowerCase().replace(/ /g, "_") + ".png";
     }
 
-    // Function to draw cards client-side based on spread type
     function drawCardsForSpreadClient(spreadType) {
       function getRandomCard() {
         return CANONICAL_CARDS[Math.floor(Math.random() * CANONICAL_CARDS.length)];
@@ -510,14 +514,12 @@
           if (!chosen.includes(card)) chosen.push(card);
         }
         return { cards: chosen, layout: "three" };
-      } else { // single card
+      } else {
         return { cards: [getRandomCard()], layout: "default" };
       }
     }
 
-    // Function to display just the cards without an API call or inline context
     function displayJustCards(spreadTypeKey) {
-      // Clear previous chat and hide inline context
       chatContainer.innerHTML = "";
       inlineContextContainer.style.display = "none";
       welcomeMessageDiv.innerText = (spreadTypeKey === "single" ? "Single card spread" :
@@ -532,7 +534,6 @@
       addCardImages(cards, result.layout);
     }
 
-    // Event listeners for the new "Just Cards" buttons
     btnJustSingle.addEventListener("click", () => {
       displayJustCards("single");
     });
@@ -543,9 +544,6 @@
       displayJustCards("5-card");
     });
 
-    // ----------------------------------------------------------------
-    // Modal for Card Zoom
-    // ----------------------------------------------------------------
     closeModal.addEventListener("click", () => {
       modal.style.display = "none";
     });
@@ -557,9 +555,8 @@
       }
     });
 
-    // Show welcome message on page load
     document.addEventListener("DOMContentLoaded", () => {
-      welcomeMessageDiv.innerText = "Welcome to Codex Arcana! Click one of the buttons below to get started. Use the Read options if you seek an interpretation or Spread to a quick draw form the deck. As above, so below. Ask and you shall know.";
+      welcomeMessageDiv.innerText = "Welcome to Codex Arcana! Click one of the buttons below to get started. Use the Read options if you seek an interpretation or Spread for a quick draw from the deck. As above, so below. Ask and you shall know.";
     });
   </script>
 </body>

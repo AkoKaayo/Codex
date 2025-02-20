@@ -1,0 +1,306 @@
+# minor_arcana_cups.yml
+
+overview: |
+  The Cups in the Minor Arcana represent the entire spectrum of emotional life, from love’s 
+  earliest stirrings to its transcendent states. Rooted in feelings, intuition, and relational 
+  bonds, each card (Ace through Ten) narrates a specific stage in the development of the heart. 
+  Whether expressing pure potential or culminating in universal love, the suit of Cups reminds 
+  us that the emotional realm—like water—must flow to stay healthy, or risk stagnation and sorrow.
+
+suit: "Cups"
+
+cards:
+  - number: "Ace"
+    name: "Ace of Cups"
+    keywords:
+      - "Love in potential"
+      - "Emotional abundance"
+      - "Cathedral of the heart"
+      - "Infinite possibilities"
+      - "Overflowing chalice"
+    interpretations: |
+      The Ace of Cups symbolises love in its pure potential—a cathedral or chalice that 
+      is still closed yet brimming with promise. It encompasses every shade of emotional 
+      life, from spiritual devotion to romantic euphoria, and reminds us that love 
+      ceaselessly renews itself like an everlasting well. 
+      
+      Negative aspects include unrequited or obsessive longing, a sense of emptiness 
+      if one fails to pour this love into the world, or an insatiable emotional need 
+      that can manifest as jealousy, bitterness, or smothering demands.
+    description: |
+      At the card’s base lies a fresh, flesh-coloured structure—virginal matter signifying 
+      the newborn potential of the heart. Above it, a layered “temple” or “cup” ascends, 
+      merging elements of spiritual intelligence (the sword-like tip) and receptive 
+      feeling. Concentric circles—green for hope, red for passion—evoke past and future 
+      times, emphasising that love spans every dimension.
+      
+      Three palm leaves at the bottom represent the dynamic, growing connection between 
+      mind (blue) and matter (red), culminating in a halo of pure white light. This entire 
+      structure is a chalice of cosmic love. Yet its gift must be shared—if this cup 
+      never empties, its bounty goes stale.
+    reading: |
+      In a reading, the Ace of Cups heralds a fresh emotional or spiritual chapter, beckoning 
+      you to open your heart. It may point to new romance, forgiveness, or creative inspiration 
+      founded in empathy. Embrace its promise, and let feelings flow freely rather than 
+      remain locked in yearning.
+    monologue: |
+      "I am the wellspring of inexhaustible love, poised to overflow into your world. 
+      Come drink of my waters, and discover that your heart can hold the entire universe."
+
+  - number: "Two"
+    name: "Two of Cups"
+    keywords:
+      - "Amorous daydream"
+      - "Union or pairing"
+      - "Preparation for love"
+      - "Hesitation"
+      - "Oedipal echo"
+    interpretations: |
+      The Two of Cups signifies a receptive emotional state in which affection and longing 
+      accumulate, though not yet realised. It is the realm of amorous fantasy: the desire 
+      for the Other is shaped by idealised images—potentially reflecting family patterns 
+      or childhood dreams. 
+      
+      Positively, it sets the stage for genuine connection once the heart dares to move 
+      beyond fantasy. Negatively, one may remain confined to daydreams or cling to a childlike 
+      vision of love that avoids mature engagement.
+    description: |
+      Often illustrated with a central or mirrored arrangement of cups, the card emphasises 
+      duality: two vessels poised for union. Hidden angels or a phoenix in some depictions 
+      remind us that these daydreams can be sublimated into genuine relationships—or 
+      descend into unfulfilled illusions if no real step is taken.
+    reading: |
+      In a reading, the Two of Cups indicates that an emotional attraction or partnership 
+      is forming but not fully tangible. Recognise the difference between reverie and 
+      reality, and muster the courage to let love step into the world.
+    monologue: |
+      "Within me, your heart twinkles with potential but stands untested. Let longing 
+      become motion, and imagination turn to genuine exchange; only then can love 
+      truly flourish."
+
+  - number: "Three"
+    name: "Three of Cups"
+    keywords:
+      - "Initial burst of love"
+      - "Romantic ideal"
+      - "Joyous fanaticism"
+      - "Youthful passion"
+      - "Uncertain consequences"
+    interpretations: |
+      The Three of Cups symbolises the vibrant explosion of first love, charged with 
+      adolescent energy or renewed passion at any age. Enthusiasm soars—yet one risks 
+      heartbreak if the dream shatters. This card speaks of springlike blossoming 
+      and the exhilarating chaos of new romance.
+    description: |
+      Typically, three cups—arranged in a dynamic structure—express the heart’s 
+      immediate, potent rush. There may be a central cup, brimming with symbolic 
+      flowers, representing the unbridled confidence of youthful ardour. 
+      
+      The raw force of this outbreak can be creative or destructive, depending on 
+      how it’s guided. 
+    reading: |
+      In a reading, the Three of Cups encourages you to relish the excitement of 
+      fresh emotional discovery. It warns, however, against naivety: remain open 
+      to love’s blossoming but be prepared should it not follow your every 
+      adolescent whim.
+    monologue: |
+      "I am the first bloom of passion, green and strong, thrilling as spring 
+      after a long winter. Dare to rejoice, but know that once the petals 
+      open, they may face sun—or storm."
+
+  - number: "Four"
+    name: "Four of Cups"
+    keywords:
+      - "Emotional stability"
+      - "Security in love"
+      - "Family basis"
+      - "Risk of routine"
+      - "Search for comfort"
+    interpretations: |
+      The Four of Cups depicts a securely rooted emotional situation: a love or 
+      family dynamic that, while dependable, risks growing stale. Such stability 
+      can foster deep trust—yet if turned into mere habit or material considerations, 
+      the heart’s vitality withers.
+    description: |
+      Common art for the Four of Cups may show two cups at the base and two at the top, 
+      forming a sturdy pillar. The sense is of love aspiring upward yet anchored 
+      in mutual reliance. Its horizontal leaves or structural elements evoke a 
+      family “table” or platform that supports the relationship.
+    reading: |
+      In a spread, this card calls you to appreciate your emotional foundation while 
+      remaining attentive to personal growth. Whether in marriage, friendship, or 
+      self-love, avoid letting ease stagnate into apathy. Re-examine the heart’s 
+      deeper call.
+    monologue: |
+      "Steady as a well-built home, I shelter your heart from tempests. But do not 
+      bury passion for comfort’s sake—love’s hearth must stay alive with sparks."
+
+  - number: "Five"
+    name: "Five of Cups"
+    keywords:
+      - "New ideal"
+      - "Emotional fanaticism"
+      - "Enthusiasm or deception"
+      - "Threshold of transformation"
+      - "Passage between worlds"
+    interpretations: |
+      The Five of Cups introduces a new emotional ideal—possibly one of spiritual 
+      devotion, romantic extremism, or deep moral longing. Its aura of temptation 
+      can heighten love into a fervent quest, but illusions may abound. The negative 
+      side includes gullibility, unrequited worship, or heartbreak upon realising 
+      the Other is merely human.
+    description: |
+      Often showing a central cup lifted by an ornate structure, the card reveals 
+      how the emotional realm aspires to contact a higher dimension. While noble, 
+      such longing can teeter between saintly transcendence and desperate hero-worship.
+    reading: |
+      In a reading, the Five of Cups indicates a beckoning for deeper emotional 
+      purpose. You may feel drawn to an ideal that transcends the everyday. Ensure 
+      that you keep your bearings, or else illusions and disappointment may unfold.
+    monologue: |
+      "I open a door beyond your usual horizon—an ideal so bright it dazzles. 
+      Let devotion lift you, but guard against illusions; in the effort to reach 
+      the infinite, your heart must still walk upon the earth."
+
+  - number: "Six"
+    name: "Six of Cups"
+    keywords:
+      - "Beauty in love"
+      - "Mirror-like union"
+      - "Self-acceptance"
+      - "Emotional fulfilment"
+      - "Potential narcissism"
+    interpretations: |
+      The Six of Cups suggests the joyous state of emotional harmony—like soulmates 
+      or mirrored halves discovering delight in one another. Whether it is self-love 
+      purified or a meeting with a kindred spirit, the heart experiences beauty 
+      and fullness. 
+      
+      Negatively, this card can point to a self-absorbed couple or emotional egoism 
+      that excludes the world.
+    description: |
+      Artwork often features symmetrical cups or twin arrangements, signifying 
+      reflection, harmony, or sweet union. This balanced formation can speak of 
+      emotional complacency if not shared beyond the pair or individual.
+    reading: |
+      In a spread, the Six of Cups invites you to enjoy the gentle blossoming of 
+      love or a warm friendship. It can indicate a time of nostalgic sweetness 
+      or reconnection with a past joy. Beware, however, of shutting out reality 
+      in a closed love circuit.
+    monologue: |
+      "Within my waters, you see your own reflection, radiant and true. Such 
+      harmony nourishes the soul, yet remember that love shared beyond the self 
+      magnifies its light."
+
+  - number: "Seven"
+    name: "Seven of Cups"
+    keywords:
+      - "Action in the world"
+      - "Humanitarian love"
+      - "Joyous expansion"
+      - "Generosity"
+      - "Potential altruism"
+    interpretations: |
+      The Seven of Cups depicts a love that moves beyond personal confines to 
+      touch the larger community. It carries the impetus to serve, to give 
+      without demanding recognition. However, philanthropic illusions or 
+      meddling paternalism can also arise when boundaries remain unclear.
+    description: |
+      Often there is an axis of cups leading from the grounded personal realm 
+      to the cosmic. Leaves or tendrils reach outward, suggesting emotional 
+      growth directed at humanity or nature itself.
+    reading: |
+      In a reading, the Seven of Cups urges you to employ your emotional gifts 
+      in altruistic pursuits or creative empathy. Ask not only what love can do 
+      for you, but how it may heal others. Remain watchful of pride or saviour 
+      fantasies.
+    monologue: |
+      "My heart brims with desire to give. Let me flow into the world, 
+      washing away sorrow and bridging divides. Yet keep your feet on 
+      the ground, so that mercy does not wander into vanity."
+
+  - number: "Eight"
+    name: "Eight of Cups"
+    keywords:
+      - "Emotional perfection"
+      - "Fullness"
+      - "Cosmic harmony"
+      - "Grace"
+      - "All-encompassing love"
+    interpretations: |
+      The Eight of Cups heralds the heart’s attainment of near-complete perfection: 
+      it is the emotive parallel to emptiness in Swords. Here, every corner of 
+      feeling is saturated with kindness, empathy, and acceptance. Despite this 
+      exaltation, one must remain humble, for perfection can freeze if not 
+      applied in daily living.
+    description: |
+      Illustrations often show a symmetrical or multi-layered arrangement of cups, 
+      some forming dynamic shapes signifying total love. The negative side can be 
+      the fear of “coming down” from such heights or the inability to hold 
+      practicality with spiritual bliss.
+    reading: |
+      In a spread, the Eight of Cups indicates that your emotional life has 
+      reached a strong, beautiful equilibrium. Allow its spiritual power 
+      to act upon your real circumstances. Elevation is meant to be shared, 
+      not hoarded.
+    monologue: |
+      "I am the heart at rest in universal love. Open yourself to me, 
+      and discover a capacity to forgive, to bless, to cherish unreservedly. 
+      Yet do not dwell solely in the heavens; your kindness must grace the earth."
+
+  - number: "Nine"
+    name: "Nine of Cups"
+    keywords:
+      - "Crisis of the heart"
+      - "Letting go"
+      - "Preparing for new dimension"
+      - "Emotional autumn"
+      - "Necessary mourning"
+    interpretations: |
+      The Nine of Cups depicts a stage where prior emotional fulfilment must 
+      be surrendered to permit a new horizon of love. Leaves appear to wilt, 
+      signifying a wise acceptance that certain attachments must be released. 
+      This can be bittersweet but sets the stage for rebirth.
+    description: |
+      Imagery frequently shows a top row of cups still brimming and bottom cups 
+      drooping or withering. The mood is autumnal: a reminder that the cycle 
+      of love, like the seasons, requires letting go of old petals so fresh 
+      blossoms can form.
+    reading: |
+      In a reading, the Nine of Cups suggests a crisis or turning point in 
+      emotional life. Though sadness may accompany the farewell, it paves 
+      the way for deeper love or a fresh emotional identity.
+    monologue: |
+      "I am the hush before rebirth, the moment of farewell to a love 
+      that no longer grows. Grieve if you must, for tears water 
+      the seeds of tomorrow’s blossoming."
+
+  - number: "Ten"
+    name: "Ten of Cups"
+    keywords:
+      - "Culmination"
+      - "Universal love"
+      - "Completion of a cycle"
+      - "Overflowing heart"
+      - "Awaiting new service"
+    interpretations: |
+      The Ten of Cups marks the completion of the cups journey: nine open 
+      cups plus a tenth that is sealed, signifying love that no longer 
+      needs anything for itself. It stands ready to serve the world or 
+      evolve into a brand-new cycle. Yet if one clings to this “final” 
+      contentment, stagnation may result.
+    description: |
+      Typically, the arrangement shows an uppermost cup sealed off in a 
+      state of perfect fullness—love’s pinnacle. The momentum is paused, 
+      awaiting an impetus to apply this emotional wealth to another path 
+      (like the Ace of Pentacles, or a spiritual calling).
+    reading: |
+      In a reading, the Ten of Cups tells you that you have tasted 
+      the maximum sweetness of a completed cycle. The heart stands 
+      fulfilled, but life’s flow calls you onward. Use your love 
+      to bless, guide, or embark on a new dream.
+    monologue: |
+      "I have reached the summit of the heart’s delight, and yet 
+      I yearn to pour myself forth anew. Let me not be hoarded 
+      in a golden chalice; your love is completed only when 
+      it serves a greater awakening."

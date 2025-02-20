@@ -1,0 +1,233 @@
+# degrees.yml
+
+- degree: "Alpha"
+  synonyms:
+    - "Alpha"
+    - "Zero"
+  related_arcana:
+    - "The Fool. Large contribution of initial energy."
+  warnings: "Risk of unfocused potential and endless revolving without manifestation."
+  meaning: |
+    Alpha symbolizes pure potentiality—a raw, unformed creative energy that is the seed of all possibilities.
+  shadow: |
+    The danger lies in lacking direction and succumbing to naive illusions if this energy remains undirected.
+  commentary: |
+    As the opener of the cycle, Alpha represents the beginning from which all subsequent degrees emerge.
+
+- degree: "1"
+  synonyms:
+    - "Ace"
+    - "One"
+    - "I"
+    - "XI"
+  related_arcana:
+    - "The Magician. Everything is in the state of potential. He must learn to choose."
+    - "Strength. Awakening of Animal Energy."
+    - "Ace of Swords. All thoughts are possible. What we think becomes reality."
+    - "Ace of Cups. Our entire emotional life is contained therein, with infinite possibilities for loving and hating."
+    - "Ace of Pentacles. Material potential: health, money, house, work..."
+    - "Ace of Wands. Creative and sexual energy in the state of potential."
+  warnings: "Remaining virtual, being incapable of taking the initial step into reality."
+  meaning: |
+    Degree 1 represents the seed of creation and individuality—a state brimming with potential but untested by experience.
+  shadow: |
+    There is a danger of remaining stuck in potential, failing to commit and actualize the energy.
+  commentary: |
+    This degree is a call to action; potential must be transformed into reality through a decisive first step.
+
+- degree: "2"
+  synonyms:
+    - "Two"
+    - "II"
+    - "XII"
+  related_arcana:
+    - "The High Priestess. Cloistered, she studies while sitting on an egg. Prepares to act but remains in gestation."
+    - "The Hanged Man. Bound with his hands behind his back, he does not choose; symbolizing meditation and the gift of self."
+    - "Two of Swords. Accumulation of thought; reveries without action or mental structure."
+    - "Two of Cups. Amorous daydreaming: 'I don't know what love is, but I am getting ready for it.'"
+    - "Two of Pentacles. A contract in preparation, not yet signed—promises pending fulfillment."
+    - "Two of Wands. Puberty, the gathering of sexual energy."
+  warnings: "Risk of inertia and potential decay if energy remains untransformed."
+  meaning: |
+    Degree 2 introduces duality and polarity—a phase of accumulation and gestation where energy is gathered in readiness for action.
+  shadow: |
+    Without transformation, the energy risks stagnation and can decay into inactivity.
+  commentary: |
+    This stage sets the foundation for the creative explosion that follows, preparing raw potential for dynamic change.
+
+- degree: "3"
+  synonyms:
+    - "Three"
+    - "III"
+    - "XIII"
+  related_arcana:
+    - "The Empress. Creative violence of spring; a cyclical reawakening of potent, creative femininity."
+    - "Death. Demolition, revolution, and transformation through the violent destruction of the old."
+    - "Three of Swords. Budding, intense mental activity marked by intellectual enthusiasm and fanaticism."
+    - "Three of Cups. The emergence of ideal and romantic love before deeper union."
+    - "Three of Pentacles. New beginnings in work, projects, or personal growth—often signaling the onset of change."
+    - "Three of Wands. The first pleasure and creation, sometimes marked by impulsive or premature action."
+  warnings: "Risk of chaotic or purposeless bursts of energy leading to disillusionment."
+  meaning: |
+    Degree 3 marks the explosive onset of action—a burst of accumulated energy, often passionate and impulsive.
+  shadow: |
+    Unfocused or premature action may result in disappointment or creative collapse.
+  commentary: |
+    This is the stage of vibrant creativity, where potential is released, but it must soon find structure to avoid chaos.
+
+- degree: "4"
+  synonyms:
+    - "Four"
+    - "IV"
+    - "IIII"
+    - "XIIII"
+  related_arcana:
+    - "The Emperor. A figure of authority and rational order; the power of established laws."
+    - "Temperance. Symbolizes spiritual protection and harmonious inner circulation."
+    - "Four of Swords. The structuring of thought—a 'square' mind capable of clear reasoning."
+    - "Four of Cups. Emotional stability, rooted in family, fidelity, and solid relationships."
+    - "Four of Pentacles. Representing good health, steady income, and a stable foundation."
+    - "Four of Wands. Regularity in passion and creativity, sometimes to the point of monotony."
+  warnings: "Risk of stagnation if stability becomes rigidity."
+  meaning: |
+    Degree 4 signifies stabilization and potency—a solid foundation in material, emotional, and intellectual realms.
+  shadow: |
+    Overemphasis on stability may prevent further evolution, trapping potential in a state of rigidity.
+  commentary: |
+    This degree offers the necessary structure for creative ideas to be harnessed and brought into lasting form.
+
+- degree: "5"
+  synonyms:
+    - "Five"
+    - "V"
+    - "XV"
+  related_arcana:
+    - "The Pope. An instructor and guide, bridging two worlds without abandoning the earthly realm."
+    - "The Devil. A symbol of temptation, deep unconscious drives, and raw creative passion."
+    - "Five of Swords. The emergence of new knowledge or studies, signaling change."
+    - "Five of Cups. Idealized love and emotional fanaticism that can lead to disillusionment."
+    - "Five of Pentacles. The introduction of new consciousness into matter, hinting at emerging possibilities."
+    - "Five of Wands. A sign of new desire, yet warning of lies, betrayal, or unfulfilled promises."
+  warnings: "Risk of deception and betrayal if the transformative energy is misdirected."
+  meaning: |
+    Degree 5 is a transitional phase—a bridge between material stability and higher ideals, challenging the status quo.
+  shadow: |
+    If misdirected, the energy can result in regression or an inability to move forward.
+  commentary: |
+    Acting as an intermediary, this degree pushes one to move beyond comfortable stability toward a new paradigm.
+
+- degree: "6"
+  synonyms:
+    - "Six"
+    - "VI"
+    - "XVI"
+  related_arcana:
+    - "The Lover. Embodies union and the complexities of emotional life, urging one to pursue what they love."
+    - "The Tower. Symbolizes the emergence of what was imprisoned, often through sudden illumination or upheaval."
+    - "Six of Swords. The joy of thoughtful transition and intellectual movement."
+    - "Six of Cups. Meeting a kindred spirit—an encounter that mirrors one's inner self."
+    - "Six of Pentacles. The pleasure of prosperity and balanced exchange."
+    - "Six of Wands. Total creative and sexual pleasure, with a caution against narcissism and complacency."
+  warnings: "Risk of excessive indulgence leading to stagnation and self-absorption."
+  meaning: |
+    Degree 6 celebrates pleasure, beauty, and the joy of pursuing one's passions—a creative expression of life.
+  shadow: |
+    Without further growth, repeated indulgence may lead to narcissism and hinder evolution.
+  commentary: |
+    This stage revels in creative fulfillment and emotional satisfaction, but it must be balanced by continuous progress.
+
+- degree: "7"
+  synonyms:
+    - "Seven"
+    - "VII"
+    - "XVII"
+  related_arcana:
+    - "The Chariot. Embodies conquest, triumph, and the resolute union of mind and matter."
+    - "The Star. Represents the quest for one’s place in the world and the birth of new creative ventures."
+    - "Seven of Swords. Signifies the highest attainment of receptive thought."
+    - "Seven of Cups. Illustrates love in action and humanitarian pursuits."
+    - "Seven of Pentacles. The materialization of spiritual ideals through alchemical work."
+    - "Seven of Wands. Denotes total creative and sexual action, with a caution against misdirected energy."
+  warnings: "Risk of misdirected energy leading to aggression or vanity."
+  meaning: |
+    Degree 7 is characterized by decisive action—a dynamic merging of internal creativity with purposeful external expression.
+  shadow: |
+    If unfocused, this energy may manifest as destructive or egotistical behavior.
+  commentary: |
+    This degree channels creative potential into impactful real-world actions and transformative endeavors.
+
+- degree: "8"
+  synonyms:
+    - "Eight"
+    - "VIII"
+    - "XVIII"
+  related_arcana:
+    - "Justice. Balances necessary values and cuts away the superfluous, ensuring fairness."
+    - "The Moon. Reflects the light of intuition and art, embodying mystery and the cosmic feminine."
+    - "Eight of Swords. Symbolizes the clarity of mind achieved in meditation."
+    - "Eight of Cups. Represents emotional fullness and the pursuit of deeper meaning."
+    - "Eight of Pentacles. Signifies robust health and the prosperity that comes from disciplined effort."
+    - "Eight of Wands. Concentrates the energy needed for creative emergence, while warning of rigidity."
+  warnings: "Risk of becoming trapped in perfection or rigidity, stifling further evolution."
+  meaning: |
+    Degree 8 represents receptive perfection—a harmonious balance where all energies integrate fully.
+  shadow: |
+    Over-adherence to this state can result in an inability to move forward and adapt.
+  commentary: |
+    This degree offers a state of equilibrium that prepares one for the transformative crisis of the next stage.
+
+- degree: "9"
+  synonyms:
+    - "Nine"
+    - "IX"
+    - "VIIII"
+    - "XVIIII"
+  related_arcana:
+    - "The Hermit. Embodies wisdom through solitude and trust in the unknown."
+    - "The Sun. Heralds new beginnings, warmth, and the promise of success."
+    - "Nine of Swords. Signals the onset of positive crisis and new mental insights."
+    - "Nine of Cups. Marks the transition from one emotional state to another."
+    - "Nine of Pentacles. Represents the birthing of new realities at the end of an era."
+    - "Nine of Wands. Embodies the fundamental creative choice to leave behind the old, with a caution against perpetual crisis."
+  warnings: "Risk of prolonged crisis and isolation if the transformative energy is not embraced."
+  meaning: |
+    Degree 9 is a pivotal stage—a necessary crisis that forces the dissolution of old forms to enable new construction.
+  shadow: |
+    Failure to accept change may lead to isolation and an inability to move beyond internal turmoil.
+  commentary: |
+    This degree catalyzes the breakdown of outdated structures, clearing the path for renewal and transformation.
+
+- degree: "10"
+  synonyms:
+    - "Ten"
+    - "X"
+    - "XX"
+  related_arcana:
+    - "The Wheel of Fortune. Symbolizes a complete cycle with a handle to turn, marking both culmination and the need for assistance."
+    - "Judgement. Represents the birth of a new consciousness, calling for spiritual rebirth."
+    - "Ten of Swords. Teaches the intellect to listen through the experience of endings."
+    - "Ten of Cups. Indicates that when emotional fulfillment is achieved, it is time for a new action."
+    - "Ten of Pentacles. Suggests that prosperity can spark new creative ventures."
+    - "Ten of Wands. Warns of creative blockage if one clings too tightly to past achievements."
+  warnings: "Risk of becoming frozen in completion, unable to initiate a new cycle."
+  meaning: |
+    Degree 10 signifies totality—the culmination of one cycle and the threshold for the next.
+  shadow: |
+    A failure to let go may result in stagnation, preventing the emergence of fresh beginnings.
+  commentary: |
+    This degree marks both an ending and a gateway to renewal, urging one to release past completions in favor of new possibilities.
+
+- degree: "Omega"
+  synonyms:
+    - "21"
+    - "XXI"
+    - "The World"
+  related_arcana:
+    - "The World. Great and total realization that reflects the entire symbolic journey of the Tarot."
+  warnings: ""
+  meaning: |
+    Omega embodies the ultimate culmination—a mirror that reflects the entire cycle of creative evolution.
+  shadow: |
+    Minimal shadow exists here, as Omega primarily serves as the summarizing endpoint of the cycle.
+  commentary: |
+    As the closing degree, Omega signifies complete fulfillment while also hinting at the perpetual cycle of renewal.
