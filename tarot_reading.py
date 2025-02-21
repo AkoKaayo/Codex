@@ -38,58 +38,45 @@ def get_ai_response(prompt):
         print(f"AI API Error: {e}")
         return None
 
-def generate_card_insight(card, position, query):
+def generate_card_insight(card, position, query, intention=""):
     """
-    Generate a concise, position-aware interpretation for a given card.
+    Generate a concise, position-aware interpretation for a given card,
+    now incorporating the user's stated intention.
     """
     card_name = card.get("name", "Unknown")
     keywords = card.get("keywords", [])
     interpretations = card.get("interpretations", "")[:150]
     prompt = (
-        f"You are a modern tarot expert. In 5-7 concise sentences, interpret the card "
-        f"'{card_name}' in the '{position}' position for the query: \"{query}\". "
-        f"Focus on these details:\n"
-        f"- Keywords: {', '.join(keywords)}\n"
-        f"- Traditional meaning (brief): {interpretations}\n"
-        f"- Provide insightful, practicable, and actionable advice.\n"
-        f"Keep language clear and modern."
+        f"You are a wise oracle, blending Jungian psychology and mindfulness. "
+        f"Interpret the '{card_name}' in the '{position}' position for someone who shared: "
+        f"'{intention}'\n\n"
+        f"Guidelines:\n"
+        f"- Acknowledge their emotional state without judgment\n"
+        f"- Highlight subconscious patterns or hidden strengths\n"
+        f"- Relate to the theme of '{position}' (e.g., 'Past' = root causes, 'Future' = potential growth)\n"
+        f"- End with one reflective question (e.g., 'What would shift if you embraced...?')\n"
+        f"Use metaphors, avoid clichés, and prioritize agency over fate."
     )
     result = get_ai_response(prompt)
     if result is None or result.startswith("ERROR"):
         return "No interpretation available."
     return result
 
-def generate_spread_synthesis(card_summaries, query, layout, instructions):
+def generate_spread_synthesis(card_summaries, query, layout, instructions, intention=""):
     """
-    Synthesize the individual card insights into an overall oracle analysis.
-    For a 5-card spread, if YAML instructions include a 'five_card_reading' guideline,
-    inject them into the prompt context.
+    Synthesize individual card insights into an overall, therapeutic analysis,
+    emphasizing self-awareness and actionable growth.
     """
     positions_text = "\n".join([f"{s['position']}: {s['text']}" for s in card_summaries])
-    if layout == "plus" and instructions.get("five_card_reading"):
-        guidelines = instructions["five_card_reading"]
-        prompt = (
-            f"You are a seasoned tarot reader. Use the following guidelines as context:\n"
-            f"{guidelines}\n\n"
-            f"Synthesize the following 5-card spread for the query \"{query}\":\n"
-            f"{positions_text}\n\n"
-            "Provide 5-7 insightful paragraphs that:\n"
-            "1. Briefly introduce the general meaning of the individual cards.\n"
-            "2. Explain the meaning of the cards in the context of a 5-card spread.\n"
-            "3. Highlight key decisions or actions recommended.\n"
-            "4. Identify the core narrative linking the cards and connect them sequentially with practical advice.\n"
-            "Use an empathetic, encouraging tone and avoid vague clichés."
-        )
-    else:
-        prompt = (
-            f"You are a seasoned tarot reader. Synthesize the following spread for the query \"{query}\":\n"
-            f"{positions_text}\n\n"
-            "Provide 7-9 insightful paragraphs that:\n"
-            "1. Identify the core narrative linking the cards.\n"
-            "2. Highlight key decisions or actions recommended.\n"
-            "3. Connect the cards sequentially with practical advice.\n"
-            "Use an empathetic, encouraging tone and avoid vague clichés."
-        )
+    prompt = (
+        f"Integrate these cards for someone seeking '{intention}':\n{positions_text}\n\n"
+        f"Guidelines:\n"
+        f"- Identify recurring emotional themes\n"
+        f"- Connect cards to inner conflicts and hidden strengths (avoid focusing solely on external events)\n"
+        f"- Suggest one small actionable step aligned with their intention\n"
+        f"- Use somatic language (e.g., 'notice where this lands in your body')\n"
+        f"Tone: Warm mentor, not distant oracle. Focus on self-compassion and empowerment."
+    )
     result = get_ai_response(prompt)
     if result is None or result.startswith("ERROR"):
         return "Unable to generate synthesis."
@@ -118,7 +105,7 @@ def generate_image_path(card):
     )
     return f"/static/cards/{english_name}.png"
 
-def generate_reading(query):
+def generate_reading(query, intention=""):
     try:
         cards, instructions = load_all_cards('./data')
         instructions = instructions if isinstance(instructions, dict) else {}
@@ -140,7 +127,7 @@ def generate_reading(query):
         for idx, raw_card in enumerate(selected_cards):
             card = ensure_card(raw_card)
             position = positions[idx] if idx < len(positions) else "Additional Insight"
-            summary = generate_card_insight(card, position, query)
+            summary = generate_card_insight(card, position, query, intention)
             cards_info.append({
                 "name": card.get("name", "Mystery Card"),
                 "position": position,
@@ -156,7 +143,7 @@ def generate_reading(query):
             # For a single card reading, use the card's insight directly.
             spread_analysis = card_summaries[0]["text"]
         else:
-            spread_analysis = generate_spread_synthesis(card_summaries, query, layout, instructions)
+            spread_analysis = generate_spread_synthesis(card_summaries, query, layout, instructions, intention)
         return {
             "synthesis": spread_analysis,
             "cards": cards_info,
@@ -173,7 +160,15 @@ app = Flask(__name__)
 @app.route("/query", methods=["POST"])
 def query():
     data = request.get_json()
-    result = generate_reading(data.get("query", ""))
+    user_query = data.get("query", "").strip()
+    intention = data.get("intention", "").strip()
+    if not user_query:
+        return jsonify({"error": "No query provided."}), 400
+
+    app.logger.debug("Received query: %s", user_query)
+    app.logger.debug("Received intention: %s", intention)
+
+    result = generate_reading(user_query, intention)
     return jsonify(result)
 
 if __name__ == '__main__':

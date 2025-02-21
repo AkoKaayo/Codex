@@ -17,17 +17,16 @@ def index():
 def query():
     data = request.get_json()
     user_query = data.get("query", "").strip()
+    intention = data.get("intention", "").strip()  # Capture the user's stated intention
     if not user_query:
         return jsonify({"error": "No query provided."}), 400
 
     app.logger.debug("Received query: %s", user_query)
+    app.logger.debug("Received intention: %s", intention)
 
     try:
-        # Generate the tarot reading based on the query.
-        # This function (to be defined in tarot_reading.py) processes the query,
-        # determines the spread type (e.g., single, 3-card, or 5-card), draws the cards,
-        # and generates a synthesis interpretation.
-        reading_result = tarot_reading.generate_reading(user_query)
+        # Generate the tarot reading based on the query and intention.
+        reading_result = tarot_reading.generate_reading(user_query, intention)
         app.logger.debug("Reading result: %s", reading_result)
     except Exception as e:
         app.logger.error("Error generating reading: %s", e)

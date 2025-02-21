@@ -61,22 +61,21 @@
       font-weight: 200;
       color: #E0E0E0;
     }
-    /* Inline context container: center input + button with spacing */
+    /* Pre-Reading Intention Setting */
     #inline-context-container {
-      display: none; /* hidden by default */
+      display: flex;
       flex-direction: column;
-      justify-content: center;
-      align-items: center;
+      gap: 10px;
       margin-top: 10px;
-      gap: 15px;
     }
-    #inline-context-container input {
+    #intention-section textarea {
       width: 95%;
       padding: 10px;
       background-color: #2A2A2A;
       border: 1px solid #333;
       color: #E0E0E0;
       font-family: 'IBM Plex Mono', monospace;
+      resize: vertical;
     }
     #inline-send-button {
       width: 100%;
@@ -129,18 +128,25 @@
     #card-images-container {
       width: 100%;
     }
-    /* Default: center card(s) for single card scenario */
     #card-images-container:not(.plus-layout):not(.three-card-layout) {
       display: flex;
       align-items: center;
       justify-content: center;
       flex-wrap: wrap;
     }
+    /* Card animations */
     .card-image {
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.5s ease-out, transform 0.5s ease-out;
       margin: 10px;
       text-align: center;
       cursor: pointer;
-      max-width: 300px; /* For single card scenario */
+      max-width: 300px;
+    }
+    .card-image.loaded {
+      opacity: 1;
+      transform: translateY(0);
     }
     .card-image img {
       width: 100%;
@@ -176,9 +182,6 @@
     }
     #card-images-container.plus-layout .card-image:nth-child(5) {
       grid-area: e;
-    }
-    #card-images-container.plus-layout .card-image {
-      margin: 0;
     }
     /* 3-card layout (three-card-layout) */
     #card-images-container.three-card-layout {
@@ -254,18 +257,24 @@
       <div id="chat-container"></div>
       <div id="chat-bottom-container">
         <div id="welcome-message"></div>
-        <!-- Inline context input appears here when user picks a spread -->
+        <!-- Pre-Reading Intention Setting -->
         <div id="inline-context-container">
-          <input type="text" id="context-input" placeholder="Type to make a question or seek advice..." />
-          <button id="inline-send-button" disabled>Ask the Tarot</button>
+          <div id="intention-section">
+            <textarea 
+              id="intention-input" 
+              placeholder="Take a breath. What brings you here today? What question or situation would you like clarity on?"
+              rows="3"
+            ></textarea>
+          </div>
+          <button id="inline-send-button" disabled>Seek Guidance</button>
         </div>
-        <!-- Speed dial container (API calls) -->
+        <!-- Speed dial container -->
         <div id="speed-dial-container" style="margin-top: 10px; display: flex; gap: 10px;">
           <button id="btn-random-card">Single Card Read</button>
           <button id="btn-three-card">Three Card Read</button>
           <button id="btn-five-card">Five Card Read</button>
         </div>
-        <!-- New "Just Cards" speed dial buttons (client-side only) -->
+        <!-- Just Cards speed dial buttons -->
         <div id="just-cards-speed-dial" style="margin-top: 0px; display: flex; gap: 10px;">
           <button id="btn-just-single">Single Card Spread</button>
           <button id="btn-just-three">Three Card Spread</button>
@@ -290,28 +299,26 @@
     const chatContainer = document.getElementById("chat-container");
     const welcomeMessageDiv = document.getElementById("welcome-message");
     const cardImagesContainer = document.getElementById("card-images-container");
+    const intentionInput = document.getElementById("intention-input");
+    const inlineSendButton = document.getElementById("inline-send-button");
 
     // API call buttons
     const btnRandomCard = document.getElementById("btn-random-card");
     const btnThreeCard = document.getElementById("btn-three-card");
     const btnFiveCard = document.getElementById("btn-five-card");
 
-    // New "Just Cards" buttons (client-side)
+    // Just Cards buttons
     const btnJustSingle = document.getElementById("btn-just-single");
     const btnJustThree = document.getElementById("btn-just-three");
     const btnJustFive = document.getElementById("btn-just-five");
 
-    // Inline context input elements
-    const inlineContextContainer = document.getElementById("inline-context-container");
-    const contextInput = document.getElementById("context-input");
-    const inlineSendButton = document.getElementById("inline-send-button");
-
-    // Modal elements for card zoom/details
+    // Modal elements for card zoom
     const modal = document.getElementById("card-modal");
     const modalImage = document.getElementById("modal-image");
     const closeModal = document.querySelector("#card-modal .close");
 
     let currentSpreadType = "";
+    let currentUserPrompt = "";
 
     // Set active button styling
     function setActiveButton(clickedBtn) {
@@ -321,15 +328,14 @@
       clickedBtn.classList.add("active-button");
     }
 
-    // Updated: addUserPrompt now creates a user prompt with a spinner
+    // Create a user prompt element with spinner that displays the spread type and user prompt
     function addUserPrompt(promptText) {
       const promptDiv = document.createElement("div");
       promptDiv.classList.add("user-prompt");
 
-      // Create a span for the prompt text.
-      const textSpan = document.createElement("span");
-      textSpan.innerText = promptText;
-      promptDiv.appendChild(textSpan);
+      // Combine spread type and user prompt text
+      const displayText = `${currentSpreadType} spread about "${promptText}"`;
+      promptDiv.innerText = displayText;
 
       // Create a span for the ASCII spinner.
       const spinnerSpan = document.createElement("span");
@@ -338,7 +344,6 @@
       promptDiv.appendChild(spinnerSpan);
 
       chatContainer.appendChild(promptDiv);
-      // Scroll to the top so the beginning of the new reading is visible.
       chatContainer.scrollTop = 0;
 
       // Start ASCII spinner animation.
@@ -351,7 +356,7 @@
       return { promptDiv, spinnerSpan, spinnerId };
     }
 
-    // Updated: addAssistantMessage now scrolls to the top after adding the assistant's message.
+    // Append the assistant's message
     function addAssistantMessage(content) {
       const messageDiv = document.createElement("div");
       messageDiv.classList.add("message", "assistant-message");
@@ -365,7 +370,7 @@
       cardImagesContainer.classList.remove("plus-layout", "three-card-layout");
     }
 
-    // addCardImages now only displays card images.
+    // Display card images with subtle animations
     function addCardImages(cards, layout) {
       clearCardImages();
       if (layout === "plus") {
@@ -382,21 +387,29 @@
         cardDiv.appendChild(img);
         cardImagesContainer.appendChild(cardDiv);
       });
+      // After a short delay, add the "loaded" class to trigger the animation
+      setTimeout(() => {
+        const cardElements = cardImagesContainer.querySelectorAll('.card-image');
+        cardElements.forEach(elem => {
+          elem.classList.add('loaded');
+        });
+      }, 50);
     }
 
-    // sendQuery now uses addUserPrompt (with spinner) and clears the spinner when the response is received.
-    function sendQuery(queryString) {
+    // Modified sendQuery to include intention text and update the user prompt display
+    function sendQuery(queryString, intention) {
       chatContainer.innerHTML = "";
       welcomeMessageDiv.innerText = "";
       clearCardImages();
 
-      // Add user prompt with spinner.
-      const userPromptObj = addUserPrompt(queryString);
+      // Update the global prompt text for user prompt display
+      currentUserPrompt = intention;
+      const userPromptObj = addUserPrompt(intention);
 
       fetch("/query", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query: queryString })
+        body: JSON.stringify({ query: queryString, intention: intention })
       })
       .then(response => {
         if (!response.ok) {
@@ -405,7 +418,6 @@
         return response.json();
       })
       .then(data => {
-        // Stop and remove the spinner.
         clearInterval(userPromptObj.spinnerId);
         userPromptObj.spinnerSpan.remove();
 
@@ -433,51 +445,80 @@
     function showInlineContext(spreadType) {
       welcomeMessageDiv.innerText = "";
       currentSpreadType = spreadType;
-      contextInput.value = "";
-      inlineSendButton.disabled = true;
-      inlineContextContainer.style.display = "flex";
-      contextInput.focus();
+      intentionInput.value = "";
+      document.getElementById("inline-context-container").style.display = "flex";
+      intentionInput.focus();
     }
 
     function handleInputChange() {
-      const userText = contextInput.value.trim();
+      const userText = intentionInput.value.trim();
       inlineSendButton.disabled = (userText.length === 0);
     }
 
     function handleContextSubmission() {
-      const userContext = contextInput.value.trim();
-      if (userContext.length === 0) return;
-      inlineContextContainer.style.display = "none";
-      let finalQuery = currentSpreadType;
-      if (userContext) {
-        finalQuery += " about " + userContext;
-      }
-      sendQuery(finalQuery);
+      const intentionText = intentionInput.value.trim();
+      if (intentionText.length === 0) return;
+      document.getElementById("inline-context-container").style.display = "none";
+      sendQuery(currentSpreadType, intentionText);
     }
 
-    btnRandomCard.addEventListener("click", () => {
-      setActiveButton(btnRandomCard);
-      showInlineContext("random card");
-    });
-    btnThreeCard.addEventListener("click", () => {
-      setActiveButton(btnThreeCard);
-      showInlineContext("3 card spread");
-    });
-    btnFiveCard.addEventListener("click", () => {
-      setActiveButton(btnFiveCard);
-      showInlineContext("5 card spread");
-    });
-
     inlineSendButton.addEventListener("click", handleContextSubmission);
-    contextInput.addEventListener("keydown", function(event) {
+    intentionInput.addEventListener("keydown", function(event) {
       if (event.key === "Enter") {
         event.preventDefault();
         handleContextSubmission();
       }
     });
-    contextInput.addEventListener("input", handleInputChange);
+    intentionInput.addEventListener("input", handleInputChange);
 
-    // Client-side card drawing logic for "Just Cards" buttons remains unchanged.
+    btnRandomCard.addEventListener("click", () => {
+      setActiveButton(btnRandomCard);
+      showInlineContext("Single");
+    });
+    btnThreeCard.addEventListener("click", () => {
+      setActiveButton(btnThreeCard);
+      showInlineContext("Three");
+    });
+    btnFiveCard.addEventListener("click", () => {
+      setActiveButton(btnFiveCard);
+      showInlineContext("Five");
+    });
+
+    btnJustSingle.addEventListener("click", () => {
+      chatContainer.innerHTML = "";
+      document.getElementById("inline-context-container").style.display = "none";
+      welcomeMessageDiv.innerText = "Single card spread";
+      const result = drawCardsForSpreadClient("single");
+      const cards = result.cards.map(card => ({
+        name: card,
+        image: getCardImage(card)
+      }));
+      addCardImages(cards, result.layout);
+    });
+    btnJustThree.addEventListener("click", () => {
+      chatContainer.innerHTML = "";
+      document.getElementById("inline-context-container").style.display = "none";
+      welcomeMessageDiv.innerText = "Three card spread";
+      const result = drawCardsForSpreadClient("3-card");
+      const cards = result.cards.map(card => ({
+        name: card,
+        image: getCardImage(card)
+      }));
+      addCardImages(cards, result.layout);
+    });
+    btnJustFive.addEventListener("click", () => {
+      chatContainer.innerHTML = "";
+      document.getElementById("inline-context-container").style.display = "none";
+      welcomeMessageDiv.innerText = "Five card spread";
+      const result = drawCardsForSpreadClient("5-card");
+      const cards = result.cards.map(card => ({
+        name: card,
+        image: getCardImage(card)
+      }));
+      addCardImages(cards, result.layout);
+    });
+
+    // Client-side card drawing functions
     const CANONICAL_CARDS = [
       "The Fool", "The Magician", "The High Priestess", "The Empress", "The Emperor",
       "The Hierophant", "The Lovers", "The Chariot", "Strength", "The Hermit",
@@ -525,31 +566,6 @@
       }
     }
 
-    function displayJustCards(spreadTypeKey) {
-      chatContainer.innerHTML = "";
-      inlineContextContainer.style.display = "none";
-      welcomeMessageDiv.innerText = (spreadTypeKey === "single" ? "Single card spread" :
-                                     spreadTypeKey === "3-card" ? "Three card spread" :
-                                     "Five card spread");
-
-      const result = drawCardsForSpreadClient(spreadTypeKey);
-      const cards = result.cards.map(card => ({
-        name: card,
-        image: getCardImage(card)
-      }));
-      addCardImages(cards, result.layout);
-    }
-
-    btnJustSingle.addEventListener("click", () => {
-      displayJustCards("single");
-    });
-    btnJustThree.addEventListener("click", () => {
-      displayJustCards("3-card");
-    });
-    btnJustFive.addEventListener("click", () => {
-      displayJustCards("5-card");
-    });
-
     closeModal.addEventListener("click", () => {
       modal.style.display = "none";
     });
@@ -562,7 +578,7 @@
     });
 
     document.addEventListener("DOMContentLoaded", () => {
-      welcomeMessageDiv.innerText = "Welcome to Codex Arcana! Click one of the buttons below to get started. Use the Read options if you seek an interpretation or Spread for a quick draw from the deck. As above, so below. Ask and you shall know.";
+      welcomeMessageDiv.innerText = "Welcome to Codex Arcana! Click on one of the buttons below to get started. Use the Read options if you seek an interpretation. You can also click Spread for a quick, simple draw from the deck. As above, so below. Ask and you shall know.";
     });
   </script>
 </body>

@@ -1,6 +1,8 @@
 import os
 import yaml
-from pprint import pprint
+import logging
+
+logging.basicConfig(level=logging.DEBUG)
 
 DATA_DIR = './data'
 
@@ -14,7 +16,7 @@ def load_yaml_files(directory):
                     contents = list(yaml.safe_load_all(file))
                     yaml_data[filename] = contents[0] if len(contents) == 1 else contents
                 except yaml.YAMLError as e:
-                    print(f"Error loading {filename}: {e}")
+                    logging.error(f"Error loading {filename}: {e}")
     return yaml_data
 
 def structure_data(loaded_data):
@@ -55,13 +57,13 @@ def load_all_cards(directory):
                 if isinstance(item, dict) and 'name' in item:
                     cards.append(item)
                 else:
-                    print(f"Invalid Major Arcana entry in {part}: {item}")
+                    logging.warning(f"Invalid Major Arcana entry in {part}: {item}")
         elif isinstance(part_data, dict):
             for key, value in part_data.items():
                 if isinstance(value, dict) and 'name' in value:
                     cards.append(value)
                 else:
-                    print(f"Invalid Major Arcana entry in {part}: {key}")
+                    logging.warning(f"Invalid Major Arcana entry in {part}: {key}")
     
     # Process Minor Arcana
     for suit in ['swords', 'cups', 'wands', 'pentacles']:
@@ -70,7 +72,7 @@ def load_all_cards(directory):
             if isinstance(card, dict) and 'name' in card:
                 cards.append(card)
             else:
-                print(f"Invalid Minor Arcana entry in {suit}: {card}")
+                logging.warning(f"Invalid Minor Arcana entry in {suit}: {card}")
     
     # Process Court Cards
     court_cards = integrated_data['court_cards'].get('suits', [])
@@ -79,13 +81,13 @@ def load_all_cards(directory):
             if isinstance(card, dict) and 'name' in card:
                 cards.append(card)
             else:
-                print(f"Invalid Court Card entry in {suit['suit']}: {card}")
+                logging.warning(f"Invalid Court Card entry in {suit.get('suit', 'Unknown')}: {card}")
     
     reading_instructions = integrated_data.get('reading', {})
     return cards, reading_instructions
 
 if __name__ == "__main__":
     cards, _ = load_all_cards(DATA_DIR)
-    print("Loaded Cards:")
+    logging.info("Loaded Cards:")
     for idx, card in enumerate(cards[:10]):  # Print first 10 for verification
-        print(f"{idx + 1}: {card.get('name', 'NO NAME')}")
+        logging.info(f"{idx + 1}: {card.get('name', 'NO NAME')}")
