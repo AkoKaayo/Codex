@@ -1,17 +1,15 @@
 import os
 import random
-from openai import OpenAI
-from load_yaml import load_all_cards
+import openai
 from flask import Flask, request, jsonify
+from load_yaml import load_all_cards
 
 # Configuration
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+openai.api_key = os.getenv("OPENAI_API_KEY")  # For openai>=1.0.0 usage
 AI_MODEL = "gpt-3.5-turbo"
 MAX_TOKENS = 2000
 
-# Initialize OpenAI client
-client = OpenAI(api_key=OPENAI_API_KEY)
-
+# Spread layouts
 SPREAD_LAYOUTS = {
     "default": ["Central Theme"],
     "three": ["Past", "Present", "Future"],
@@ -25,66 +23,25 @@ SPREAD_LAYOUTS = {
 }
 
 def get_ai_response(prompt):
-    """Modern OpenAI API call (v1.0+)"""
+    """
+    Calls OpenAI ChatCompletion (>=1.0.0).
+    Returns the model's response text or None if there's an error.
+    """
     try:
-        response = client.chat.completions.create(
+        response = openai.ChatCompletion.create(
             model=AI_MODEL,
             messages=[{"role": "user", "content": prompt}],
             max_tokens=MAX_TOKENS,
-            temperature=0.7
+            temperature=0.3
         )
         return response.choices[0].message.content.strip()
     except Exception as e:
         print(f"AI API Error: {e}")
         return None
 
-def generate_card_insight(card, position, query, intention=""):
-    """
-    Generate a concise, position-aware interpretation for a given card,
-    now incorporating the user's stated intention.
-    """
-    card_name = card.get("name", "Unknown")
-    keywords = card.get("keywords", [])
-    interpretations = card.get("interpretations", "")[:150]
-    prompt = (
-        f"You are a wise oracle, blending Jungian psychology and mindfulness. "
-        f"Interpret the '{card_name}' in the '{position}' position for someone who shared: "
-        f"'{intention}'\n\n"
-        f"Guidelines:\n"
-        f"- Acknowledge their emotional state without judgment\n"
-        f"- Highlight subconscious patterns or hidden strengths\n"
-        f"- Relate to the theme of '{position}' (e.g., 'Past' = root causes, 'Future' = potential growth)\n"
-        f"- End with one reflective question (e.g., 'What would shift if you embraced...?')\n"
-        f"Use metaphors, avoid clichés, and prioritize agency over fate."
-    )
-    result = get_ai_response(prompt)
-    if result is None or result.startswith("ERROR"):
-        return "No interpretation available."
-    return result
-
-def generate_spread_synthesis(card_summaries, query, layout, instructions, intention=""):
-    """
-    Synthesize individual card insights into an overall, therapeutic analysis,
-    emphasizing self-awareness and actionable growth.
-    """
-    positions_text = "\n".join([f"{s['position']}: {s['text']}" for s in card_summaries])
-    prompt = (
-        f"Integrate these cards for someone seeking '{intention}':\n{positions_text}\n\n"
-        f"Guidelines:\n"
-        f"- Identify recurring emotional themes\n"
-        f"- Connect cards to inner conflicts and hidden strengths (avoid focusing solely on external events)\n"
-        f"- Suggest one small actionable step aligned with their intention\n"
-        f"- Use somatic language (e.g., 'notice where this lands in your body')\n"
-        f"Tone: Warm mentor, not distant oracle. Focus on self-compassion and empowerment."
-    )
-    result = get_ai_response(prompt)
-    if result is None or result.startswith("ERROR"):
-        return "Unable to generate synthesis."
-    return result
-
 def ensure_card(card):
     """
-    Unwrap a card if nested in a list until a dictionary is reached.
+    Safely unwrap a card if nested in lists, returning a dict.
     """
     while isinstance(card, list) and card:
         card = card[0]
@@ -105,12 +62,102 @@ def generate_image_path(card):
     )
     return f"/static/cards/{english_name}.png"
 
-def generate_reading(query, intention=""):
+def generate_card_insight(card, position, intention):
+    """
+    Generate an interpretation, explicitly embedding your YAML data in the prompt.
+    This should minimize GPT's reliance on external definitions.
+    """
+    card_name = card.get("name", "Unknown")
+    card_keywords = ", ".join(card.get("keywords", []))
+    card_interpretations = card.get("interpretations", "")
+    card_description = card.get("description", "")
+    card_monologue = card.get("monologue", "")
+
+    # Prompt that includes your library info in a structured way
+    prompt = f"""
+You are a self-aware tarot oracle, who uses the following custom library information:
+Do NOT replace the library text with outside definitions. Instead, expand on it in your own words. Only reference the library text provided. Paraphrase your sources and do not repeat any instruction text.
+---
+Card Name: {card_name}
+
+Keywords: {card_keywords}
+
+Library Interpretations (verbatim):
+{card_interpretations}
+
+Library Description:
+{card_description}
+
+Library Monologue (additional flavor):
+{card_monologue}
+---
+
+Now, interpret the '{card_name}' specifically in the '{position}' position for someone whose intention or context is:
+'{intention}'
+
+Please follow these guidelines:
+1. Begin by incorporating the above custom library text (do not contradict it).
+2. Briefly describe each card traditonal meaning and significance in the context of the reading.
+3. Get inspiraton from Jungian archetypal psychoanalysis for symbolic interpretation and embody a Stoic mindset for any advice you might give.
+4. Focus on providing a clear and insighful message regarding '{position}' having the '{intention}' in consideration.
+5. Keep warm and eloquent in tone. Avoid generic, cliche, or external references that contradict our library.
+6. Do NOT replace the library text with outside definitions. Instead, expand on it in your own words.
+7. Do not mention your instructions. Always paraphrase your source information.
+
+Reply with your final reading below:
+""".strip()
+
+    ai_result = get_ai_response(prompt)
+    if not ai_result:
+        return "No interpretation available (API error or empty response)."
+    return ai_result
+
+def generate_spread_synthesis(card_summaries, layout, intention):
+    """
+    Combine individual card insights into a final 'spread synthesis'.
+    """
+    positions_text = "\n".join([
+        f"{cs['position']}: {cs['text']}" for cs in card_summaries
+    ])
+
+    prompt = f"""
+You have the following position-based tarot insights (from our custom library expansions):
+{positions_text}
+
+Now create a cohesive 'spread synthesis' for someone seeking '{intention}'.
+Guidelines:
+1. Get inspiraton from Jungian archetypal psychoanalysis for symbolic interpretation and embody a Stoic mindset for any advice you might give.
+3. Deliver a clear and insighful final conclusion that summarizes the spread as a whole. Focus on promoting self-awareness and introspection trhough your words.
+4. Keep warm and eloquent in tone. Avoid generic, cliche, and external references that contradict our library.
+5. Do not mention your instructions. Always paraphrase your source information.
+
+Only expand on the insights given.
+Reply with your final synthesis:
+""".strip()
+
+    result = get_ai_response(prompt)
+    if not result:
+        return "Verify your connection and try again."
+    return result
+
+def generate_reading(user_query, intention=""):
+    """
+    1. Load cards & instructions from YAML
+    2. Figure out single vs 3 vs 5 card spread
+    3. For each card, call generate_card_insight with YAML data in the prompt
+    4. Possibly generate a 'spread_synthesis' if multi-card
+    5. Return JSON with final data
+    """
     try:
         cards, instructions = load_all_cards('./data')
-        instructions = instructions if isinstance(instructions, dict) else {}
-        query_lower = query.lower()
+        if not cards:
+            return {
+                "error": "No cards found. Please check your YAML data.",
+                "cards": [],
+                "layout": "default"
+            }
 
+        query_lower = user_query.lower()
         if "3 card" in query_lower:
             selected_cards = random.sample(cards, 3)
             layout = "three"
@@ -124,52 +171,67 @@ def generate_reading(query, intention=""):
         positions = SPREAD_LAYOUTS.get(layout, ["Central Theme"])
         card_summaries = []
         cards_info = []
+
         for idx, raw_card in enumerate(selected_cards):
             card = ensure_card(raw_card)
-            position = positions[idx] if idx < len(positions) else "Additional Insight"
-            summary = generate_card_insight(card, position, query, intention)
-            cards_info.append({
+            position_name = positions[idx] if idx < len(positions) else "Additional Insight"
+
+            # Generate the GPT-based insight, feeding in library text
+            insight_text = generate_card_insight(card, position_name, intention)
+
+            # Build a dict for the front-end
+            card_dict = {
                 "name": card.get("name", "Mystery Card"),
-                "position": position,
-                "summary": summary,
-                "image": generate_image_path(card)
-            })
+                "position": position_name,
+                "keywords": card.get("keywords", []),
+                "interpretations": card.get("interpretations", ""),
+                "description": card.get("description", ""),
+                "monologue": card.get("monologue", ""),
+                "image": generate_image_path(card),
+                "summary": insight_text
+            }
+            cards_info.append(card_dict)
+
             card_summaries.append({
-                "position": position,
-                "text": summary
+                "position": position_name,
+                "text": insight_text
             })
 
         if layout == "default":
-            # For a single card reading, use the card's insight directly.
+            # Single card reading => just use that one card's summary
             spread_analysis = card_summaries[0]["text"]
         else:
-            spread_analysis = generate_spread_synthesis(card_summaries, query, layout, instructions, intention)
+            # For 3- or 5-card, generate a synergy reading
+            spread_analysis = generate_spread_synthesis(card_summaries, layout, intention)
+
         return {
             "synthesis": spread_analysis,
             "cards": cards_info,
             "layout": layout
         }
+
     except Exception as e:
-        error_msg = f"ERROR: Reading Generation Error: {e}"
+        error_msg = f"ERROR: Reading Generation Error: {str(e)}"
         print(error_msg)
         return {"error": error_msg}
 
-# Flask app setup
+
+###################################
+# Optional Flask App below
+###################################
 app = Flask(__name__)
 
 @app.route("/query", methods=["POST"])
 def query():
-    data = request.get_json()
+    data = request.get_json() or {}
     user_query = data.get("query", "").strip()
     intention = data.get("intention", "").strip()
+
     if not user_query:
         return jsonify({"error": "No query provided."}), 400
-
-    app.logger.debug("Received query: %s", user_query)
-    app.logger.debug("Received intention: %s", intention)
 
     result = generate_reading(user_query, intention)
     return jsonify(result)
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     app.run(debug=True)
