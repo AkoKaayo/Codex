@@ -271,12 +271,12 @@ button:disabled {
 }
 #codex-brand h1 {
   font-size: 48px;
-  color: rgba(25, 25, 25, 0.2);
+  color: #2D2D2D;
   margin: 0 0 10px 0;
 }
 #codex-brand p {
   font-size: 16px;
-  color: rgba(25, 25, 25, 0.2);
+  color: #2D2D2D;
   margin: 0;
 }
 
@@ -349,11 +349,8 @@ button:disabled {
 
 /* Chat messages */
 .message {
-  margin: 10px 0;
-  max-width: 90%;
   padding: 10px 15px;
   white-space: pre-wrap;
-  border-radius: 6px;
 }
 .assistant-message {
   background-color: #2D2D2D;

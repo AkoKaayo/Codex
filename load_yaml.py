@@ -45,9 +45,9 @@ def structure_data(loaded_data):
             'pentacles': loaded_data.get('minor_arcana_pentacles.yml', {})
         },
         'reading': loaded_data.get('reading.yml', {}),
-        'degrees': loaded_data.get('degrees.yml', {}),
+        'degrees': loaded_data.get('degrees.yml', []),
         'structure': loaded_data.get('structure.yml', {}),
-        'suits': loaded_data.get('suits.yml', {})
+        'suits': loaded_data.get('suits.yml', [])
     }
     return tarot_data
 
