@@ -1,0 +1,409 @@
+/* 
+  1) BASE COLORS & FONTS
+  Using #151515 for the left panel background,
+  #681D85 as primary purple,
+  #AD37D5 as light purple (for outlines/highlights),
+  #2D2D2D or #1E1E1E for some backgrounds,
+  #FFFFFF or #E0E0E0 for text.
+*/
+
+:root {
+  --dark-gray: #151515;      /* Left panel background */
+  --purple: #681D85;         /* Main accent color */
+  --light-purple: #AD37D5;   /* Secondary accent (outline) */
+  --black: #000000;
+  --gray: #787878;
+  --white: #FFFFFF;
+}
+
+body {
+  /* Overall page background can stay #181818 or #000000. 
+     Choose whichever suits your design best. */
+  background-color: #181818; 
+  color: var(--white);
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+
+  /* Use IBM Plex Sans for default paragraphs */
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+/* 
+  2) MAIN LAYOUT
+  Left panel (chat-wrapper), Right panel (cards-wrapper)
+*/
+#main-content {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+
+/* LEFT PANEL: 450px wide, background #151515, 20px padding */
+#chat-wrapper {
+  width: 450px;
+  background-color: var(--dark-gray);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+#chat-container {
+  flex: 1;
+  padding: 20px;
+  overflow-y: auto;
+}
+#chat-bottom-container {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: auto;
+}
+
+/* HEADINGS in Sorts Mill Goudy */
+#welcome-message {
+  font-family: 'Sorts Mill Goudy', serif;
+  font-size: 2rem;
+  font-weight: 400;
+  color: var(--white);
+  margin-bottom: 0px;
+}
+
+/* 3) BUTTON STYLES (Idle, Hover, Disabled, Selected, Ready) */
+button {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 0.85rem;
+  cursor: pointer;
+  border: none;
+  outline: none;
+  /* Default height for buttons */
+  height: 40px;
+}
+
+/* Default (idle) state */
+button {
+  background-color: #2D2D2D;
+  color: #787878;
+}
+
+/* Hover state */
+button:hover:not(:disabled):not(.selected) {
+  background-color: var(--purple);
+  color: var(--white);
+}
+
+/* Disabled state */
+button:disabled {
+  color: #787878;
+  cursor: not-allowed;
+}
+
+/* Selected state (active-button) */
+.selected,
+.active-button {
+  background-color: var(--purple);
+  outline: 2px solid var(--light-purple);
+  /* Alternative: box-shadow: 0 0 0 2px var(--light-purple) inset; */
+}
+
+/* 
+  4) Text input and separate send button styles 
+  for a uniform 65px height.
+*/
+#inline-context-container {
+  display: flex;
+  align-items: center; /* Align elements in the same row */
+  gap: 10px; /* Space between textarea and button */
+  width: 100%; /* Ensure it spans the container */
+}
+
+#inline-context-container textarea {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 0.9rem;
+  flex-grow: 1; /* Fill remaining space */
+  max-height: 150px;
+  background-color: #2A2A2A;
+  color: var(--white);
+  padding: 10px;
+  resize: none;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  overflow-y: auto;
+}
+
+/* Default disabled state */
+#intention-input {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 0.9rem;
+  flex-grow: 1;
+  min-height: 42px;
+  max-height: 150px;
+  background-color: #1E1E1E;
+  border: 1px solid #1E1E1E;
+  color: #000000;
+  padding: 10px;
+  resize: none;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  overflow-y: auto;
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+#intention-input:focus {
+  outline: none !important;
+  border: 2px solid #9747FF !important;
+}
+
+/* Enabled state for input field */
+#intention-input.enabled {
+  background-color: #2A2A2A;
+  border: 2px solid #AD37DB;
+  color: var(--white);
+  pointer-events: auto;
+  opacity: 1;
+}
+
+#inline-send-button {
+  width: 60px;
+  height: 60px;
+  padding: 0;
+  background-color: #681D85;
+  color: var(--white);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: opacity 0.2s ease, background-color 0.2s ease, transform 0.1s ease;
+}
+
+/* Disabled send button state */
+#inline-send-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: #2D2D2D;
+  border: 1px solid #2D2D2D;
+  color: #000000;
+}
+
+/* Hover effect for send button */
+#inline-send-button:not(:disabled):hover {
+  background-color: #681D85;
+  border: 2px solid #9747FF;
+  color: #AD37DB;
+  transform: scale(1.05);
+}
+
+/* Active (pressed) effect */
+#inline-send-button:not(:disabled):active {
+  transform: scale(0.95);
+}
+
+/* Button icon */
+#inline-send-button::before {
+  content: '↩';
+  font-size: 1.2rem;
+}
+
+/* 5) Speed dial buttons */
+#speed-dial-container,
+#just-cards-speed-dial {
+  display: flex;
+  gap: 10px;
+}
+#speed-dial-container button,
+#just-cards-speed-dial button {
+  flex: 1;
+}
+
+#shuffle-button {
+  height: 48px;
+  width: 100%;
+  padding: 10px;
+  background-color: #2D2D2D;
+  color: #787878;
+  font-size: 0.9rem;
+  border: none;
+  cursor: pointer;
+  text-align: center;
+}
+
+#shuffle-button:hover {
+  height: 48px;
+  width: 100%;
+  padding: 10px;
+  background-color: #681D85;
+  border: 2px solid #9747FF;
+  color: #FFFFFF;
+  font-size: 0.9rem;
+  cursor: pointer;
+  text-align: center;
+}
+
+/* 6) RIGHT PANEL (Cards) */
+#cards-wrapper {
+  flex: 1;
+  background-color: #121212;
+  overflow-y: auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  position: relative;
+}
+
+/* Brand text (CODEX TAROT) */
+#codex-brand {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  font-family: 'Sorts Mill Goudy', serif;
+  pointer-events: none;
+}
+#codex-brand h1 {
+  font-size: 48px;
+  color: rgba(25, 25, 25, 0.2);
+  margin: 0 0 10px 0;
+}
+#codex-brand p {
+  font-size: 16px;
+  color: rgba(25, 25, 25, 0.2);
+  margin: 0;
+}
+
+/* Card container & layouts */
+#card-images-container {
+  width: 100%;
+}
+#card-images-container:not(.plus-layout):not(.three-card-layout) {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.card-image {
+  margin: 10px;
+  text-align: center;
+  cursor: pointer;
+  max-width: 300px;
+}
+.card-image img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* 5-card cross layout (plus-layout) */
+#card-images-container.plus-layout {
+  display: grid;
+  width: fit-content;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: auto auto auto;
+  gap: 10px;
+  margin-top: 20px;
+  grid-template-areas:
+    ". e ."
+    "b c d"
+    ". a .";
+  justify-items: center;
+  align-items: center;
+}
+#card-images-container.plus-layout .card-image:nth-child(1) {
+  grid-area: a;
+}
+#card-images-container.plus-layout .card-image:nth-child(2) {
+  grid-area: b;
+}
+#card-images-container.plus-layout .card-image:nth-child(3) {
+  grid-area: c;
+}
+#card-images-container.plus-layout .card-image:nth-child(4) {
+  grid-area: d;
+}
+#card-images-container.plus-layout .card-image:nth-child(5) {
+  grid-area: e;
+}
+#card-images-container.plus-layout .card-image {
+  margin: 0;
+}
+
+/* 3-card layout (three-card-layout) */
+#card-images-container.three-card-layout {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+#card-images-container.three-card-layout .card-image {
+  width: fit-content;
+  flex: auto;
+}
+
+/* Chat messages */
+.message {
+  margin: 10px 0;
+  max-width: 90%;
+  padding: 10px 15px;
+  white-space: pre-wrap;
+  border-radius: 6px;
+}
+.assistant-message {
+  background-color: #2D2D2D;
+  color: var(--white);
+  margin-right: auto;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+.user-prompt {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 1rem;
+  color: #bbb;
+  margin: 5px 0;
+  text-align: left;
+}
+
+/* Spinner for ASCII animation */
+.spinner {
+  display: inline-block;
+  margin-left: 8px;
+  font-family: 'IBM Plex Mono', monospace;
+  color: #fff;
+}
+
+/* Modal for Card Zoom */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 100;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0,0,0,0.8);
+}
+.modal-content {
+  margin: 5% auto;
+  display: block;
+  max-width: 90%;
+  max-height: 80vh;
+  object-fit: contain;
+}
+.close {
+  position: absolute;
+  top: 20px;
+  right: 35px;
+  color: #fff;
+  font-size: 40px;
+  font-weight: bold;
+  cursor: pointer;
+}

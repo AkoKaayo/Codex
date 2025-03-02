@@ -1,0 +1,50 @@
+# structure.yml
+
+composition:
+  title: "Composition and Rules of Orientation"
+  description: >
+    The Tarot of Marseille is composed of 78 cards, known as Arcana. The term "Arcanum" derives from Latin for "secret," hinting at the hidden meanings that gradually emerge through interpretation.
+  details: |
+    - The 78 Arcana are divided into two principal groups: 22 Major Arcana and 56 Minor Arcana.
+    - The Minor Arcana reveal personal aspects of intellectual, psychological, and material life.
+    - The Major Arcana depict universal spiritual processes.
+    - Together, they form an initiatory and complementary system—comparable to the four legs of a table or the walls of a temple.
+
+orientation:
+  title: "Rules of Orientation and Layout"
+  description: >
+    The Tarot is read as a unified entity, arranged in a spatial and energetic layout that functions like a mandala.
+  details: |
+    - Read from left to right (symbolizing a timeline from past to future).
+    - Visualized as a double square: the left side is receptive, the right active; the upper square represents the sky, the lower the Earth; a central area signifies the human realm.
+    - Arcanum XXI (The World) encapsulates this orientation by dividing space into four quadrants, which correspond to the Minor Arcana:
+      * Swords – active toward the sky
+      * Cups – receptive toward the sky
+      * Wands – active toward the earth
+      * Pentacles – receptive toward the earth
+
+progression:
+  title: "The Tarot is Progressive"
+  description: >
+    The Tarot’s numerical structure is uniquely progressive—its numbers are formed by addition rather than subtraction.
+  details: |
+    - Traditional Roman numeral anomalies are evident in the Major Arcana:
+      * 4 is written as IIII (1+1+1+1) instead of IV (5-1).
+      * 9 appears as VIIII (5+1+1+1+1) rather than IX (10-1).
+      * 14 is expressed as Xllll (10+1+1+1+1) and 19 as XVIIII (15+1+1+1+1).
+    - This additive notation underscores the concept of gradual advancement—each card represents a step toward the highest value, XXI, which signifies realization.
+    - The cards can be organized into eleven couples whose sums equal 21, reinforcing the notion of progressive growth.
+    - For example, The Fool and XXI form the alpha and omega, while pairings like I with XX, II with XVIIII, and III with XVIII illustrate the transformative journey from potential to full realization.
+  commentary: |
+    These observations highlight that the Tarot is fundamentally a process of addition—an evolving sequence where each step builds on the previous one. This progressive nature aligns with the degrees, which map the evolution of energy, and it provides essential insight into the Tarot’s structured, harmonious design.
+
+summary:
+  title: "The Tarot as a Complete Entity"
+  description: >
+    The Tarot is not merely a collection of isolated symbols but a unified mandala that reflects the entirety of the human psyche and the cosmos. As above, so below.
+  details: |
+    - True understanding arises from recognizing the interconnections among all 78 cards.
+    - The deck functions as a symbolic temple, where every card contributes to a greater cosmic revelation.
+    - The energetic progressions (as mapped in the degrees file) and thematic energies (from the suits file) interlock within this structure, forming the basis for comprehensive interpretations.
+
+

@@ -7,11 +7,6 @@ logging.basicConfig(level=logging.DEBUG)
 
 @app.route("/")
 def index():
-    # Make sure you have an 'index.html' file in the 'templates' folder:
-    # your_project/
-    # ├── FlaskApp.py (this file)
-    # ├── templates/
-    # │   └── index.html
     return render_template("index.html")
 
 @app.route("/query", methods=["POST"])
