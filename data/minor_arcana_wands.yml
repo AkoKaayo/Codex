@@ -1,13 +1,20 @@
 # minor_arcana_wands.yml
 
 overview: |
-  The Wands in the Minor Arcana symbolise creative and sexual energy—vitality that 
-  can propel personal expression, artistry, or physical desire. Each card from Ace 
-  to Ten illustrates a stage in the Wand's journey: from raw, untamed potential to 
-  concentrated mastery. While creativity and passion can enrich life with ardour 
-  and magic, they also carry the risk of volatility when misdirected. The Wands 
-  remind us that we do not manufacture desire—we channel or sublimate it, deciding 
-  its direction.
+  The Wands in the Minor Arcana symbolize sexual and creative energy—vitality that 
+  can propel personal expression, artistry, or physical desire. Each card (Ace 
+  through Ten) illustrates a stage in the Wand’s journey: from raw, untamed 
+  potential to a final transformation that transcends mere passion. While creativity 
+  and passion can enrich life with ardor and magic, they carry risks if misdirected. 
+  The Wands remind us that we do not create desire ex nihilo—we channel and shape 
+  it consciously.
+
+  Numerologically, Aces hold the primordial spark, Twos store it in a “virgin” 
+  state, Threes burst forth, Fours anchor it, Fives invite deeper or revolutionary 
+  impulses, Sixes find exquisite pleasure, Sevens project power that can be 
+  altruistic or tyrannical, Eights refine action to its essence, Nines face 
+  absolute commitment, and Tens break open to a new calling beyond the 
+  immediate creative or sexual domain.
 
 suit: "Wands"
 
@@ -15,341 +22,384 @@ cards:
   - number: "Ace"
     name: "Ace of Wands"
     keywords:
-      - "Vital energy"
-      - "Creative potential"
-      - "Sexual force"
-      - "Raw spark"
-      - "Impetus"
+      - "Raw creative force"
+      - "Potential for vitality"
+      - "Sexual potency"
+      - "Courage to act"
+      - "Risk of aggression"
     interpretations: |
-      The Ace of Wands represents a large amount of vital energy in a state of 
-      pure potential. This surging force underpins creative, sexual, and 
-      inspirational drives. It can herald a breakthrough in artistic vision 
-      or the ignition of a passionate encounter. 
-      
-      Negatively, the card may indicate a creative block or the misuse of 
-      force—aggression, violence, or sexual abuse. It also warns of 
-      hasty enthusiasm that fizzles out if not guided with care and 
-      intelligence.
+      The Ace of Wands indicates a vast reservoir of vital, creative energy 
+      waiting to be channeled. It can herald a dynamic new project or the 
+      awakening of sexual desire. This power must be shaped consciously 
+      or it may erupt destructively or be squandered.
+
+      Numerologically, the Ace carries the primal spark that everything 
+      in the Wands suit will develop. If approached with intelligence, 
+      it serves as the impetus to conquer obstacles; if allowed to run 
+      wild, it becomes violence or blocked desire.
     description: |
-      Traditionally depicted as a solitary wand radiating sparks of energy, 
-      the Ace of Wands suggests unstoppable creative power. The wand often 
-      grows thicker at the top, revealing its phallic connotation—yet 
-      culminating in a shape reminiscent of the feminine, symbolising 
-      the union of opposites. The presence of branching or leaves indicates 
-      that the individual can choose how to direct or prune this energy, 
-      allowing it to flourish in multiple forms. 
+      The card shows a single Wand brimming with energy. The top is 
+      thicker, referencing the phallic symbol, yet also morphs into 
+      a subtly feminine form. Branches or sprigs mark the potential 
+      for multiple directions. Each point of growth offers a chance 
+      to sublimate the raw “green” energy into a higher purpose.
     reading: |
-      In a reading, the Ace of Wands invites you to seize the moment and let 
-      your latent passion take form. Whether in an artistic project or a 
-      romantic pursuit, harness your desire consciously—lest it erupt 
-      destructively or evaporate prematurely.
+      In a reading, the Ace of Wands calls you to seize a surge of 
+      creative or erotic power. Embark on your endeavor with boldness, 
+      or channel newly awakened desire with responsibility. Neglect 
+      of this spark leads to aggression, frustration, or a 
+      “fizzled start.”
     monologue: |
-      "I am the raw pulse of creation, the spark that rouses your sleeping 
-      passions. Grasp me boldly—yet shape my fire with intent, for I burn 
-      brightest when fused with purpose."
+      “I am the untamed spark of life, brimming with creative 
+      and sexual charge. Grasp me with intention, and watch 
+      your passion blaze into action.”
 
   - number: "Two"
     name: "Two of Wands"
     keywords:
-      - "Accumulated desire"
       - "Repressed energy"
-      - "Preparation"
       - "Virgin state"
-      - "Puberty of creativity"
+      - "Potential in gestation"
+      - "First glimmer of desire"
+      - "Doubt in capacity"
     interpretations: |
-      The Two of Wands signifies a phase of gathering or storing desire, 
-      sexuality, or creative impetus. This energy remains passive, 
-      unexpressed—akin to puberty before the first true experience. 
-      Positively, it readies the soul for decisive action. Negatively, 
-      it could point to blocked energy, shyness, or doubt about one’s 
-      creative or sexual capacity.
+      The Two of Wands represents a phase of accumulated force 
+      that has not yet found outward expression. It can describe 
+      intense but latent sexuality, or a creative idea lingering 
+      before its actualization. This state is “virgin,” 
+      waiting for decisive movement.
+
+      Numerologically, Two is receptive accumulation. The user 
+      contemplates or incubates a plan or desire, uncertain 
+      when to act. The risk lies in indefinite postponement 
+      or self-doubt.
     description: |
-      Often shown with two wands crossing or joined by a delicate bulb 
-      or root, the imagery implies internal tension. A central bulb may 
-      symbolise nascent desires incubating, waiting to shoot forth. 
-      The slender wands emphasise that such energy, though quiescent, 
-      is potent and can burst out once the right moment arrives.
+      Two slender Wands connect at a carefully wrought base that 
+      holds repressed vigor. The subtle bulb or shape at the 
+      crossing reveals a readiness to sprout. Desire remains 
+      pure but untried, reminiscent of puberty before 
+      the first experience.
     reading: |
-      In a reading, this card suggests an important interval of quiet 
-      gestation. Embrace it as a time to build confidence. Stay alert 
-      for chances to channel your stored energy constructively rather 
-      than repress it into frustration.
+      In a reading, the Two of Wands reflects a crucial moment 
+      of preparation. Energy runs high, though concealed. 
+      Hesitation might stem from fear or overthinking. 
+      Recognize the stored power and decide how to release it.
     monologue: |
-      "In me, your creative might lies dormant, gathering warmth like 
-      a seed in winter. Soon enough, you’ll choose: let the sap flow 
-      or keep it locked in silent potential."
+      “I am unspent vigor, coiled and patient, awaiting your permission 
+      to unfold. Let me out, or risk storing me forever in 
+      silent indecision.”
 
   - number: "Three"
     name: "Three of Wands"
     keywords:
-      - "Burst of energy"
-      - "Adolescent desire"
-      - "Explosive creation"
-      - "First sexual experience"
-      - "Fanaticism or reawakening"
+      - "Burst of creative energy"
+      - "Puberty of desire"
+      - "Chaotic expansion"
+      - "Initial success"
+      - "Risk of scatter"
     interpretations: |
-      The Three of Wands symbolises a swift, impulsive eruption of energy. 
-      This might correspond to puberty’s wild emergence or the first 
-      decisive step in a creative effort. It contains both the exuberance 
-      of new possibility and the threat of indiscriminate action. 
-      
-      At its best, the card fosters fertility in art or passion. At its 
-      worst, it spawns chaos or ill-conceived endeavours.
+      The Three of Wands signifies a powerful eruption of energy. 
+      This is akin to adolescence, when sexuality or creativity 
+      awakens in a rush. It can generate breakthroughs but also 
+      cause scattered efforts if not directed carefully.
+
+      Numerologically, the Three is a “creative explosion.” 
+      In Wands, it references both the unstoppable fervor 
+      of new desire and the potential for overreach 
+      when illusions overshadow practical constraints.
     description: |
-      Typically, three wands intersect at a vivid focal point, with 
-      branches or leaves surging outward. The black dots or tips often 
-      indicate raw, impersonal energy—fanatical or fiercely budding. 
-      Though the swirl of possibility is exhilarating, it lacks the 
-      guidance of experience.
+      Three Wands meet at a vivid center, from which branches or 
+      leaves shoot outward. This depiction confirms a robust 
+      surge that thrusts one into action, sometimes with 
+      little plan besides excitement.
     reading: |
-      In a reading, the Three of Wands announces the unstoppable onset 
-      of action—like a newly awakened sexual appetite or an eager 
-      creative start. Channel the fervour mindfully, or risk quick 
-      disillusionment if it fails to find form.
+      In a reading, the Three of Wands proclaims a bold leap 
+      forward. Seize the momentum but remain aware of 
+      the need for some grounding. Without structure, 
+      early triumphs can falter as quickly as they flare.
     monologue: |
-      "Hear my springtime cry—vibrant, bold, and unstoppable. The world 
-      will yield to my blossoming force, but I beg you: steer me with 
-      wisdom so that I may truly thrive."
+      “I roar into being with the thrill of a first discovery, 
+      brash and alive. Celebrate me, but know that without 
+      direction, I may burn out before the journey 
+      truly begins.”
 
   - number: "Four"
     name: "Four of Wands"
     keywords:
-      - "Stability"
-      - "Regular sexuality"
-      - "Repetition"
-      - "Creative routine"
-      - "Material security"
+      - "Established power"
+      - "Stable creativity"
+      - "Routine risk"
+      - "Comfortable success"
+      - "Solid partnership"
     interpretations: |
-      The Four of Wands refers to an established anchor for creative or 
-      sexual energy. In personal relationships, it hints at comfortable 
-      intimacy or a routine erotic life. In artistry, it suggests 
-      regularly producing the same style or repeated success. 
-      
-      While stability fosters security and reliability, it can also 
-      dull the freshness vital to ongoing inspiration.
+      The Four of Wands depicts desire that has found a reliable 
+      form—whether in a creative project sustaining regular output 
+      or a sexual relationship that offers security. This fosters 
+      a sense of groundedness and repeated achievement.
+
+      However, numerological Four warns that routine can kill 
+      spontaneity. If the heart no longer grows, the solidity 
+      becomes a prison. Repetition dulls the original spark.
     description: |
-      Often depicted as four wands forming a structured shape, this card 
-      evokes a protective enclosure or framework. Leaves or flowers may 
-      echo the cyclical nature of daily practice—a saint who always 
-      repeats the same miracles, or an artist producing the same works. 
-      Vital energy is harnessed in a predictable form.
+      Four Wands lock into a balanced pattern, producing 
+      a “house” for the creative or sexual impulse. 
+      Leaves or flowers confirm that success is now 
+      consistent. Yet the structure can harden, 
+      requiring the spirit to stay open to the next challenge.
     reading: |
-      In a reading, the Four of Wands encourages you to consolidate 
-      success or find reliability in your creative or sexual expression. 
-      Yet it cautions that comfort can slide into stagnation if no 
-      evolution follows.
+      In a reading, the Four of Wands encourages the 
+      celebration of success and comfort. Appreciate 
+      stability but stay alert to creeping boredom 
+      or complacency. Security should not override 
+      evolution.
     monologue: |
-      "I am the builder of your safe haven, the daily weaving of desire 
-      or talent that steadies your life. But do not let me become a cage— 
-      routine is sweet yet must open to new wonders."
+      “I stand as the fortress of your earned success, 
+      the shape that protects your fire. But if 
+      you do not venture beyond my walls, 
+      you may forget why you began.”
 
   - number: "Five"
     name: "Five of Wands"
     keywords:
-      - "New desire"
-      - "Bridge to another dimension"
-      - "Temptation"
-      - "Revolutionary spirit"
-      - "Mystical or sexual impulse"
+      - "New temptation"
+      - "Yearning for deeper change"
+      - "Bridge between known and unknown"
+      - "Evolving passion"
+      - "Potential conflict"
     interpretations: |
-      The Five of Wands represents the emergence of a new point of view 
-      or yearning that shakes existing stability. This card fosters an 
-      energetic leap—perhaps spiritual or sexual—that can either refine 
-      the old or overthrow it. The impetus may be mystical, erotic, 
-      or a fresh impetus for creativity. 
-      
-      Negatively, illusions or manipulative lures (empty promises or 
-      swindlers) can ambush the eager. It warns: do not trust 
-      “revolutionary” talk blindly; real transformation demands sincerity.
+      The Five of Wands reveals a desire to break past 
+      comfort. This might take the form of new sexual 
+      frontiers, radical creativity, or spiritual 
+      reorientation. The existing structure 
+      (Four) is no longer enough.
+
+      Numerologically, Five signals a temptation or 
+      call to surpass old boundaries. Properly pursued, 
+      it revitalizes and expands the self; 
+      mishandled, it lapses into rebellion 
+      without substance.
     description: |
-      Imagery often shows five wands forming a gap or bridging shape, 
-      symbolising the crossing between old security (the Four) and a 
-      newly opened horizon. Floral buds may appear, heralding a 
-      transforming or radical shift. 
+      Five Wands form a crossing or a gap, indicating 
+      the disruption of stable patterns. Leaves 
+      or buds appear, showing that the impetus 
+      can become a true transformation if faced 
+      with sincerity rather than random revolt.
     reading: |
-      In a reading, the Five of Wands invites you to follow your 
-      emergent cravings or epiphanies with discernment. Harness your 
-      rebellious or creative stirrings for genuine growth, rather than 
-      fleeing the known on a whim or false ideal.
+      In a reading, the Five of Wands urges you 
+      to follow your renewed cravings or creative 
+      stirrings with caution and clarity. 
+      Embrace the chance to evolve, but 
+      avoid illusions or quick-fix excitements.
     monologue: |
-      "I am the flame that tempts you from your cosy fire— 
-      risk a step beyond the usual, and discover worlds 
-      unnamed. Yet do not be fooled by hollow calls; real 
-      change births from the union of passion and truth."
+      “I open a door to a realm beyond your familiar ground. 
+      Let my call inspire a fresh quest, but choose well. 
+      Shall you embrace new heights or dance with illusions?”
 
   - number: "Six"
     name: "Six of Wands"
     keywords:
-      - "Pleasure"
-      - "Beauty"
-      - "Union"
-      - "Narcissism risk"
-      - "Creative delight"
+      - "Pleasure and ecstasy"
+      - "Joy of creation"
+      - "Sexual gratification"
+      - "Potential narcissism"
+      - "Fulfillment in expression"
     interpretations: |
-      The Six of Wands sings of total sexual or creative pleasure— 
-      a joyous union with self or another. Creation flourishes as 
-      a fulfilling dance, and life brims with inspiring possibility. 
-      Yet self-absorption can mar this card, turning self-celebration 
-      into conceit, or sexual desire into a closed loop that forgets 
-      the broader world.
+      The Six of Wands reaches a pivotal expression 
+      of pleasure, whether artistic or sexual. 
+      Satisfaction runs high, offering 
+      confidence and delight. It can be 
+      the moment an artist discovers 
+      a unique style or lovers find 
+      deep harmony.
+
+      Numerological Six refers to “beauty.” Here, 
+      that beauty takes the form of fully 
+      embraced desire. The danger is 
+      narcissism—falling in love with 
+      one’s own success at the expense 
+      of further growth.
     description: |
-      Often illustrated with wands crossing in vibrant synergy, 
-      leaves or petals may appear fully opened, representing 
-      a pleasurable bloom. This card echoes a “honeymoon” phase 
-      in both artistry and intimacy.
+      Six Wands converge in a pattern that radiates 
+      exultation or synergy. It portrays a honeymoon 
+      phase in both artistry and intimacy, 
+      with all leaves or flowers fully open 
+      to represent the blossoming joy of 
+      acceptance and adoration.
     reading: |
-      In a reading, the Six of Wands reveals a peak of rapturous 
-      gratification—creative synergy or erotic fulfilment that 
-      tastes sweet indeed. Do not withdraw from reality in 
-      self-satisfied indulgence, but share your delight and 
-      stay open to continued evolution.
+      In a reading, the Six of Wands signifies 
+      a time of triumphant gratification. 
+      Relish this wave of self-assurance 
+      and shared delight, yet ensure 
+      it remains inclusive and doesn’t 
+      degenerate into a closed bubble 
+      of self-absorption.
     monologue: |
-      "I bask in my own radiant success—drunk on creation’s 
-      sweetness. Join me in bliss, but remember: true ecstasy 
-      glows brighter when mirrored in the larger tapestry of life."
+      “I blaze with the delicious warmth of your creative 
+      or erotic power, turning life into a festival. 
+      May this feast sustain you, so long as you remember 
+      to feed the world as well.”
 
   - number: "Seven"
     name: "Seven of Wands"
     keywords:
-      - "Total sexual/creative action"
-      - "Altruistic energy"
-      - "Immense force"
-      - "Dictatorship if misused"
-      - "Union of matter and spirit"
+      - "Expansive action"
+      - "Blossoming power"
+      - "Altruistic drive"
+      - "Potential tyranny"
+      - "Triumph of sexual/creative force"
     interpretations: |
-      The Seven of Wands denotes an apex of outward action—a 
-      forceful, charismatic, and unstoppable energy in the 
-      sexual or creative domain. Done well, it channels 
-      passion into heroic or humanitarian ends. Done poorly, 
-      it can dominate, coerce, or subjugate. 
-      
-      Positively, the card suggests unstoppable creative 
-      impetus or philanthropy. Negatively, tyranny or 
-      manipulative sexual proselytising emerges if 
-      humility is abandoned.
+      The Seven of Wands embodies unstoppable energy. 
+      It can manifest as passionate leadership, healing, 
+      or large-scale creative success. This card 
+      references altruistic “insemination” of the world: 
+      channeling your power outward so others can benefit.
+
+      If misapplied, the same force becomes exploitative 
+      or dictatorial. Numerologically, Seven 
+      is action in the world; the impetus behind it 
+      determines whether it blesses or crushes.
     description: |
-      Imagery typically reveals seven wands, the central 
-      axis blazing with vitality while leaves or flowers 
-      spiral outward. This unstoppable impetus merges 
-      physical desire with deeper spiritual or moral 
-      convictions, for good or ill.
+      Seven Wands intersect at a central, intense 
+      node of power, flaring outward. 
+      Leaves or petals flourish with no sign 
+      of restraint. This unstoppable surge 
+      can build or destroy. 
+      Its essence is impersonal cosmic fire, 
+      directed by your heart’s intent.
     reading: |
-      In a reading, the Seven of Wands offers unstoppable 
-      impetus—creative, sexual, or philanthropic. Guide 
-      your dynamic fervour ethically, or risk falling 
-      into a controlling stance, losing sight of 
-      empathy in your personal campaign.
+      In a reading, the Seven of Wands challenges 
+      you to harness great passion responsibly. 
+      Aim to uplift instead of dominating. 
+      Your heightened energy must remain grounded 
+      in respect for others to avoid destructive extremes.
     monologue: |
-      "I thunder across your horizon, bristling with 
-      might and purpose. Focus my roar on uplifting 
-      hearts, lest I trample them."
+      “I offer an inexhaustible blaze that can light 
+      the world or reduce it to ashes. 
+      Choose now—will you erect a temple of hope 
+      or a fortress of cruelty?”
 
   - number: "Eight"
     name: "Eight of Wands"
     keywords:
-      - "Concentration"
-      - "Sublimation"
-      - "Perfection"
-      - "Creative magic"
-      - "Routine or paralysis"
+      - "Perfect concentration"
+      - "Refined creativity"
+      - "Sublimation of desire"
+      - "Effortless mastery"
+      - "Risk of inertia"
     interpretations: |
-      The Eight of Wands embodies the attainment of near-perfect 
-      concentration—the blossoming of sexual or creative energy 
-      into a pure, unadorned axis. Sublimation refines desire 
-      into a higher calling or artistry. Conversely, if fear 
-      hampers it, the flow stalls, leading to paralysis or 
-      sterility.
+      The Eight of Wands condenses the suit’s passion 
+      into a single, focused point. Extraneous motions 
+      vanish, culminating in swift, sure action. 
+      This is the martial artist’s mastery or an 
+      artist’s pure stroke. It represents 
+      sublimation where raw desire transforms 
+      into a perfect, minimal act.
+
+      Negatively, chasing absolute perfection 
+      can paralyze motion. A fixation on flawlessness 
+      leads to inaction, ironically strangling 
+      the energy it seeks to refine.
     description: |
-      Commonly, the card lacks extensive foliage, instead 
-      focusing on the wands’ intersection of lines or 
-      an uncluttered central pattern. This signals the 
-      transformation of scattered impulses into a single, 
-      potent direction. The slightest distraction can 
-      shatter this elevated focus.
+      The Wands converge into a streamlined formation, 
+      leaves pruned to essential forms. This reveals 
+      how creativity or sexuality, harnessed with 
+      discipline, becomes effortless. The suit’s 
+      free-flaring growth is replaced by 
+      targeted precision.
     reading: |
-      In a reading, the Eight of Wands warns that you 
-      stand on the brink of creative or erotic mastery. 
-      Properly harnessed, your energy becomes unstoppable; 
-      neglected, it withers into frustration or numbness.
+      In a reading, the Eight of Wands signals 
+      an optimal moment to execute tasks with 
+      minimal waste. Let the pure impetus flow, 
+      ignoring trivialities. Beware letting 
+      perfectionism freeze your impetus. 
+      Properly embraced, this is 
+      unstoppable grace.
     monologue: |
-      "I cast aside the decorative flourish—what remains 
-      is essence sharpened to a spear. Let me channel 
-      your energy into flawless precision; do not 
-      shy away from the purity of purpose."
+      “I show you the power of one well-aimed arrow, 
+      the unstoppable beauty of undistracted skill. 
+      Enter my realm, but do not linger until 
+      you can no longer move.”
 
   - number: "Nine"
     name: "Nine of Wands"
     keywords:
-      - "Win or die"
-      - "Stripped of embellishment"
-      - "Fear of death"
-      - "Creative crisis"
-      - "Implacable choice"
+      - "Life-or-death choice"
+      - "Bare resolve"
+      - "Ego’s final test"
+      - "Make no concessions"
+      - "Potential fear of totality"
     interpretations: |
-      The Nine of Wands stands at a crossroads: 
-      all illusions or side shoots vanish. One 
-      must choose to persist, giving everything 
-      to the craft or passion, or yield to fear. 
-      This moment may evoke the existential 
-      “fight or surrender” dynamic. 
-      
-      Positively, it fosters unwavering determination; 
-      negatively, it can manifest as panic or 
-      self-sabotage.
+      The Nine of Wands stands at a stark juncture. 
+      All foliage is gone; illusions are stripped. 
+      The creative or sexual force condenses 
+      into uncompromising essence. 
+      The motto becomes “win or die,” 
+      although not literally—rather, 
+      it is the fearless stance 
+      of a warrior or artist 
+      who leaves no room for half-measures.
+
+      Numerologically, Nine signals a crisis 
+      preceding transformation. 
+      In Wands, it demands total authenticity. 
+      Fear of losing the old identity 
+      might sabotage the crossing.
     description: |
-      Typically shown with bare wands, stripped 
-      of leaves or ornaments, the card emphasises 
-      minimalism and severity. Red and blue 
-      intersections reveal the interplay between 
-      impetus and receptivity, culminating in 
-      an urgent confrontation with one’s limits.
+      The bare Wands form a stark axis, 
+      confronting illusions or halfhearted 
+      attempts. The domain of desire or creativity 
+      no longer accommodates superficial pursuits. 
+      One must either transform or remain behind.
     reading: |
-      In a reading, the Nine of Wands demands 
-      raw courage. Will you press on with your 
-      entire being, or retreat in fear? A 
-      fundamental test looms in sexuality or 
-      creativity— one that can lead to triumph 
-      or tragic defeat.
+      In a reading, the Nine of Wands insists 
+      on unwavering commitment. 
+      Let go of safe illusions or 
+      compromised efforts. 
+      You stand at the threshold of 
+      a deeper reality—act wholeheartedly 
+      or relinquish the path.
     monologue: |
-      "My stage is harshly lit—no props, no 
-      curtains, only the bare ring of conflict. 
-      Let your fervour be your shield. Either 
-      fight for your vision, or lose it forever."
+      “I bring you to the razor’s edge where indecision must end. 
+      Act with total sincerity or step back into half-living. 
+      The choice, stark and unadorned, is yours.”
 
   - number: "Ten"
     name: "Ten of Wands"
     keywords:
-      - "Cycle complete"
-      - "Dual axis"
-      - "Androgynous summation"
-      - "Transition to intellect"
-      - "Triumph or downfall"
+      - "Completion of the cycle"
+      - "Energy no longer contained"
+      - "Transmutation of power"
+      - "Passing into spirit"
+      - "Potential disconnection"
     interpretations: |
-      The Ten of Wands concludes the creative/sexual cycle. 
-      Instead of a single wand, two or more emerge, forming 
-      a gateway or cross that suggests synergy of masculine 
-      and feminine energies. This total realisation of 
-      creative power may lead one to higher planes 
-      (like the Ace of Swords) or flounder if clung to 
-      as an end in itself. 
-      
-      One must release the illusions of possession 
-      and let the newly forged energy flow into new realms.
+      The Ten of Wands closes the suit’s fiery journey. 
+      The Wand splits, creating an opening or “white axis” 
+      for a new dimension. Passion or creativity must 
+      move into another realm—spirituality, teaching, 
+      healing, or intellectual pursuit.
+
+      Numerologically, Ten ends one cycle 
+      and hints at the next. If obstructed, 
+      this card warns of burnout, bitterness, 
+      or feeling uprooted. Properly embraced, 
+      it channels the mature force of Wands 
+      into a higher calling.
     description: |
-      Often, the Ten of Wands shows a pivotal shift: 
-      a vertical staff or axis breaks into multiple lines, 
-      forming a shape reminiscent of an angel, a cross, 
-      or a portal. Leaves might be minimal, implying 
-      that the bloom is over— only the final union remains.
+      The central Wand divides, making space for 
+      a new principle. Leaves or flowers reconfigure, 
+      suggesting an angelic or transpersonal shape. 
+      After so much fiery expansion, the energy 
+      transcends the sexual/creative domain, 
+      primed to surface anew as, for example, 
+      the Ace of Swords.
     reading: |
-      In a reading, the Ten of Wands proclaims the end 
-      of a cycle. Recognise the magnitude of your 
-      creative or sexual journey, then redirect 
-      your impetus to an evolved goal—be it 
-      intellectual, spiritual, or humanitarian.
+      In a reading, the Ten of Wands proclaims the 
+      end of a passionate era. Your once-vital impetus 
+      seeks a new form. If you cling to old definitions, 
+      you risk frustration. Embrace the transition 
+      to discover a different path for your 
+      now-mature energy.
     monologue: |
-      "I bear the fruit of all your passion, 
-      pressed into a new shape—two wands bridging 
-      heaven and earth. Our dance has reached 
-      its zenith; step now into the next realm, 
-      unburdened by old illusions."
+      “I mark the final moment in your fiery dance—beyond me 
+      lies a new realm. Release what was, and discover how 
+      your power is meant to evolve in the cycles ahead.”
