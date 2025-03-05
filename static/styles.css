@@ -361,10 +361,10 @@ button:disabled {
   line-height: 1.4;
 }
 .user-prompt {
-  font-family: 'IBM Plex Sans', sans-serif;
-  font-size: 1rem;
+  font-family: 'Sorts Mill Goudy', serif;
+  font-size: 1.5rem;
   color: #bbb;
-  margin: 5px 0;
+  margin-bottom: 15px;
   text-align: left;
 }
 

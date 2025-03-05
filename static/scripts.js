@@ -29,55 +29,46 @@ let currentSpreadType     = "";
 let currentUserPrompt     = "";
 
 /***************************************************************
- * Functions to enable and disable the input field
+ * Enable / Disable input
  ***************************************************************/
 function enableInput() {
   intentionInput.classList.add("enabled");
-  intentionInput.placeholder = "Take a breath and reflect... \nWhat brings you here today?"; // Change placeholder text
+  intentionInput.placeholder = "Take a breath and reflect... \nWhat brings you here today?";
 }
 
 function disableInput() {
   intentionInput.classList.remove("enabled");
-  intentionInput.placeholder = "Select a spread type above to begin"; // Default disabled text
+  intentionInput.placeholder = "Select a spread type above to begin";
 }
 
-// Initialize the correct placeholder text on page load
 disableInput();
 
-// Add event listeners to enable input when a button is clicked
 cardReadButtons.forEach(button => {
   button.addEventListener("click", enableInput);
 });
 
 /***************************************************************
- * Typewriter effect for assistant messages
+ * Basic chat output (no typewriter)
  ***************************************************************/
-function typewriterEffect(element, text, speed = 40) {
-  let i = 0;
-  const intervalId = setInterval(() => {
-    if (i < text.length) {
-      element.textContent += text.charAt(i);
-      i++;
-      chatContainer.scrollTop = chatContainer.scrollHeight;
-    } else {
-      clearInterval(intervalId);
-    }
-  }, speed);
+function addAssistantMessage(content) {
+  const messageDiv = document.createElement("div");
+  messageDiv.classList.add("message", "assistant-message");
+  // Use innerHTML to render HTML markup from the content.
+  messageDiv.innerHTML = content;
+  chatContainer.appendChild(messageDiv);
+  chatContainer.scrollTop = chatContainer.scrollHeight;
 }
 
-/***************************************************************
- * 1. Chat & Spinner Functions
- ***************************************************************/
 function addUserPrompt(promptText) {
   const promptDiv = document.createElement("div");
   promptDiv.classList.add("user-prompt");
   const displayText = `${currentSpreadType} spread about "${promptText}"`;
   promptDiv.innerText = displayText;
 
-  // Create a spinner
+  // Create spinner
   const spinnerSpan = document.createElement("span");
   spinnerSpan.classList.add("spinner");
-  spinnerSpan.innerText = " "; 
+  spinnerSpan.innerText = " ";
   promptDiv.appendChild(spinnerSpan);
 
   chatContainer.appendChild(promptDiv);
@@ -93,21 +84,18 @@ function addUserPrompt(promptText) {
   return { promptDiv, spinnerSpan, spinnerId };
 }
 
-function addAssistantMessage(content) {
-  const messageDiv = document.createElement("div");
-  messageDiv.classList.add("message", "assistant-message");
-  messageDiv.textContent = "";
-  chatContainer.appendChild(messageDiv);
-  typewriterEffect(messageDiv, content, 30);
-}
-
 function clearChat() {
   chatContainer.innerHTML = "";
   welcomeMessageDiv.innerText = "";
 }
 
+/***************************************************************
+ * Fetch / Send logic
+ ***************************************************************/
 function sendQuery(queryString, intention) {
   clearChat();
+  hideUIForReading(); 
+
   const userPromptObj = addUserPrompt(intention);
   clearCardImages();
 
@@ -116,27 +104,33 @@ function sendQuery(queryString, intention) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ query: queryString, intention: intention })
   })
-    .then(response => {
-      if (!response.ok) throw new Error("Network response was not ok");
-      return response.json();
-    })
+    .then(response => response.json())
     .then(data => {
       clearInterval(userPromptObj.spinnerId);
       userPromptObj.spinnerSpan.remove();
 
-      // If cards are returned
       if (data.cards && data.cards.length > 0) {
         addCardImages(data.cards, data.layout);
-        // Hide the brand text once we have cards
         codexBrand.style.display = "none";
       }
 
-      // Synthesis or fallback
-      if (!data.synthesis || data.synthesis.trim() === "") {
-        if (data.error) addAssistantMessage(data.error);
-        else addAssistantMessage("No results found. Try rephrasing your question.");
-      } else {
+      // Show introduction if present
+      if (data.introduction && data.introduction.trim() !== "") {
+        addAssistantMessage(data.introduction);
+      }
+
+      // Show synergy text if present
+      if (data.synthesis && data.synthesis.trim() !== "") {
         addAssistantMessage(data.synthesis);
+      } else if (data.error) {
+        addAssistantMessage(data.error);
+      } else {
+        addAssistantMessage("No results found. Try rephrasing your question.");
+      }
+
+      // Show oracle message if present
+      if (data.oracle_message && data.oracle_message.trim() !== "") {
+        addAssistantMessage(data.oracle_message);
       }
     })
     .catch(error => {
@@ -148,32 +142,28 @@ function sendQuery(queryString, intention) {
 }
 
 /***************************************************************
- * 2. Card Display Functions
+ * Card display
  ***************************************************************/
 function clearCardImages() {
   cardImagesContainer.innerHTML = "";
   cardImagesContainer.classList.remove("plus-layout", "three-card-layout");
-
-  // Delay the check to ensure cards are fully removed
   setTimeout(() => {
     if (cardImagesContainer.children.length === 0) {
-      codexBrand.style.display = "block"; // Show brand text when no cards are present
+      codexBrand.style.display = "block";
     }
   }, 100);
 }
 
 function addCardImages(cards, layout) {
   clearCardImages();
-  
-  // Hide the brand text when cards are added
-  codexBrand.style.display = "none";  
+  codexBrand.style.display = "none";
 
   if (layout === "plus") {
     cardImagesContainer.classList.add("plus-layout");
   } else if (layout === "three") {
     cardImagesContainer.classList.add("three-card-layout");
   }
-  
+
   cards.forEach(card => {
     const cardDiv = document.createElement("div");
     cardDiv.classList.add("card-image");
@@ -186,7 +176,7 @@ function addCardImages(cards, layout) {
 }
 
 /***************************************************************
- * 3. UI Interaction Functions
+ * Additional UI / Event handlers
  ***************************************************************/
 function showInlineContext(spreadType) {
   welcomeMessageDiv.innerText = "";
@@ -240,7 +230,7 @@ btnFiveCard.addEventListener("click", () => {
   showInlineContext("Five");
 });
 
-// Fixing Event Listeners for Just Cards Buttons
+// "Just Cards"
 btnJustSingle.addEventListener("click", () => {
   clearChat();
   document.getElementById("inline-context-container").style.display = "none";
@@ -291,85 +281,32 @@ function setUserPromptText(text) {
   chatContainer.appendChild(promptDiv);
 }
 
-// Create shuffle button
 const shuffleButton = document.createElement("button");
 shuffleButton.id = "shuffle-button";
 shuffleButton.textContent = "Shuffle and Start Again";
 shuffleButton.style.display = "none";
 shuffleButton.addEventListener("click", resetToDefault);
 
-// Append shuffle button to chat-bottom-container
 document.getElementById("chat-bottom-container").appendChild(shuffleButton);
 
 function hideUIForReading() {
-  // Hide speed dial buttons
   document.getElementById("speed-dial-container").style.display = "none";
   document.getElementById("just-cards-speed-dial").style.display = "none";
-
-  // Hide input field and send button
   document.getElementById("inline-context-container").style.display = "none";
-
-  // Show shuffle button
   shuffleButton.style.display = "block";
 }
 
 function resetToDefault() {
-  // Clear chat messages
   document.getElementById("chat-container").innerHTML = "";
-
-  // Clear card images
   clearCardImages();
-
-  // Show speed dial buttons
   document.getElementById("speed-dial-container").style.display = "flex";
   document.getElementById("just-cards-speed-dial").style.display = "flex";
-
-  // Show input field and send button
   document.getElementById("inline-context-container").style.display = "flex";
-
-  // Hide shuffle button
   shuffleButton.style.display = "none";
 }
 
-// Modify sendQuery to hide UI when sending query
-function sendQuery(queryString, intention) {
-  clearChat();
-  hideUIForReading(); // Hide UI elements
-
-  const userPromptObj = addUserPrompt(intention);
-  clearCardImages();
-
-  fetch("/query", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ query: queryString, intention: intention })
-  })
-    .then(response => response.json())
-    .then(data => {
-      clearInterval(userPromptObj.spinnerId);
-      userPromptObj.spinnerSpan.remove();
-
-      if (data.cards && data.cards.length > 0) {
-        addCardImages(data.cards, data.layout);
-        codexBrand.style.display = "none";
-      }
-
-      if (data.synthesis && data.synthesis.trim() !== "") {
-        addAssistantMessage(data.synthesis);
-      } else {
-        addAssistantMessage("No results found. Try rephrasing your question.");
-      }
-    })
-    .catch(error => {
-      clearInterval(userPromptObj.spinnerId);
-      userPromptObj.spinnerSpan.remove();
-      console.error("Error:", error);
-      addAssistantMessage("An error occurred while fetching the tarot reading.");
-    });
-}
-
 /***************************************************************
- * 4. "Just Cards" logic
+ * "Just Cards" logic
  ***************************************************************/
 const CANONICAL_CARDS = [
   "The Fool", "The Magician", "The High Priestess", "The Empress", "The Emperor",
@@ -420,11 +357,12 @@ function getCardImage(cardName) {
 }
 
 /***************************************************************
- * 5. Modal: Card Zoom
+ * Modal: Card Zoom
  ***************************************************************/
 closeModal.addEventListener("click", () => {
   modal.style.display = "none";
 });
+
 document.addEventListener("click", (event) => {
   if (
     event.target.tagName === "IMG" &&
@@ -436,7 +374,7 @@ document.addEventListener("click", (event) => {
 });
 
 /***************************************************************
- * 6. On DOM Load
+ * On DOMContentLoaded
  ***************************************************************/
 document.addEventListener("DOMContentLoaded", () => {
   welcomeMessageDiv.innerText = "Welcome to Codex Tarot";
