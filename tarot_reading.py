@@ -12,13 +12,13 @@ MAX_TOKENS = 2000
 # Layout definitions
 SPREAD_LAYOUTS = {
     "default": ["Central Theme"],
-    "three": ["Past", "Present", "Future"],
+    "three": ["PAST", "PRESENT", "FUTURE"],
     "plus": [
-        "What prevents you from being yourself?",
-        "With what means can you free yourself?",
-        "What action should you undertake?",
-        "Into what transformation you are being led?",
-        "What is your ultimate purpose or destiny?"
+        "WHAT PREVENTS YOU FORM BEING YOURSELF?",
+        "WITH WHAT MEANS CAN YOU FREE YOURSELF?",
+        "WHAT ACTION SHOULD YOU UNDERTAKE?",
+        "INTO WHAT TRANSFORMATION ARE YOU BEING LED?",
+        "WHAT IS YOUR ULTIMATE PURPOSE OR DESTINY?"
     ]
 }
 
@@ -269,11 +269,11 @@ def build_noAI_synergy_paragraph(card_summaries, intention):
     guaranteeing no external knowledge is introduced.
     
     Return HTML snippet that:
-      - starts with a heading <h2>The Tarot's Message</h2>
+      - starts with a heading <h2>THE TAROT'S MESSAGE</h2>
       - includes a short synergy paragraph
     """
     synergy_lines = []
-    synergy_lines.append("<h2 class='tarot-message-title'>The Tarot's Message</h2>")
+    synergy_lines.append("<h2 class='tarot-message-title'>THE TAROT'S MESSAGE</h2>")
 
     # We'll gather each official reading plus position in a single short paragraph.
     # E.g. "Past (Ten of Wands): Official reading text..."
@@ -475,7 +475,7 @@ def generate_spread_synthesis(card_summaries, layout, intention, synergy_text=""
     
     # Add a titled final synergy paragraph.
     synergy_paragraph = generate_spread_summary_paragraph(card_summaries, layout, intention)
-    synergy_result += f"\n\n<h3 class='tarot-message-title'>The Tarot's Message</h3>\n<p class='tarot-message'>{synergy_paragraph}</p>"
+    synergy_result += f"\n\n<h3 class='tarot-message-title'>THE TAROT'S MESSAGE</h3>\n<p class='tarot-message'>{synergy_paragraph}</p>"
     
     return synergy_result
 

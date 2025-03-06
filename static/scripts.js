@@ -32,17 +32,49 @@ let currentUserPrompt     = "";
  * Enable / Disable input
  ***************************************************************/
 function enableInput() {
-  intentionInput.classList.add("enabled");
-  intentionInput.placeholder = "Take a breath and reflect... \nWhat brings you here today?";
+  // Enable the textarea for typing and update its placeholder
+  intentionInput.disabled = false;
+  intentionInput.placeholder = "What question or situation should the tarot address?";
+  
+  // Keep the send button disabled until there's text
+  inlineSendButton.disabled = true;
+  // Reset send button color (default matching input field style)
+  inlineSendButton.style.color = "#787878";
+  inlineSendButton.classList.remove("send-enabled");
+  
+  // Add event listener for input changes
+  intentionInput.addEventListener("input", handleSendButtonState);
+}
+
+function handleSendButtonState() {
+  // Enable the send button only if there's non-whitespace text
+  if (intentionInput.value.trim().length > 0) {
+    inlineSendButton.disabled = false;
+    inlineSendButton.classList.add("send-enabled");
+  } else {
+    inlineSendButton.disabled = true;
+    inlineSendButton.classList.remove("send-enabled");
+  }
 }
 
 function disableInput() {
-  intentionInput.classList.remove("enabled");
-  intentionInput.placeholder = "Select a spread type above to begin";
+  // Disable both the textarea and send button
+  intentionInput.disabled = true;
+  inlineSendButton.disabled = true;
+  
+  // Reset the placeholder to the default message when no reading is selected
+  intentionInput.placeholder = "Select the type of reading you seek for clarity on.";
+  
+  // Remove the input event listener to avoid duplicates
+  intentionInput.removeEventListener("input", handleSendButtonState);
+  // Reset the send button state
+  inlineSendButton.classList.remove("send-enabled");
 }
 
+// Initially disable the input fields
 disableInput();
 
+// When a spread button is clicked, enable the input
 cardReadButtons.forEach(button => {
   button.addEventListener("click", enableInput);
 });
@@ -67,7 +99,7 @@ function addUserPrompt(promptText) {
 
   const subtitleDiv = document.createElement("div");
   subtitleDiv.classList.add("user-prompt-subtitle");
-  subtitleDiv.textContent = `– ${promptText}`;
+  subtitleDiv.textContent = `${promptText}`;
 
   const flexContainer = document.createElement("div");
   flexContainer.style.display = "flex";
@@ -110,6 +142,9 @@ function sendQuery(queryString, intention) {
   const userPromptObj = addUserPrompt(intention);
   clearCardImages();
 
+  // Disable shuffle button during loading
+  shuffleButton.disabled = true;
+
   fetch("/query", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -141,12 +176,18 @@ function sendQuery(queryString, intention) {
       }
       
       addAssistantMessage(synergyContent);
+
+      // Re-enable shuffle button after loading
+      shuffleButton.disabled = false;
     })
     .catch(error => {
       clearInterval(userPromptObj.spinnerId);
       userPromptObj.spinnerSpan.remove();
       console.error("Error:", error);
       addAssistantMessage("An error occurred while fetching the tarot reading.");
+
+      // Re-enable shuffle button on error
+      shuffleButton.disabled = false;
     });
 }
 
@@ -199,6 +240,13 @@ function handleInputChange() {
   inlineSendButton.disabled = (intentionInput.value.trim().length === 0);
 }
 
+function capitalizeFirstLetter() {
+  const input = intentionInput.value;
+  if (input.length > 0) {
+    intentionInput.value = input.charAt(0).toUpperCase() + input.slice(1);
+  }
+}
+
 function handleContextSubmission() {
   const intentionText = intentionInput.value.trim();
   if (intentionText.length === 0) return;
@@ -224,6 +272,8 @@ intentionInput.addEventListener("keydown", e => {
   }
 });
 intentionInput.addEventListener("input", handleInputChange);
+intentionInput.addEventListener("input", capitalizeFirstLetter);
+
 inlineSendButton.addEventListener("click", handleContextSubmission);
 
 btnRandomCard.addEventListener("click", () => {
@@ -312,6 +362,18 @@ function resetToDefault() {
   document.getElementById("just-cards-speed-dial").style.display = "flex";
   document.getElementById("inline-context-container").style.display = "flex";
   shuffleButton.style.display = "none";
+
+  // Clear input field and disable it
+  intentionInput.value = "";
+  disableInput();
+
+  // Deselect all buttons
+  btnRandomCard.classList.remove("active-button");
+  btnThreeCard.classList.remove("active-button");
+  btnFiveCard.classList.remove("active-button");
+  btnJustSingle.classList.remove("active-button");
+  btnJustThree.classList.remove("active-button");
+  btnJustFive.classList.remove("active-button");
 }
 
 /***************************************************************

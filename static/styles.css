@@ -69,39 +69,37 @@ body {
   margin-bottom: 0px;
 }
 
-/* 3) BUTTON STYLES (Idle, Hover, Disabled, Selected, Ready) */
+/* Minimalist button styles for all buttons */
 button {
+  background-color: transparent;
+  border: 1px solid #787878;
+  color: #787878;
+  padding: 8px 16px;
+  border-radius: 2px;
   font-family: 'IBM Plex Sans', sans-serif;
-  font-size: 0.85rem;
+  font-size: 0.7rem;
   cursor: pointer;
-  border: none;
-  outline: none;
-  height: 40px;
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 
-/* Default (idle) state */
-button {
-  background-color: #2D2D2D;
-  color: #787878;
+/* Hover state: subtle background tint and darker border/text */
+button:hover:not(:disabled) {
+  background-color: rgba(104, 29, 133, 0.1); /* Light tint using the purple values */
+  border-color: #681D85;
+  color: #681D85;
 }
 
-/* Hover state */
-button:hover:not(:disabled):not(.selected) {
+/* Active/Clicked state: accent background with contrasting text */
+button:active:not(:disabled) {
   background-color: var(--purple);
-  color: var(--white);
+  border-color: var(--purple);
+  color: #FFFFFF;
 }
 
-/* Disabled state */
-button:disabled {
-  color: #787878;
-  cursor: not-allowed;
-}
-
-/* Selected state (active-button) */
-.selected,
 .active-button {
-  background-color: var(--purple);
-  outline: 2px solid var(--light-purple);
+  background-color: rgba(104, 29, 133, 0.1);
+  border-color: #681D85;
+  color: #681D85;
 }
 
 /* 
@@ -110,9 +108,11 @@ button:disabled {
 */
 #inline-context-container {
   display: flex;
-  align-items: center;
-  gap: 10px;
-  width: 100%;
+  align-items: center;       /* The button and textarea share the same height */
+  border: 1px solid #787878;  /* A single border around both */
+  border-radius: 2px;
+  background-color: #2A2A2A; /* Consistent gray background */
+  max-width: 100%;
 }
 
 #inline-context-container textarea {
@@ -120,7 +120,7 @@ button:disabled {
   font-size: 0.9rem;
   flex-grow: 1;
   max-height: 150px;
-  background-color: #2A2A2A;
+  background-color: transparent; /* Inherits from container */
   color: var(--white);
   padding: 10px;
   resize: none;
@@ -130,79 +130,81 @@ button:disabled {
   overflow-y: auto;
 }
 
-/* Default disabled state */
+/* Intention Input Field Styling */
 #intention-input {
+  flex: 1;
+  border: none;
+  background: transparent; /* Inherits from container */
+  color: #bbb;
   font-family: 'IBM Plex Sans', sans-serif;
-  font-size: 0.9rem;
-  flex-grow: 1;
-  min-height: 42px;
-  max-height: 150px;
-  background-color: #1E1E1E;
-  border: 1px solid #1E1E1E;
-  color: #000000;
-  padding: 10px;
-  resize: none;
-  white-space: pre-wrap;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  overflow-y: auto;
-  pointer-events: none;
+  font-size: 0.7rem;
+  line-height: 1.4;        /* Helps multi-line readability */
+  padding: 8px 0;
+  resize: none;            /* Remove if you want a manual resize handle */
+  outline: none;
+}
+
+#intention-input::placeholder {
+  color: #555;          /* slightly darker placeholder */
+  white-space: pre-line; /* ensures multiline placeholder displays properly */
+}
+
+/* Focus state for the text input */
+#intention-input:focus {
+  border-color: var(--purple);
+  background-color: transparent; /* Keep gray from container */
+}
+
+/* Disabled state for the text input */
+#intention-input:disabled {
+  cursor: not-allowed;
   opacity: 0.5;
 }
 
-#intention-input:focus {
-  outline: none !important;
-  border: 2px solid #9747FF !important;
-}
-
-/* Enabled state for input field */
-#intention-input.enabled {
-  background-color: #2A2A2A;
-  border: 2px solid #AD37DB;
-  color: var(--white);
-  pointer-events: auto;
-  opacity: 1;
-}
-
+/* Inline send button positioned inside the input container */
 #inline-send-button {
-  width: 60px;
-  height: 60px;
-  padding: 0;
-  background-color: #681D85;
-  color: var(--white);
+  border: none;
+  background: transparent; /* Inherits from container */
+  color: #bbb;          /* matches disabled input color initially */
+  font-size: 1.2rem;    /* size for the ↩ symbol */
+  cursor: pointer;
+  padding: 0 12px;      /* Adjusted horizontal padding for symbol */
+  transition: color 0.3s ease, background-color 0.3s ease;
+  outline: none;
   display: flex;
   align-items: center;
   justify-content: center;
-  cursor: pointer;
-  transition: opacity 0.2s ease, background-color 0.2s ease, transform 0.1s ease;
 }
 
-/* Disabled send button state */
-#inline-send-button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  background-color: #2D2D2D;
-  border: 1px solid #2D2D2D;
-  color: #000000;
-}
-
-/* Hover effect for send button */
-#inline-send-button:not(:disabled):hover {
-  background-color: #681D85;
-  border: 2px solid #9747FF;
-  color: #AD37DB;
-  transform: scale(1.05);
-}
-
-/* Active (pressed) effect */
-#inline-send-button:not(:disabled):active {
-  transform: scale(0.95);
-}
-
-/* Button icon */
+/* Inject the ↩ symbol using a pseudo-element */
 #inline-send-button::before {
-  content: '↩';
+  content: "↩";
   font-size: 1.2rem;
+}
+
+/* Disabled state */
+#inline-send-button:disabled {
+  background-color: #2A2A2A; /* Match container gray */
+  color: #bbb;
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* Enabled state class for send button */
+#inline-send-button.send-enabled {
+  background-color: #2A2A2A; /* Match container gray */
+  color: #681D85 !important;
+}
+
+/* Hover: subtle gray tint, symbol turns purple */
+#inline-send-button:hover:not(:disabled) {
+  color: #AD37D5 !important;
+}
+
+/* Active: fully purple with white symbol */
+#inline-send-button:active:not(:disabled) {
+  background-color: var(--purple);
+  color: #FFFFFF;
 }
 
 /* 5) Speed dial buttons */
@@ -220,24 +222,40 @@ button:disabled {
   height: 48px;
   width: 100%;
   padding: 10px;
-  background-color: #2D2D2D;
-  color: #787878;
+  background-color: #2A2A2A; /* Match container gray */
+  border: 1px solid #787878; /* Consistent border */
+  color: #787878; /* Gray text */
   font-size: 0.9rem;
-  border: none;
   cursor: pointer;
   text-align: center;
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
 
-#shuffle-button:hover {
-  height: 48px;
-  width: 100%;
-  padding: 10px;
-  background-color: #681D85;
-  border: 2px solid #9747FF;
+#shuffle-button:disabled {
+  background-color: #2A2A2A; /* Keep gray */
+  border-color: #555; /* Darker border to indicate disabled */
+  color: #555; /* Darker text to indicate disabled */
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+#shuffle-button:hover:not(:disabled) {
+  background-color: rgba(104, 29, 133, 0.1); /* Purple tint on hover */
+  border-color: #681D85;
+  color: #681D85;
+}
+
+#shuffle-button:disabled:hover {
+  background-color: #2A2A2A; /* Prevent hover effect when disabled */
+  border-color: #555;
+  color: #555;
+  cursor: not-allowed; /* Enforce forbidden cursor */
+}
+
+#shuffle-button:active:not(:disabled) {
+  background-color: var(--purple); /* Full purple on active */
+  border-color: var(--purple);
   color: #FFFFFF;
-  font-size: 0.9rem;
-  cursor: pointer;
-  text-align: center;
 }
 
 /* 6) RIGHT PANEL (Cards) */
