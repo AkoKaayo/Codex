@@ -17,8 +17,6 @@
 }
 
 body {
-  /* Overall page background can stay #181818 or #000000. 
-     Choose whichever suits your design best. */
   background-color: #181818; 
   color: var(--white);
   margin: 0;
@@ -26,8 +24,6 @@ body {
   display: flex;
   flex-direction: column;
   height: 100vh;
-
-  /* Use IBM Plex Sans for default paragraphs */
   font-family: 'IBM Plex Sans', sans-serif;
   font-size: 14px;
   line-height: 1.4;
@@ -53,7 +49,7 @@ body {
 }
 #chat-container {
   flex: 1;
-  padding: 20px;
+  padding: 10px;
   overflow-y: auto;
 }
 #chat-bottom-container {
@@ -80,7 +76,6 @@ button {
   cursor: pointer;
   border: none;
   outline: none;
-  /* Default height for buttons */
   height: 40px;
 }
 
@@ -107,7 +102,6 @@ button:disabled {
 .active-button {
   background-color: var(--purple);
   outline: 2px solid var(--light-purple);
-  /* Alternative: box-shadow: 0 0 0 2px var(--light-purple) inset; */
 }
 
 /* 
@@ -116,15 +110,15 @@ button:disabled {
 */
 #inline-context-container {
   display: flex;
-  align-items: center; /* Align elements in the same row */
-  gap: 10px; /* Space between textarea and button */
-  width: 100%; /* Ensure it spans the container */
+  align-items: center;
+  gap: 10px;
+  width: 100%;
 }
 
 #inline-context-container textarea {
   font-family: 'IBM Plex Sans', sans-serif;
   font-size: 0.9rem;
-  flex-grow: 1; /* Fill remaining space */
+  flex-grow: 1;
   max-height: 150px;
   background-color: #2A2A2A;
   color: var(--white);
@@ -349,23 +343,65 @@ button:disabled {
 
 /* Chat messages */
 .message {
-  padding: 10px 15px;
+  padding: 15px;
   white-space: pre-wrap;
 }
 .assistant-message {
   background-color: #2D2D2D;
   color: var(--white);
-  margin-right: auto;
-  font-family: 'IBM Plex Sans', sans-serif;
-  font-size: 0.9rem;
-  line-height: 1.4;
+  margin-bottom: 10px;
+  font-size: 1rem;
+  line-height: 1.6;
+  text-align: left;
+  opacity: 0;
+  animation: fadeIn 0.5s ease forwards;
 }
 .user-prompt {
   font-family: 'Sorts Mill Goudy', serif;
-  font-size: 1.5rem;
+  font-size: 1.25rem;
   color: #bbb;
-  margin-bottom: 15px;
+  padding: 15px;
+  margin-bottom: 10px;
+  line-height: 1.6;
   text-align: left;
+}
+.user-prompt-title {
+  font-family: 'Sorts Mill Goudy', serif;
+  font-size: 1.6rem;
+  color: #bbb;
+  margin: 0;
+}
+.user-prompt-subtitle {
+  font-family: 'Sorts Mill Goudy', serif;
+  font-size: 1.4rem;
+  color: #bbb;
+  margin: 0 0 0 5px;
+}
+.card-position {
+  font-family: 'Sorts Mill Goudy', serif;
+  font-size: 1.2rem;
+  color: #bbb; /* Reverted from --light-purple */
+  margin-bottom: 5px;
+}
+.card-analysis, .tarot-message {
+  font-size: 1rem;
+  margin-bottom: 15px;
+  line-height: 1.6;
+}
+.tarot-message {
+  font-family: 'Sorts Mill Goudy', serif;
+  font-size: 1.1rem;
+  color: #FFFFFF !important;
+  margin: 0;
+  padding: 0;         /* Remove extra padding if needed */
+  line-height: 1.5;
+}
+.tarot-message-title {
+  font-family: 'Sorts Mill Goudy', serif;
+  font-size: 1.3rem;
+  color: #bbb;
+  margin: 0 0 -10px 0;
+  padding: 0;
 }
 
 /* Spinner for ASCII animation */
@@ -373,7 +409,8 @@ button:disabled {
   display: inline-block;
   margin-left: 8px;
   font-family: 'IBM Plex Mono', monospace;
-  color: #fff;
+  font-size: 1.25rem;
+  color: var(--light-purple);
 }
 
 /* Modal for Card Zoom */
@@ -403,4 +440,10 @@ button:disabled {
   font-size: 40px;
   font-weight: bold;
   cursor: pointer;
+}
+
+/* Fade-in animation */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }

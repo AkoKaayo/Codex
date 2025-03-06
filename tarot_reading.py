@@ -14,11 +14,11 @@ SPREAD_LAYOUTS = {
     "default": ["Central Theme"],
     "three": ["Past", "Present", "Future"],
     "plus": [
-        "What prevents you from being yourself",
-        "With what means can you free yourself",
-        "What action should you undertake",
-        "Into what transformation you are being led",
-        "What is your ultimate purpose or destiny"
+        "What prevents you from being yourself?",
+        "With what means can you free yourself?",
+        "What action should you undertake?",
+        "Into what transformation you are being led?",
+        "What is your ultimate purpose or destiny?"
     ]
 }
 

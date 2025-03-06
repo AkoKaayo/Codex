@@ -53,26 +53,37 @@ cardReadButtons.forEach(button => {
 function addAssistantMessage(content) {
   const messageDiv = document.createElement("div");
   messageDiv.classList.add("message", "assistant-message");
-  // Use innerHTML to render HTML markup from the content.
   messageDiv.innerHTML = content;
   chatContainer.appendChild(messageDiv);
-  chatContainer.scrollTop = chatContainer.scrollHeight;
 }
 
 function addUserPrompt(promptText) {
   const promptDiv = document.createElement("div");
   promptDiv.classList.add("user-prompt");
-  const displayText = `${currentSpreadType} spread about "${promptText}"`;
-  promptDiv.innerText = displayText;
 
-  // Create spinner
+  const titleDiv = document.createElement("div");
+  titleDiv.classList.add("user-prompt-title");
+  titleDiv.textContent = `${currentSpreadType} Cards Reading`;
+
+  const subtitleDiv = document.createElement("div");
+  subtitleDiv.classList.add("user-prompt-subtitle");
+  subtitleDiv.textContent = `– ${promptText}`;
+
+  const flexContainer = document.createElement("div");
+  flexContainer.style.display = "flex";
+  flexContainer.style.flexDirection = "column";
+  flexContainer.style.alignItems = "baseline";
+  flexContainer.appendChild(titleDiv);
+  flexContainer.appendChild(subtitleDiv);
+
   const spinnerSpan = document.createElement("span");
   spinnerSpan.classList.add("spinner");
   spinnerSpan.innerText = " ";
-  promptDiv.appendChild(spinnerSpan);
+  flexContainer.appendChild(spinnerSpan);
+
+  promptDiv.appendChild(flexContainer);
 
   chatContainer.appendChild(promptDiv);
-  chatContainer.scrollTop = chatContainer.scrollHeight;
 
   const spinnerFrames = ["|", "/", "-", "\\"];
   let index = 0;
@@ -114,24 +125,22 @@ function sendQuery(queryString, intention) {
         codexBrand.style.display = "none";
       }
 
-      // Show introduction if present
+      let synergyContent = "";
       if (data.introduction && data.introduction.trim() !== "") {
-        addAssistantMessage(data.introduction);
+        synergyContent += `<p class="assistant-message" style="margin-bottom: 10px;">${data.introduction}</p>`;
       }
-
-      // Show synergy text if present
       if (data.synthesis && data.synthesis.trim() !== "") {
-        addAssistantMessage(data.synthesis);
+        synergyContent += data.synthesis;
       } else if (data.error) {
-        addAssistantMessage(data.error);
+        synergyContent += `<p class="assistant-message">${data.error}</p>`;
       } else {
-        addAssistantMessage("No results found. Try rephrasing your question.");
+        synergyContent += `<p class="assistant-message">No results found. Try rephrasing your question.</p>`;
       }
-
-      // Show oracle message if present
       if (data.oracle_message && data.oracle_message.trim() !== "") {
-        addAssistantMessage(data.oracle_message);
+        synergyContent += `<p class="tarot-message">${data.oracle_message}</p>`;
       }
+      
+      addAssistantMessage(synergyContent);
     })
     .catch(error => {
       clearInterval(userPromptObj.spinnerId);
