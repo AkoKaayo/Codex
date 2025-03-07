@@ -411,6 +411,6 @@ document.addEventListener("click", (event) => {
 
 /* Page Load */
 document.addEventListener("DOMContentLoaded", () => {
-  welcomeMessageDiv.innerText = "Welcome to Codex Tarot";
+  welcomeMessageDiv.innerText = "Take a breath... \nWhat brings you here today?";
   intentionInput.addEventListener("input", handleSendButtonState);
 });

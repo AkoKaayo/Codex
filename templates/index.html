@@ -14,7 +14,18 @@
   <header></header>
 
   <div id="main-content">
-    <!-- LEFT COLUMN: Chat -->
+    <!-- RIGHT COLUMN: Cards (now first) -->
+    <div id="cards-wrapper">
+      <!-- Brand text displayed only when no cards are drawn -->
+      <div id="codex-brand">
+        <h1>CODEX TAROT</h1>
+        <p>As above, so below. Ask and you shall know.</p>
+      </div>
+
+      <div id="card-images-container"></div>
+    </div>
+
+    <!-- LEFT COLUMN: Chat (now second) -->
     <div id="chat-wrapper">
       <div id="chat-container"></div>
       <div id="chat-bottom-container">
@@ -44,17 +55,6 @@
           <button id="inline-send-button" disabled></button>
         </div>
       </div>
-    </div>
-
-    <!-- RIGHT COLUMN: Cards -->
-    <div id="cards-wrapper">
-      <!-- Brand text displayed only when no cards are drawn -->
-      <div id="codex-brand">
-        <h1>CODEX TAROT</h1>
-        <p>As above, so below. Ask and you shall know.</p>
-      </div>
-
-      <div id="card-images-container"></div>
     </div>
   </div>
 

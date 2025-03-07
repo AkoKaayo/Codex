@@ -28,7 +28,7 @@ body {
 }
 
 #chat-wrapper {
-  width: 30%;
+  width: 35%;
   background-color: var(--dark-gray);
   overflow-y: auto;
   display: flex;
@@ -53,7 +53,7 @@ body {
   font-family: 'Sorts Mill Goudy', serif;
   font-size: 2rem;
   font-weight: 400;
-  color: var(--white);
+  color: #bbb;
   margin-bottom: 0;
 }
 
@@ -149,7 +149,7 @@ button:active:not(:disabled) {
 #inline-send-button {
   border: none;
   background: transparent;
-  color: #bbb;
+  color: #2a2a2a;
   font-size: 1.2rem;
   cursor: pointer;
   padding: 0 12px;
@@ -300,7 +300,6 @@ button:active:not(:disabled) {
 
 #card-images-container.plus-layout {
   display: grid;
-  width: 100%;
   grid-template-columns: repeat(3, minmax(80px, 1fr));
   grid-template-rows: repeat(3, auto);
   grid-template-areas:
@@ -368,7 +367,6 @@ button:active:not(:disabled) {
 }
 
 .assistant-message {
-  background-color: #2D2D2D;
   color: var(--white);
   margin-bottom: 10px;
   font-size: 1rem;
@@ -382,8 +380,6 @@ button:active:not(:disabled) {
   font-family: 'Sorts Mill Goudy', serif;
   font-size: 1.25rem;
   color: #bbb;
-  padding: 15px;
-  margin-bottom: 10px;
   line-height: 1.6;
   text-align: left;
 }
@@ -450,7 +446,7 @@ button:active:not(:disabled) {
   width: 100%;
   height: 100%;
   overflow: auto;
-  background-color: rgba(0,0,0,0.8);
+  background-color: rgb(0, 0, 0);
 }
 
 .modal-content {
@@ -463,8 +459,8 @@ button:active:not(:disabled) {
 
 .close {
   position: absolute;
-  top: 20px;
-  right: 35px;
+  top: 0px;
+  right: 0px;
   color: #fff;
   font-size: 40px;
   font-weight: bold;
