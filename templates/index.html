@@ -18,17 +18,17 @@
     <div id="chat-wrapper">
       <div id="chat-container"></div>
       <div id="chat-bottom-container">
-        <div id="welcome-message" style="margin-bottom: 0px;"></div>
+        <div id="welcome-message"></div>
 
         <!-- Speed dial container (API calls) -->
-        <div id="speed-dial-container" style="margin-top: 0px;">
+        <div id="speed-dial-container">
           <button id="btn-random-card">Single Card Read</button>
           <button id="btn-three-card">Three Card Read</button>
           <button id="btn-five-card">Five Card Read</button>
         </div>
 
         <!-- "Just Cards" speed dial buttons (client-side only) -->
-        <div id="just-cards-speed-dial" style="margin-top: 0px;">
+        <div id="just-cards-speed-dial">
           <button id="btn-just-single">Single Card Spread</button>
           <button id="btn-just-three">Three Card Spread</button>
           <button id="btn-just-five">Five Card Spread</button>
@@ -37,11 +37,11 @@
         <!-- Inline context input appears here when user picks a spread -->
         <div id="inline-context-container">
           <textarea
-    id="intention-input"
-    placeholder="Select the type of reading you seek for clarity on."
-    disabled
-  ></textarea>
-  <button id="inline-send-button" disabled></button>
+            id="intention-input"
+            placeholder="Select the type of reading you seek for clarity on."
+            disabled
+          ></textarea>
+          <button id="inline-send-button" disabled></button>
         </div>
       </div>
     </div>
@@ -60,7 +60,7 @@
 
   <!-- Card Zoom Modal -->
   <div id="card-modal" class="modal">
-    <span class="close">&times;</span>
+    <span class="close">×</span>
     <img class="modal-content" id="modal-image">
   </div>
   <script src="{{ url_for('static', filename='scripts.js') }}"></script>

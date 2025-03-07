@@ -1,53 +1,44 @@
-/***************************************************************
- * DOM element references
- ***************************************************************/
-const chatContainer       = document.getElementById("chat-container");
-const welcomeMessageDiv   = document.getElementById("welcome-message");
+/* DOM References */
+const chatContainer = document.getElementById("chat-container");
+const welcomeMessageDiv = document.getElementById("welcome-message");
 const cardImagesContainer = document.getElementById("card-images-container");
-const codexBrand          = document.getElementById("codex-brand");
+const codexBrand = document.getElementById("codex-brand");
 
-const intentionInput      = document.getElementById("intention-input");
-const cardReadButtons     = document.querySelectorAll("#btn-random-card, #btn-three-card, #btn-five-card");
-const inlineSendButton    = document.getElementById("inline-send-button");
+const intentionInput = document.getElementById("intention-input");
+const cardReadButtons = document.querySelectorAll("#btn-random-card, #btn-three-card, #btn-five-card");
+const inlineSendButton = document.getElementById("inline-send-button");
 
-// API call buttons
-const btnRandomCard       = document.getElementById("btn-random-card");
-const btnThreeCard        = document.getElementById("btn-three-card");
-const btnFiveCard         = document.getElementById("btn-five-card");
+const btnRandomCard = document.getElementById("btn-random-card");
+const btnThreeCard = document.getElementById("btn-three-card");
+const btnFiveCard = document.getElementById("btn-five-card");
 
-// "Just Cards" buttons
-const btnJustSingle       = document.getElementById("btn-just-single");
-const btnJustThree        = document.getElementById("btn-just-three");
-const btnJustFive         = document.getElementById("btn-just-five");
+const btnJustSingle = document.getElementById("btn-just-single");
+const btnJustThree = document.getElementById("btn-just-three");
+const btnJustFive = document.getElementById("btn-just-five");
 
-// Modal elements for card zoom
-const modal               = document.getElementById("card-modal");
-const modalImage          = document.getElementById("modal-image");
-const closeModal          = document.querySelector("#card-modal .close");
+const modal = document.getElementById("card-modal");
+const modalImage = document.getElementById("modal-image");
+const closeModal = document.querySelector("#card-modal .close");
 
-let currentSpreadType     = "";
-let currentUserPrompt     = "";
+let currentSpreadType = "";
+let currentUserPrompt = "";
 
-/***************************************************************
- * Enable / Disable input
- ***************************************************************/
+/* Input Handling */
 function enableInput() {
-  // Enable the textarea for typing and update its placeholder
   intentionInput.disabled = false;
   intentionInput.placeholder = "What question or situation should the tarot address?";
-  
-  // Keep the send button disabled until there's text
   inlineSendButton.disabled = true;
-  // Reset send button color (default matching input field style)
-  inlineSendButton.style.color = "#787878";
   inlineSendButton.classList.remove("send-enabled");
-  
-  // Add event listener for input changes
-  intentionInput.addEventListener("input", handleSendButtonState);
+}
+
+function disableInput() {
+  intentionInput.disabled = true;
+  inlineSendButton.disabled = true;
+  intentionInput.placeholder = "Select the type of reading you seek for clarity on.";
+  inlineSendButton.classList.remove("send-enabled");
 }
 
 function handleSendButtonState() {
-  // Enable the send button only if there's non-whitespace text
   if (intentionInput.value.trim().length > 0) {
     inlineSendButton.disabled = false;
     inlineSendButton.classList.add("send-enabled");
@@ -57,31 +48,13 @@ function handleSendButtonState() {
   }
 }
 
-function disableInput() {
-  // Disable both the textarea and send button
-  intentionInput.disabled = true;
-  inlineSendButton.disabled = true;
-  
-  // Reset the placeholder to the default message when no reading is selected
-  intentionInput.placeholder = "Select the type of reading you seek for clarity on.";
-  
-  // Remove the input event listener to avoid duplicates
-  intentionInput.removeEventListener("input", handleSendButtonState);
-  // Reset the send button state
-  inlineSendButton.classList.remove("send-enabled");
-}
-
-// Initially disable the input fields
 disableInput();
 
-// When a spread button is clicked, enable the input
 cardReadButtons.forEach(button => {
   button.addEventListener("click", enableInput);
 });
 
-/***************************************************************
- * Basic chat output (no typewriter)
- ***************************************************************/
+/* Chat Output */
 function addAssistantMessage(content) {
   const messageDiv = document.createElement("div");
   messageDiv.classList.add("message", "assistant-message");
@@ -132,25 +105,31 @@ function clearChat() {
   welcomeMessageDiv.innerText = "";
 }
 
-/***************************************************************
- * Fetch / Send logic
- ***************************************************************/
+/* Fetch Logic */
 function sendQuery(queryString, intention) {
   clearChat();
-  hideUIForReading(); 
-
+  hideUIForReading();
   const userPromptObj = addUserPrompt(intention);
   clearCardImages();
-
-  // Disable shuffle button during loading
   shuffleButton.disabled = true;
 
-  fetch("/query", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ query: queryString, intention: intention })
-  })
-    .then(response => response.json())
+  // Add a 20-second timeout for the fetch
+  const timeoutPromise = new Promise((resolve, reject) => {
+    setTimeout(() => reject(new Error("Request timed out")), 20000);
+  });
+
+  Promise.race([
+    fetch("/query", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ query: queryString, intention: intention })
+    }),
+    timeoutPromise
+  ])
+    .then(response => {
+      if (!response.ok) throw new Error("Network response was not ok");
+      return response.json();
+    })
     .then(data => {
       clearInterval(userPromptObj.spinnerId);
       userPromptObj.spinnerSpan.remove();
@@ -176,24 +155,19 @@ function sendQuery(queryString, intention) {
       }
       
       addAssistantMessage(synergyContent);
-
-      // Re-enable shuffle button after loading
       shuffleButton.disabled = false;
     })
     .catch(error => {
       clearInterval(userPromptObj.spinnerId);
       userPromptObj.spinnerSpan.remove();
       console.error("Error:", error);
-      addAssistantMessage("An error occurred while fetching the tarot reading.");
-
-      // Re-enable shuffle button on error
+      addAssistantMessage(error.message === "Request timed out" ? "Request timed out. Please try again." : "An error occurred while fetching the tarot reading.");
       shuffleButton.disabled = false;
+      resetToDefault();
     });
 }
 
-/***************************************************************
- * Card display
- ***************************************************************/
+/* Card Display */
 function clearCardImages() {
   cardImagesContainer.innerHTML = "";
   cardImagesContainer.classList.remove("plus-layout", "three-card-layout");
@@ -225,9 +199,7 @@ function addCardImages(cards, layout) {
   });
 }
 
-/***************************************************************
- * Additional UI / Event handlers
- ***************************************************************/
+/* UI Handlers */
 function showInlineContext(spreadType) {
   welcomeMessageDiv.innerText = "";
   currentSpreadType = spreadType;
@@ -237,7 +209,7 @@ function showInlineContext(spreadType) {
 }
 
 function handleInputChange() {
-  inlineSendButton.disabled = (intentionInput.value.trim().length === 0);
+  handleSendButtonState();
 }
 
 function capitalizeFirstLetter() {
@@ -289,7 +261,6 @@ btnFiveCard.addEventListener("click", () => {
   showInlineContext("Five");
 });
 
-// "Just Cards"
 btnJustSingle.addEventListener("click", () => {
   clearChat();
   document.getElementById("inline-context-container").style.display = "none";
@@ -363,11 +334,9 @@ function resetToDefault() {
   document.getElementById("inline-context-container").style.display = "flex";
   shuffleButton.style.display = "none";
 
-  // Clear input field and disable it
   intentionInput.value = "";
   disableInput();
 
-  // Deselect all buttons
   btnRandomCard.classList.remove("active-button");
   btnThreeCard.classList.remove("active-button");
   btnFiveCard.classList.remove("active-button");
@@ -376,9 +345,7 @@ function resetToDefault() {
   btnJustFive.classList.remove("active-button");
 }
 
-/***************************************************************
- * "Just Cards" logic
- ***************************************************************/
+/* Just Cards Logic */
 const CANONICAL_CARDS = [
   "The Fool", "The Magician", "The High Priestess", "The Empress", "The Emperor",
   "The Hierophant", "The Lovers", "The Chariot", "Strength", "The Hermit",
@@ -427,9 +394,7 @@ function getCardImage(cardName) {
   return "/static/cards/" + cardName.toLowerCase().replace(/ /g, "_") + ".png";
 }
 
-/***************************************************************
- * Modal: Card Zoom
- ***************************************************************/
+/* Card Zoom Modal */
 closeModal.addEventListener("click", () => {
   modal.style.display = "none";
 });
@@ -444,9 +409,8 @@ document.addEventListener("click", (event) => {
   }
 });
 
-/***************************************************************
- * On DOMContentLoaded
- ***************************************************************/
+/* Page Load */
 document.addEventListener("DOMContentLoaded", () => {
   welcomeMessageDiv.innerText = "Welcome to Codex Tarot";
+  intentionInput.addEventListener("input", handleSendButtonState);
 });
