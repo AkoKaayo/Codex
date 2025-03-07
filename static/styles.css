@@ -1,4 +1,3 @@
-/* Base Colors & Fonts */
 :root {
   --dark-gray: #151515;
   --purple: #681D85;
@@ -21,7 +20,6 @@ body {
   line-height: 1.4;
 }
 
-/* Main Layout */
 #main-content {
   flex: 1;
   display: flex;
@@ -29,7 +27,6 @@ body {
   min-height: 100vh;
 }
 
-/* Left Panel */
 #chat-wrapper {
   width: 30%;
   background-color: var(--dark-gray);
@@ -60,7 +57,6 @@ body {
   margin-bottom: 0;
 }
 
-/* Buttons */
 .btn-disabled {
   background-color: #2A2A2A;
   color: #bbb;
@@ -98,7 +94,6 @@ button:active:not(:disabled) {
   color: #681D85;
 }
 
-/* Text Input & Send Button */
 #inline-context-container {
   display: flex;
   align-items: center;
@@ -171,7 +166,10 @@ button:active:not(:disabled) {
 }
 
 #inline-send-button.btn-disabled {
-  /* Inherits from .btn-disabled */
+  background-color: #2A2A2A;
+  color: #bbb;
+  cursor: not-allowed;
+  opacity: 0.5;
 }
 
 #inline-context-container #inline-send-button:hover:not(:disabled) {
@@ -188,7 +186,6 @@ button:active:not(:disabled) {
   color: #681D85 !important;
 }
 
-/* Speed Dial */
 #speed-dial-container,
 #just-cards-speed-dial {
   display: flex;
@@ -238,18 +235,18 @@ button:active:not(:disabled) {
   color: #FFFFFF;
 }
 
-/* Right Panel */
 #cards-wrapper {
   flex: 1;
   background-color: #121212;
   overflow-y: auto;
-  padding: 20px;
+  padding: 1rem;
   display: flex;
   flex-direction: column;
+  justify-content: center;
   align-items: center;
-  justify-content: flex-start;
   position: relative;
   min-width: 0;
+  min-height: 0;
 }
 
 #codex-brand {
@@ -274,64 +271,97 @@ button:active:not(:disabled) {
   margin: 0;
 }
 
-/* Card Layouts */
 #card-images-container:not(.plus-layout):not(.three-card-layout) {
   display: flex;
   align-items: center;
   justify-content: center;
   flex-wrap: wrap;
+  width: 100%;
+  padding: 10px;
+  box-sizing: border-box;
+  min-height: 50%;
 }
 
 .card-image {
   margin: 10px;
   text-align: center;
   cursor: pointer;
-  max-width: 300px;
+  width: 100%;
+  max-width: 250px;
+  min-width: 150px;
+  max-height: 400px;
 }
 
 .card-image img {
   width: 100%;
-  height: auto;
-  display: block;
+  height: 100%;
+  object-fit: contain;
 }
 
 #card-images-container.plus-layout {
   display: grid;
-  width: fit-content;
-  grid-template-columns: 1fr 1fr 1fr;
-  grid-template-rows: auto auto auto;
-  gap: 10px;
-  margin-top: 20px;
+  width: 100%;
+  grid-template-columns: repeat(3, minmax(80px, 1fr));
+  grid-template-rows: repeat(3, auto);
   grid-template-areas:
     ". e ."
     "b c d"
     ". a .";
   justify-items: center;
   align-items: center;
+  column-gap: 0.5rem;
+  row-gap: 1rem;
+  padding: 2rem 0;
 }
 
-#card-images-container.plus-layout .card-image:nth-child(1) { grid-area: a; }
-#card-images-container.plus-layout .card-image:nth-child(2) { grid-area: b; }
-#card-images-container.plus-layout .card-image:nth-child(3) { grid-area: c; }
-#card-images-container.plus-layout .card-image:nth-child(4) { grid-area: d; }
-#card-images-container.plus-layout .card-image:nth-child(5) { grid-area: e; }
+#card-images-container.plus-layout::after {
+  content: '';
+  display: block;
+  margin-top: 1rem;
+}
+
+#card-images-container.plus-layout .card-image:nth-child(1) {
+  grid-area: a;
+}
+#card-images-container.plus-layout .card-image:nth-child(2) {
+  grid-area: b;
+}
+#card-images-container.plus-layout .card-image:nth-child(3) {
+  grid-area: c;
+}
+#card-images-container.plus-layout .card-image:nth-child(4) {
+  grid-area: d;
+}
+#card-images-container.plus-layout .card-image:nth-child(5) {
+  grid-area: e;
+}
 
 #card-images-container.plus-layout .card-image {
   margin: 0;
+  max-width: 200px;
+  min-width: 120px;
+  max-height: 300px;
+  aspect-ratio: 2/3;
 }
 
 #card-images-container.three-card-layout {
   display: flex;
   justify-content: center;
-  gap: 10px;
+  align-items: center;
+  gap: 0.25rem;
+  width: 100%;
+  min-height: 50%;
+  padding: 10px 0;
 }
 
 #card-images-container.three-card-layout .card-image {
   width: fit-content;
   flex: auto;
+  max-width: 200px;
+  min-width: 150px;
+  max-height: 350px;
 }
 
-/* Chat Messages */
 .message {
   padding: 15px;
   white-space: pre-wrap;
@@ -366,8 +396,8 @@ button:active:not(:disabled) {
 }
 
 .user-prompt-subtitle {
-  font-family: 'Sorts Mill Goudy', serif;
-  font-size: 1.4rem;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 0.9rem;
   color: #bbb;
   margin: 0 0 0 5px;
 }
@@ -379,7 +409,8 @@ button:active:not(:disabled) {
   margin-bottom: 5px;
 }
 
-.card-analysis, .tarot-message {
+.card-analysis,
+.tarot-message {
   font-size: 1rem;
   margin-bottom: 15px;
   line-height: 1.6;
@@ -410,7 +441,6 @@ button:active:not(:disabled) {
   color: var(--light-purple);
 }
 
-/* Modal */
 .modal {
   display: none;
   position: fixed;
@@ -441,20 +471,40 @@ button:active:not(:disabled) {
   cursor: pointer;
 }
 
-/* Media Queries */
 @media (max-width: 768px) {
   #main-content {
     flex-direction: column;
   }
-
   #chat-wrapper {
     width: 100%;
     min-height: 50vh;
   }
-
   #cards-wrapper {
     width: 100%;
     min-height: 50vh;
+    padding: 0.5rem;
+  }
+  .card-image {
+    max-width: 150px;
+    min-width: 100px;
+    max-height: 200px;
+  }
+  #card-images-container.plus-layout {
+    gap: 0.5rem;
+    grid-template-columns: repeat(3, minmax(80px, 1fr));
+  }
+  #card-images-container.plus-layout .card-image {
+    max-width: 120px;
+    max-height: 180px;
+  }
+  #card-images-container.three-card-layout {
+    gap: 0.2rem;
+    padding: 5px 0;
+  }
+  #card-images-container.three-card-layout .card-image {
+    max-width: 150px;
+    min-width: 120px;
+    max-height: 250px;
   }
 }
 
@@ -463,20 +513,43 @@ button:active:not(:disabled) {
     padding: 6px 12px;
     font-size: 0.6rem;
   }
-
   #intention-input {
     font-size: 0.65rem;
     padding: 6px 0;
   }
-
   #inline-send-button {
     font-size: 1rem;
     padding: 0 8px;
   }
+  .card-image {
+    max-width: 120px;
+    min-width: 100px;
+    max-height: 200px;
+  }
+  #card-images-container.plus-layout {
+    grid-template-columns: repeat(3, minmax(60px, 1fr));
+    gap: 0.25rem;
+  }
+  #card-images-container.plus-layout .card-image {
+    max-width: 90px;
+    max-height: 135px;
+  }
+  #card-images-container.three-card-layout {
+    gap: 0.15rem;
+    padding: 3px 0;
+  }
+  #card-images-container.three-card-layout .card-image {
+    max-width: 120px;
+    min-width: 100px;
+    max-height: 200px;
+  }
 }
 
-/* Animations */
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
