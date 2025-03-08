@@ -1,27 +1,28 @@
 /* DOM References */
-const chatContainer = document.getElementById("chat-container");
 const welcomeMessageDiv = document.getElementById("welcome-message");
+const userPromptWrapper = document.getElementById("user-prompt-wrapper");
+const readingTextContainer = document.getElementById("reading-text-container");
+
 const cardImagesContainer = document.getElementById("card-images-container");
 const codexBrand = document.getElementById("codex-brand");
 
 const intentionInput = document.getElementById("intention-input");
-const cardReadButtons = document.querySelectorAll("#btn-random-card, #btn-three-card, #btn-five-card");
 const inlineSendButton = document.getElementById("inline-send-button");
 
 const btnRandomCard = document.getElementById("btn-random-card");
 const btnThreeCard = document.getElementById("btn-three-card");
 const btnFiveCard = document.getElementById("btn-five-card");
-
 const btnJustSingle = document.getElementById("btn-just-single");
 const btnJustThree = document.getElementById("btn-just-three");
 const btnJustFive = document.getElementById("btn-just-five");
+
+const shuffleButton = document.getElementById("shuffle-button");
 
 const modal = document.getElementById("card-modal");
 const modalImage = document.getElementById("modal-image");
 const closeModal = document.querySelector("#card-modal .close");
 
 let currentSpreadType = "";
-let currentUserPrompt = "";
 
 /* Input Handling */
 function enableInput() {
@@ -48,20 +49,19 @@ function handleSendButtonState() {
   }
 }
 
+/* On page load, disable input until user picks a spread. */
 disableInput();
 
-cardReadButtons.forEach(button => {
+/* Speed dial spread buttons (API-based) enable the text area. */
+[btnRandomCard, btnThreeCard, btnFiveCard].forEach(button => {
   button.addEventListener("click", enableInput);
 });
 
-/* Chat Output */
-function addAssistantMessage(content) {
-  const messageDiv = document.createElement("div");
-  messageDiv.classList.add("message", "assistant-message");
-  messageDiv.innerHTML = content;
-  chatContainer.appendChild(messageDiv);
-}
+/* ========== UI RENDERING ========== */
 
+/** 
+ * Adds the user prompt (title, question, spinner) to #user-prompt-wrapper.
+ */
 function addUserPrompt(promptText) {
   const promptDiv = document.createElement("div");
   promptDiv.classList.add("user-prompt");
@@ -72,7 +72,7 @@ function addUserPrompt(promptText) {
 
   const subtitleDiv = document.createElement("div");
   subtitleDiv.classList.add("user-prompt-subtitle");
-  subtitleDiv.textContent = `${promptText}`;
+  subtitleDiv.textContent = promptText;
 
   const flexContainer = document.createElement("div");
   flexContainer.style.display = "flex";
@@ -88,8 +88,9 @@ function addUserPrompt(promptText) {
 
   promptDiv.appendChild(flexContainer);
 
-  chatContainer.appendChild(promptDiv);
+  userPromptWrapper.appendChild(promptDiv);
 
+  // Simple spinner animation
   const spinnerFrames = ["|", "/", "-", "\\"];
   let index = 0;
   const spinnerId = setInterval(() => {
@@ -100,21 +101,42 @@ function addUserPrompt(promptText) {
   return { promptDiv, spinnerSpan, spinnerId };
 }
 
-function clearChat() {
-  chatContainer.innerHTML = "";
+/**
+ * Adds the final reading text to #reading-text-container.
+ */
+function addReadingText(content) {
+  const readingDiv = document.createElement("div");
+  readingDiv.innerHTML = content;
+  readingTextContainer.appendChild(readingDiv);
+}
+
+/**
+ * Clears all dynamic UI elements (prompt, reading text, etc.).
+ */
+function clearUI() {
+  userPromptWrapper.innerHTML = "";
+  readingTextContainer.innerHTML = "";
   welcomeMessageDiv.innerText = "";
 }
 
-/* Fetch Logic */
-function sendQuery(queryString, intention) {
-  clearChat();
-  hideUIForReading();
-  const userPromptObj = addUserPrompt(intention);
-  clearCardImages();
-  shuffleButton.disabled = true;
+/* ========== FETCH LOGIC ========== */
 
-  // Add a 20-second timeout for the fetch
-  const timeoutPromise = new Promise((resolve, reject) => {
+/**
+ * Sends the query to /query, shows spinner prompt, waits for response,
+ * then displays the reading text in #reading-text-container.
+ */
+function sendQuery(queryString, intention) {
+  clearUI();
+  hideUIForReading();
+
+  // Show user prompt + spinner
+  const userPromptObj = addUserPrompt(intention);
+
+  clearCardImages();
+  shuffleButton.disabled = true; // Keep shuffle button disabled while loading
+
+  // 20-second fetch timeout
+  const timeoutPromise = new Promise((_, reject) => {
     setTimeout(() => reject(new Error("Request timed out")), 20000);
   });
 
@@ -122,7 +144,7 @@ function sendQuery(queryString, intention) {
     fetch("/query", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ query: queryString, intention: intention })
+      body: JSON.stringify({ query: queryString, intention })
     }),
     timeoutPromise
   ])
@@ -131,14 +153,17 @@ function sendQuery(queryString, intention) {
       return response.json();
     })
     .then(data => {
+      // Stop spinner
       clearInterval(userPromptObj.spinnerId);
       userPromptObj.spinnerSpan.remove();
 
+      // If the server returned cards, display them
       if (data.cards && data.cards.length > 0) {
         addCardImages(data.cards, data.layout);
         codexBrand.style.display = "none";
       }
 
+      // Build reading text
       let synergyContent = "";
       if (data.introduction && data.introduction.trim() !== "") {
         synergyContent += `<p class="assistant-message" style="margin-bottom: 10px;">${data.introduction}</p>`;
@@ -153,24 +178,40 @@ function sendQuery(queryString, intention) {
       if (data.oracle_message && data.oracle_message.trim() !== "") {
         synergyContent += `<p class="tarot-message">${data.oracle_message}</p>`;
       }
-      
-      addAssistantMessage(synergyContent);
+
+      // Append reading text below the user prompt
+      addReadingText(synergyContent);
+
+      // Enable shuffle button once the reading arrives
       shuffleButton.disabled = false;
     })
     .catch(error => {
+      // Stop spinner
       clearInterval(userPromptObj.spinnerId);
       userPromptObj.spinnerSpan.remove();
       console.error("Error:", error);
-      addAssistantMessage(error.message === "Request timed out" ? "Request timed out. Please try again." : "An error occurred while fetching the tarot reading.");
+
+      addReadingText(
+        error.message === "Request timed out"
+          ? "<p class='assistant-message'>Request timed out. Please try again.</p>"
+          : "<p class='assistant-message'>An error occurred while fetching the tarot reading.</p>"
+      );
+
       shuffleButton.disabled = false;
       resetToDefault();
     });
 }
 
-/* Card Display */
+/* ========== CARD DISPLAY ========== */
+
+/**
+ * Clears the card images from #card-images-container.
+ */
 function clearCardImages() {
   cardImagesContainer.innerHTML = "";
   cardImagesContainer.classList.remove("plus-layout", "three-card-layout");
+
+  // Show brand if no cards remain
   setTimeout(() => {
     if (cardImagesContainer.children.length === 0) {
       codexBrand.style.display = "block";
@@ -178,6 +219,9 @@ function clearCardImages() {
   }, 100);
 }
 
+/**
+ * Adds card images to #card-images-container with the specified layout.
+ */
 function addCardImages(cards, layout) {
   clearCardImages();
   codexBrand.style.display = "none";
@@ -199,11 +243,17 @@ function addCardImages(cards, layout) {
   });
 }
 
-/* UI Handlers */
+/* ========== UI HANDLERS ========== */
+
+/**
+ * Called when user clicks a spread button (Single, Three, Five).
+ */
 function showInlineContext(spreadType) {
   welcomeMessageDiv.innerText = "";
   currentSpreadType = spreadType;
   intentionInput.value = "";
+
+  // Show the inline context container so user can type their question
   document.getElementById("inline-context-container").style.display = "flex";
   intentionInput.focus();
 }
@@ -212,6 +262,7 @@ function handleInputChange() {
   handleSendButtonState();
 }
 
+/** Capitalize the first letter automatically */
 function capitalizeFirstLetter() {
   const input = intentionInput.value;
   if (input.length > 0) {
@@ -219,24 +270,36 @@ function capitalizeFirstLetter() {
   }
 }
 
+/**
+ * Called when user submits the question (Enter or click).
+ */
 function handleContextSubmission() {
   const intentionText = intentionInput.value.trim();
   if (intentionText.length === 0) return;
+
+  // Hide the text area after submission
   document.getElementById("inline-context-container").style.display = "none";
 
   let finalQuery = "";
-  if (currentSpreadType.toLowerCase() === "single") {
-    finalQuery = "1 card spread about " + intentionText;
-  } else if (currentSpreadType.toLowerCase() === "three") {
-    finalQuery = "3 card spread about " + intentionText;
-  } else if (currentSpreadType.toLowerCase() === "five") {
-    finalQuery = "5 card spread about " + intentionText;
-  } else {
-    finalQuery = currentSpreadType + " spread about " + intentionText;
+  switch (currentSpreadType.toLowerCase()) {
+    case "single":
+      finalQuery = "1 card spread about " + intentionText;
+      break;
+    case "three":
+      finalQuery = "3 card spread about " + intentionText;
+      break;
+    case "five":
+      finalQuery = "5 card spread about " + intentionText;
+      break;
+    default:
+      finalQuery = currentSpreadType + " spread about " + intentionText;
+      break;
   }
+
   sendQuery(finalQuery, intentionText);
 }
 
+/* Text area events */
 intentionInput.addEventListener("keydown", e => {
   if (e.key === "Enter") {
     e.preventDefault();
@@ -248,6 +311,7 @@ intentionInput.addEventListener("input", capitalizeFirstLetter);
 
 inlineSendButton.addEventListener("click", handleContextSubmission);
 
+/* Speed dial (API) buttons */
 btnRandomCard.addEventListener("click", () => {
   setActiveButton(btnRandomCard);
   showInlineContext("Single");
@@ -261,91 +325,92 @@ btnFiveCard.addEventListener("click", () => {
   showInlineContext("Five");
 });
 
+/* "Just Cards" (client-only) buttons */
 btnJustSingle.addEventListener("click", () => {
-  clearChat();
+  clearUI();
   document.getElementById("inline-context-container").style.display = "none";
   setUserPromptText("Single card spread");
   const result = drawCardsForSpreadClient("single");
-  const cards = result.cards.map(card => ({
-    name: card,
-    image: getCardImage(card)
-  }));
-  addCardImages(cards, result.layout);
+  addCardImages(result.cards, result.layout);
 });
 
 btnJustThree.addEventListener("click", () => {
-  clearChat();
+  clearUI();
   document.getElementById("inline-context-container").style.display = "none";
   setUserPromptText("Three card spread");
   const result = drawCardsForSpreadClient("3-card");
-  const cards = result.cards.map(card => ({
-    name: card,
-    image: getCardImage(card)
-  }));
-  addCardImages(cards, result.layout);
+  addCardImages(result.cards, result.layout);
 });
 
 btnJustFive.addEventListener("click", () => {
-  clearChat();
+  clearUI();
   document.getElementById("inline-context-container").style.display = "none";
   setUserPromptText("Five card spread");
   const result = drawCardsForSpreadClient("5-card");
-  const cards = result.cards.map(card => ({
-    name: card,
-    image: getCardImage(card)
-  }));
-  addCardImages(cards, result.layout);
+  addCardImages(result.cards, result.layout);
 });
 
+/**
+ * Highlights the active spread button.
+ */
 function setActiveButton(clickedBtn) {
-  btnRandomCard.classList.remove("active-button");
-  btnThreeCard.classList.remove("active-button");
-  btnFiveCard.classList.remove("active-button");
+  [btnRandomCard, btnThreeCard, btnFiveCard].forEach(b => b.classList.remove("active-button"));
   clickedBtn.classList.add("active-button");
 }
 
+/**
+ * Show a simple text label above the reading text (for Just Cards).
+ */
 function setUserPromptText(text) {
+  userPromptWrapper.innerHTML = ""; // Clear any old prompt/spinner
   const promptDiv = document.createElement("div");
   promptDiv.classList.add("user-prompt");
   promptDiv.innerText = text;
-  chatContainer.appendChild(promptDiv);
+  userPromptWrapper.appendChild(promptDiv);
 }
 
-const shuffleButton = document.createElement("button");
-shuffleButton.id = "shuffle-button";
-shuffleButton.textContent = "Shuffle and Start Again";
-shuffleButton.style.display = "none";
-shuffleButton.addEventListener("click", resetToDefault);
+/* ========== SHUFFLE BUTTON & RESET ========== */
 
-document.getElementById("chat-bottom-container").appendChild(shuffleButton);
-
+/**
+ * Hides speed dials, shows the shuffle button (disabled).
+ */
 function hideUIForReading() {
   document.getElementById("speed-dial-container").style.display = "none";
   document.getElementById("just-cards-speed-dial").style.display = "none";
   document.getElementById("inline-context-container").style.display = "none";
+
+  // Show the shuffle button, but keep it disabled until reading arrives
   shuffleButton.style.display = "block";
+  shuffleButton.disabled = true;
 }
 
+/**
+ * Resets everything to the initial state (except the welcome message stays hidden 
+ * because you asked to show only once).
+ */
 function resetToDefault() {
-  document.getElementById("chat-container").innerHTML = "";
+  clearUI();
   clearCardImages();
+
   document.getElementById("speed-dial-container").style.display = "flex";
   document.getElementById("just-cards-speed-dial").style.display = "flex";
   document.getElementById("inline-context-container").style.display = "flex";
   shuffleButton.style.display = "none";
 
+  // Re-disable the text area
   intentionInput.value = "";
   disableInput();
 
-  btnRandomCard.classList.remove("active-button");
-  btnThreeCard.classList.remove("active-button");
-  btnFiveCard.classList.remove("active-button");
-  btnJustSingle.classList.remove("active-button");
-  btnJustThree.classList.remove("active-button");
-  btnJustFive.classList.remove("active-button");
+  // Remove any "active-button" highlights
+  [btnRandomCard, btnThreeCard, btnFiveCard, btnJustSingle, btnJustThree, btnJustFive].forEach(b => {
+    b.classList.remove("active-button");
+  });
 }
 
-/* Just Cards Logic */
+/* Shuffle button resets to default. */
+shuffleButton.addEventListener("click", resetToDefault);
+
+/* ========== CLIENT-ONLY LOGIC FOR "JUST CARDS" ========== */
 const CANONICAL_CARDS = [
   "The Fool", "The Magician", "The High Priestess", "The Empress", "The Emperor",
   "The Hierophant", "The Lovers", "The Chariot", "Strength", "The Hermit",
@@ -372,21 +437,23 @@ function getRandomCard() {
 
 function drawCardsForSpreadClient(spreadType) {
   if (spreadType === "5-card") {
-    let chosen = [];
+    const chosen = [];
     while (chosen.length < 5) {
-      let card = getRandomCard();
+      const card = getRandomCard();
       if (!chosen.includes(card)) chosen.push(card);
     }
-    return { cards: chosen, layout: "plus" };
+    return { cards: chosen.map(name => ({ name, image: getCardImage(name) })), layout: "plus" };
   } else if (spreadType === "3-card") {
-    let chosen = [];
+    const chosen = [];
     while (chosen.length < 3) {
-      let card = getRandomCard();
+      const card = getRandomCard();
       if (!chosen.includes(card)) chosen.push(card);
     }
-    return { cards: chosen, layout: "three" };
+    return { cards: chosen.map(name => ({ name, image: getCardImage(name) })), layout: "three" };
   } else {
-    return { cards: [getRandomCard()], layout: "default" };
+    // Single
+    const cardName = getRandomCard();
+    return { cards: [{ name: cardName, image: getCardImage(cardName) }], layout: "default" };
   }
 }
 
@@ -399,7 +466,7 @@ closeModal.addEventListener("click", () => {
   modal.style.display = "none";
 });
 
-document.addEventListener("click", (event) => {
+document.addEventListener("click", event => {
   if (
     event.target.tagName === "IMG" &&
     event.target.parentElement.classList.contains("card-image")
@@ -409,7 +476,7 @@ document.addEventListener("click", (event) => {
   }
 });
 
-/* Page Load */
+/* On DOM load, show welcome text once, then user can pick a spread. */
 document.addEventListener("DOMContentLoaded", () => {
   welcomeMessageDiv.innerText = "Take a breath... \nWhat brings you here today?";
   intentionInput.addEventListener("input", handleSendButtonState);

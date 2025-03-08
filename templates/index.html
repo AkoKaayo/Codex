@@ -6,7 +6,10 @@
   <title>Codex Tarot</title>
 
   <!-- Google Fonts (Sorts Mill Goudy + IBM Plex Sans) -->
-  <link href="https://fonts.googleapis.com/css2?family=Sorts+Mill+Goudy:wght@400;700&family=IBM+Plex+Sans:wght@200;400;600&display=swap" rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Sorts+Mill+Goudy:wght@400;700&family=IBM+Plex+Sans:wght@200;400;600&display=swap"
+    rel="stylesheet"
+  />
   
   <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
 </head>
@@ -14,38 +17,42 @@
   <header></header>
 
   <div id="main-content">
-    <!-- RIGHT COLUMN: Cards (now first) -->
+    <!-- RIGHT COLUMN: Cards -->
     <div id="cards-wrapper">
       <!-- Brand text displayed only when no cards are drawn -->
       <div id="codex-brand">
         <h1>CODEX TAROT</h1>
-        <p>As above, so below. Ask and you shall know.</p>
+        <p></p>
       </div>
-
       <div id="card-images-container"></div>
     </div>
 
-    <!-- LEFT COLUMN: Chat (now second) -->
+    <!-- LEFT COLUMN: Bottom-driven layout -->
     <div id="chat-wrapper">
-      <div id="chat-container"></div>
+      <!-- This bottom container will hold everything in a top-to-bottom order -->
       <div id="chat-bottom-container">
+
+        <!-- 1. Welcome message (shown on page load) -->
         <div id="welcome-message"></div>
 
-        <!-- Speed dial container (API calls) -->
+        <!-- 2. User prompt (spinner + question) -->
+        <div id="user-prompt-wrapper"></div>
+
+        <!-- 3. Speed dial container (API calls) -->
         <div id="speed-dial-container">
           <button id="btn-random-card">Single Card Read</button>
           <button id="btn-three-card">Three Card Read</button>
           <button id="btn-five-card">Five Card Read</button>
         </div>
 
-        <!-- "Just Cards" speed dial buttons (client-side only) -->
+        <!-- 4. "Just Cards" speed dial buttons (client-side only) -->
         <div id="just-cards-speed-dial">
           <button id="btn-just-single">Single Card Spread</button>
           <button id="btn-just-three">Three Card Spread</button>
           <button id="btn-just-five">Five Card Spread</button>
         </div>
 
-        <!-- Inline context input appears here when user picks a spread -->
+        <!-- 5. Inline context input (for the user’s question) -->
         <div id="inline-context-container">
           <textarea
             id="intention-input"
@@ -54,6 +61,12 @@
           ></textarea>
           <button id="inline-send-button" disabled></button>
         </div>
+
+        <!-- 6. Reading text (final tarot reading from the server) -->
+        <div id="reading-text-container"></div>
+
+        <!-- 7. Shuffle button at the bottom -->
+        <button id="shuffle-button" style="display: none;">Shuffle and Start Again</button>
       </div>
     </div>
   </div>
@@ -63,6 +76,8 @@
     <span class="close">×</span>
     <img class="modal-content" id="modal-image">
   </div>
+
+  <!-- Main script -->
   <script src="{{ url_for('static', filename='scripts.js') }}"></script>
 </body>
 </html>
