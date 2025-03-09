@@ -3,56 +3,33 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Codex Tarot</title>
-
-  <!-- Google Fonts (Sorts Mill Goudy + IBM Plex Sans) -->
+  <title>Codex Arcana</title>
   <link
     href="https://fonts.googleapis.com/css2?family=Sorts+Mill+Goudy:wght@400;700&family=IBM+Plex+Sans:wght@200;400;600&display=swap"
     rel="stylesheet"
   />
-  
+  <!-- Adjust path to your static folder as needed -->
   <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
 </head>
 <body>
-  <header></header>
-
-  <div id="main-content">
-    <!-- RIGHT COLUMN: Cards -->
-    <div id="cards-wrapper">
-      <!-- Brand text displayed only when no cards are drawn -->
+  <div id="app-container">
+    <!-- Centered Card Area -->
+    <div id="card-area">
       <div id="codex-brand">
-        <h1>CODEX TAROT</h1>
-        <p></p>
+        <h1>CODEX ARCANA</h1>
+        <p>Take a breath... What brings you here today?</p>
       </div>
       <div id="card-images-container"></div>
     </div>
 
-    <!-- LEFT COLUMN: Bottom-driven layout -->
-    <div id="chat-wrapper">
-      <!-- This bottom container will hold everything in a top-to-bottom order -->
-      <div id="chat-bottom-container">
-
-        <!-- 1. Welcome message (shown on page load) -->
-        <div id="welcome-message"></div>
-
-        <!-- 2. User prompt (spinner + question) -->
-        <div id="user-prompt-wrapper"></div>
-
-        <!-- 3. Speed dial container (API calls) -->
-        <div id="speed-dial-container">
+    <!-- Bottom Toolbar -->
+    <div id="bottom-toolbar">
+      <div id="toolbar-container">
+        <div id="toolbar-buttons">
           <button id="btn-random-card">Single Card Read</button>
-          <button id="btn-three-card">Three Card Read</button>
-          <button id="btn-five-card">Five Card Read</button>
+          <button id="btn-three-card">Three Cards Read</button>
+          <button id="btn-five-card">Five Cards Read</button>
         </div>
-
-        <!-- 4. "Just Cards" speed dial buttons (client-side only) -->
-        <div id="just-cards-speed-dial">
-          <button id="btn-just-single">Single Card Spread</button>
-          <button id="btn-just-three">Three Card Spread</button>
-          <button id="btn-just-five">Five Card Spread</button>
-        </div>
-
-        <!-- 5. Inline context input (for the user’s question) -->
         <div id="inline-context-container">
           <textarea
             id="intention-input"
@@ -61,23 +38,29 @@
           ></textarea>
           <button id="inline-send-button" disabled></button>
         </div>
+      </div>
+    </div>
 
-        <!-- 6. Reading text (final tarot reading from the server) -->
-        <div id="reading-text-container"></div>
-
-        <!-- 7. Shuffle button at the bottom -->
+    <!-- Reading Panel -->
+    <!-- Removed any "hidden" class since we control display purely via JS -->
+    <div id="reading-panel">
+      <span id="close-panel">×</span>
+      <div id="user-prompt-wrapper"></div>
+      <div id="reading-text-container"></div>
+      <div id="shuffle-container">
+        <!-- Shuffle button hidden by default; revealed after reading loads -->
         <button id="shuffle-button" style="display: none;">Shuffle and Start Again</button>
       </div>
     </div>
+
+    <!-- Card Zoom Modal -->
+    <div id="card-modal" class="modal">
+      <span class="close">×</span>
+      <img class="modal-content" id="modal-image">
+    </div>
   </div>
 
-  <!-- Card Zoom Modal -->
-  <div id="card-modal" class="modal">
-    <span class="close">×</span>
-    <img class="modal-content" id="modal-image">
-  </div>
-
-  <!-- Main script -->
+  <!-- Adjust path to your static folder as needed -->
   <script src="{{ url_for('static', filename='scripts.js') }}"></script>
 </body>
 </html>
