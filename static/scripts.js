@@ -45,8 +45,9 @@ function handleSendButtonState() {
   }
 }
 
-/* On page load, disable input until user picks a spread. */
+/* On page load, disable input and hide reading panel */
 disableInput();
+hideReadingPanel(); // Ensure panel is hidden on load
 
 /* Speed dial buttons enable the text area. */
 [btnRandomCard, btnThreeCard, btnFiveCard].forEach(button => {
@@ -103,6 +104,32 @@ function clearUI() {
   readingTextContainer.innerHTML = "";
 }
 
+/* Add a function to scale cards dynamically */
+function scaleCards() {
+  const cardImagesContainer = document.getElementById("card-images-container");
+  const cardImages = cardImagesContainer.getElementsByClassName("card-image");
+
+  if (cardImages.length > 0) {
+    const containerWidth = cardImagesContainer.offsetWidth;
+    const numCards = cardImages.length;
+    let maxCardWidth;
+
+    if (window.innerWidth <= 900) { // Mobile
+      const totalMarginPerCard = 20; // 10px left + 10px right
+      maxCardWidth = Math.min((containerWidth - (numCards * totalMarginPerCard)) / numCards, 200);
+    } else { // Desktop and intermediate resolutions
+      const totalMarginPerCard = 20;
+      maxCardWidth = Math.min((containerWidth - (numCards * totalMarginPerCard)) / numCards, 300);
+      maxCardWidth = Math.max(maxCardWidth, 200); // Ensure minimum width for visibility
+    }
+
+    Array.from(cardImages).forEach(card => {
+      card.style.maxWidth = `${maxCardWidth}px`;
+      card.style.height = "auto"; // Maintain aspect ratio
+    });
+  }
+}
+
 /* Fetch Logic */
 function sendQuery(queryString, intention) {
   clearUI();
@@ -153,6 +180,7 @@ function sendQuery(queryString, intention) {
       // Show any returned card images
       if (data.cards && data.cards.length > 0) {
         addCardImages(data.cards, spreadType);
+        scaleCards(); // Scale after images are added
       } else {
         console.warn("No cards in response:", data);
       }
@@ -185,8 +213,6 @@ function sendQuery(queryString, intention) {
       // Show shuffle button to allow reset
       shuffleButton.disabled = false;
       shuffleButton.style.display = "block";
-
-      // We still want the user to be able to reset
     });
 }
 
@@ -251,6 +277,7 @@ function handleContextSubmission() {
 function showReadingPanel() {
   readingPanel.classList.add("active");
   cardArea.classList.add("panel-open");
+  readingPanel.style.display = "flex"; // Ensure panel is shown
 
   // Initially hide shuffle button each time we open the panel
   shuffleButton.style.display = "none";
@@ -260,9 +287,8 @@ function showReadingPanel() {
 function hideReadingPanel() {
   readingPanel.classList.remove("active");
   cardArea.classList.remove("panel-open");
-
-  // Show bottom toolbar again
-  bottomToolbar.style.display = "flex";
+  readingPanel.style.display = "none"; // Hide panel
+  bottomToolbar.style.display = "flex"; // Restore toolbar
 
   // Hide shuffle button
   shuffleButton.style.display = "none";
@@ -314,7 +340,6 @@ function setActiveButton(clickedBtn) {
 }
 
 shuffleButton.addEventListener("click", resetToDefault);
-closePanel.addEventListener("click", hideReadingPanel);
 
 closeModal.addEventListener("click", () => {
   modal.style.display = "none";
@@ -333,4 +358,5 @@ document.addEventListener("click", event => {
 document.addEventListener("DOMContentLoaded", () => {
   // Double-check we keep the send button disabled if no text
   intentionInput.addEventListener("input", handleSendButtonState);
+  hideReadingPanel(); // Ensure panel is hidden on page load
 });
