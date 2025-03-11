@@ -20,6 +20,169 @@ const closeModal = document.querySelector("#card-modal .close");
 
 let currentSpreadType = "";
 
+// Button text states
+const buttonTextStates = {
+  random: { full: "Single Card Read", short: "Single" },
+  three: { full: "Three Cards Read", short: "3 Cards" },
+  five: { full: "Five Cards Read", short: "5 Cards" }
+};
+
+// --- NEW: Starry Particle Logic ---
+// Configurable parameters (edit these to fine-tune)
+const PARTICLE_COUNT = 75;          // Number of particles (50–100 recommended)
+const MIN_SIZE = 0.5;               // Minimum particle radius (pixels) - very small
+const MAX_SIZE = 1;                 // Maximum particle radius (pixels) - very small
+const MIN_SPEED = -0.2;             // Minimum velocity (pixels per frame) - slow
+const MAX_SPEED = 0.1;              // Maximum velocity (pixels per frame) - slow
+const TWINKLE_SPEED = 0.02;         // Speed of opacity oscillation (higher = faster)
+const COLLISION_DISTANCE = 5;       // Distance for collision detection (pixels)
+const COLLISION_BRIGHTNESS = 3;     // Brightness increase on collision (multiplier)
+const COLLISION_DURATION = 500;     // Duration of brightness in ms
+const FADE_DURATION = 5000;         // Fade-out duration in ms (5 seconds)
+
+// Canvas setup
+const canvas = document.getElementById("starry-canvas");
+const ctx = canvas.getContext("2d");
+let particles = [];
+let showParticles = true; // Control particle visibility
+let canvasOpacity = 1;    // Track canvas opacity for fade-out
+
+// Particle class
+class Particle {
+  constructor() {
+    this.x = Math.random() * canvas.width;
+    this.y = Math.random() * canvas.height;
+    this.size = Math.random() * (MAX_SIZE - MIN_SIZE) + MIN_SIZE;
+    this.dx = Math.random() * (MAX_SPEED - MIN_SPEED) + MIN_SPEED;
+    this.dy = Math.random() * (MAX_SPEED - MIN_SPEED) + MIN_SPEED;
+    this.opacity = 0.5 + Math.random() * 0.5; // 0.5 to 1.0
+    this.twinklePhase = Math.random() * Math.PI * 2;
+    this.brightness = 1; // Multiplier for collision effect
+    this.brightnessTimeout = null;
+  }
+
+  draw() {
+    ctx.beginPath();
+    ctx.arc(this.x, this.y, this.size * this.brightness, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`; // White stars
+    ctx.fill();
+    ctx.closePath();
+  }
+
+  update() {
+    // Movement
+    this.x += this.dx;
+    this.y += this.dy;
+
+    // Wrap around edges
+    if (this.x < 0) this.x = canvas.width;
+    if (this.x > canvas.width) this.x = 0;
+    if (this.y < 0) this.y = canvas.height;
+    if (this.y > canvas.height) this.y = 0;
+
+    // Twinkle effect
+    this.twinklePhase += TWINKLE_SPEED;
+    this.opacity = 0.5 + Math.sin(this.twinklePhase) * 0.25; // 0.25 to 0.75
+
+    // Reset brightness after collision duration
+    if (this.brightness > 1) {
+      clearTimeout(this.brightnessTimeout);
+      this.brightnessTimeout = setTimeout(() => {
+        this.brightness = 1;
+      }, COLLISION_DURATION);
+    }
+  }
+}
+
+// Initialize particles
+function initParticles() {
+  particles = [];
+  for (let i = 0; i < PARTICLE_COUNT; i++) {
+    particles.push(new Particle());
+  }
+}
+
+// Check collisions
+function checkCollisions() {
+  for (let i = 0; i < particles.length; i++) {
+    for (let j = i + 1; j < particles.length; j++) {
+      const dx = particles[i].x - particles[j].x;
+      const dy = particles[i].y - particles[j].y;
+      const distance = Math.sqrt(dx * dx + dy * dy);
+      if (distance < COLLISION_DISTANCE) {
+        particles[i].brightness = COLLISION_BRIGHTNESS;
+        particles[j].brightness = COLLISION_BRIGHTNESS;
+      }
+    }
+  }
+}
+
+// Fade out particles over 5 seconds
+function fadeOutParticles() {
+  if (!showParticles) return; // Already fading or hidden
+  showParticles = false;
+
+  const fadeSteps = 100; // Number of steps for smooth fade
+  const fadeInterval = FADE_DURATION / fadeSteps; // Time per step (50ms per step)
+  let step = 0;
+
+  const fadeTimer = setInterval(() => {
+    step++;
+    canvasOpacity = 1 - (step / fadeSteps); // Linear fade from 1 to 0
+    canvas.style.opacity = canvasOpacity;
+
+    if (step >= fadeSteps) {
+      clearInterval(fadeTimer);
+      canvas.remove(); // NEW: Remove canvas from DOM
+    }
+  }, fadeInterval);
+}
+
+// Animation loop
+function animateParticles() {
+  if (!showParticles) return; // Stop animating if hidden
+
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  particles.forEach(particle => {
+    particle.update();
+    particle.draw();
+  });
+  checkCollisions();
+  requestAnimationFrame(animateParticles);
+}
+
+// Resize canvas
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  initParticles(); // Reinitialize particles to fit new size
+}
+
+// Debounce function (reused from button text)
+function debounce(func, delay) {
+  let timeoutId;
+  return function (...args) {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => func.apply(this, args), delay);
+  };
+}
+
+// --- Existing Button Text Logic ---
+function updateButtonText() {
+  const breakpoint = 768;
+  if (window.innerWidth <= breakpoint) {
+    btnRandomCard.textContent = buttonTextStates.random.short;
+    btnThreeCard.textContent = buttonTextStates.three.short;
+    btnFiveCard.textContent = buttonTextStates.five.short;
+  } else {
+    btnRandomCard.textContent = buttonTextStates.random.full;
+    btnThreeCard.textContent = buttonTextStates.three.full;
+    btnFiveCard.textContent = buttonTextStates.five.full;
+  }
+}
+
+const debouncedUpdateButtonText = debounce(updateButtonText, 200);
+
 /* Input Handling */
 function enableInput() {
   intentionInput.disabled = false;
@@ -270,6 +433,9 @@ function handleContextSubmission() {
   const intentionText = intentionInput.value.trim();
   if (!intentionText) return;
 
+  // Fade out particles when submitting a query
+  fadeOutParticles();
+
   sendQuery(`${currentSpreadType.toLowerCase()} card spread about ${intentionText}`, intentionText);
 }
 
@@ -308,6 +474,7 @@ function resetToDefault() {
   intentionInput.value = "";
   currentSpreadType = "";      
   [btnRandomCard, btnThreeCard, btnFiveCard].forEach(b => b.classList.remove("active-button"));
+  // Note: Do NOT re-enable particles here
 }
 
 /* Event Listeners */
@@ -359,4 +526,10 @@ document.addEventListener("DOMContentLoaded", () => {
   // Double-check we keep the send button disabled if no text
   intentionInput.addEventListener("input", handleSendButtonState);
   hideReadingPanel(); // Ensure panel is hidden on page load
+  updateButtonText();
+  resizeCanvas();
+  animateParticles();
 });
+
+window.addEventListener("resize", debouncedUpdateButtonText);
+window.addEventListener("resize", resizeCanvas);

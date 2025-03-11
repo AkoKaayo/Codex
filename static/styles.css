@@ -8,13 +8,14 @@
 }
 
 body {
-  background-color: #000000;
+  background-color: #000000; /* Keep body black for base */
   color: var(--white);
   margin: 0;
   padding: 0;
   font-family: 'IBM Plex Sans', sans-serif;
   font-size: 1rem;
   line-height: 1.4;
+  position: relative; /* NEW: Establish stacking context for body */
 }
 
 h3 {
@@ -33,7 +34,19 @@ h3 {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: #181818;
+  background-color: transparent; /* Changed from #181818 to allow canvas visibility */
+  position: relative;
+}
+
+/* Canvas styling */
+#starry-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh; /* Explicit height to match viewport */
+  z-index: -1; /* Behind all content */
+  pointer-events: none; /* NEW: Prevent canvas from blocking clicks */
 }
 
 #card-area {
@@ -43,7 +56,7 @@ h3 {
   align-items: center;
   position: relative;
   transition: margin-right 0.3s ease;
-  background-color: #000000;
+  background-color: transparent; /* Changed from #000000 to show particles */
   min-height: 0;
 }
 
@@ -407,8 +420,8 @@ button:active:not(:disabled) {
     border-top-right-radius: 32px;
   }
   #reading-panel.active {
-  border-top-left-radius: 32px;
-  border-top-right-radius: 32px;
+    border-top-left-radius: 32px;
+    border-top-right-radius: 32px;
   }
   #card-area.panel-open {
     margin-right: 0;
