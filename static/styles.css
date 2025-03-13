@@ -15,7 +15,7 @@ body {
   font-family: 'IBM Plex Sans', sans-serif;
   font-size: 1rem;
   line-height: 1.4;
-  position: relative; /* NEW: Establish stacking context for body */
+  position: relative;
 }
 
 h3 {
@@ -30,12 +30,25 @@ h3 {
   unicode-bidi: isolate;
 }
 
+/* Container that holds everything */
 #app-container {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background-color: transparent; /* Changed from #181818 to allow canvas visibility */
-  position: relative;
+  background-color: transparent;
+  position: relative; /* No margin-right shift here anymore */
+}
+
+/* NEW: Remove the old #app-container.panel-open shift entirely */
+
+/* Vanta.js fog effect container */
+#vanta-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  z-index: -1; /* Above card-area, below toolbar */
 }
 
 /* Canvas styling */
@@ -44,20 +57,44 @@ h3 {
   top: 0;
   left: 0;
   width: 100%;
-  height: 100vh; /* Explicit height to match viewport */
-  z-index: -1; /* Behind all content */
-  pointer-events: none; /* NEW: Prevent canvas from blocking clicks */
+  height: 100vh;
+  z-index: -1; /* Same layer as fog */
+  pointer-events: none; /* Prevent canvas from blocking clicks */
 }
 
+/* CARD AREA */
 #card-area {
-  flex: 1; /* Default flex to push toolbar to bottom */
-  display: flex;
-  justify-content: center;
+  flex: 1;
+  display: table-column;
+  justify-content: space-between;
   align-items: center;
   position: relative;
-  transition: margin-right 0.3s ease;
-  background-color: transparent; /* Changed from #000000 to show particles */
+  background-color: transparent;
   min-height: 0;
+  z-index: 0;
+  margin-top: 40px; /* Space for logo */
+  transition: margin-right 0.3s ease; /* We shift it when panel opens */
+}
+
+/* When the reading panel is open, shift card-area left by 400px */
+#card-area.panel-open {
+  margin-right: 400px;
+}
+
+#logo {
+  position: relative;
+  top: -100px; /* Start off-screen */
+  left: 53%;
+  transform: translateX(-50%);
+  opacity: 0; /* Initially invisible */
+  transition: top 1s ease, opacity 1s ease; /* Slide and fade in over 1 second */
+  z-index: 2; /* Above card-area but below reading panel */
+  pointer-events: none;
+}
+
+#logo img {
+  max-height: 50px;
+  width: auto;
 }
 
 #codex-brand {
@@ -68,37 +105,39 @@ h3 {
   text-align: center;
   font-family: 'Sorts Mill Goudy', serif;
   pointer-events: none;
+  text-shadow: 0 0 55px #AD37DB;
+  z-index: -2;
 }
 
 #codex-brand h1 {
   font-size: 72px;
   line-height: 66px;
-  color: #2D2D2D;
+  color: #000000;
   margin: 0 0 10px 0;
 }
 
 #codex-brand p {
-  font-size: 22px;
-  color: #2D2D2D;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 18px;
+  color: #787878;
   margin: 0;
 }
 
-/* Card container layouts */
+/* CARD IMAGES CONTAINER */
 #card-images-container {
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-wrap: nowrap; /* Prevent wrapping universally */
-  padding: 20px;
-  width: 100%;
-  min-height: 0;
+  flex-wrap: nowrap;  /* keep everything on one row */
+  padding: 3rem 0;
+  margin: 0 auto;
 }
 
 .card-image {
   margin: 10px;
   text-align: center;
   cursor: pointer;
-  max-width: 300px; /* Default for desktop */
+  max-width: 300px; /* default for desktop, can override w/ media query */
   max-height: 450px;
   height: auto;
 }
@@ -109,12 +148,13 @@ h3 {
   object-fit: contain;
 }
 
-/* Bottom toolbar */
+/* BOTTOM TOOLBAR */
 #bottom-toolbar {
   padding: 20px;
-  background-color: #000000;
+  background-color: transparent;
   display: flex;
   justify-content: center;
+  z-index: 1;
 }
 
 #toolbar-container {
@@ -122,10 +162,11 @@ h3 {
   flex-direction: column;
   gap: 20px;
   background-color: #151515;
-  border-radius: 16px;
+  border-radius: 36px;
   padding: 20px;
   max-width: 600px;
   width: 100%;
+  opacity: 80%;
 }
 
 #toolbar-buttons {
@@ -135,7 +176,6 @@ h3 {
   width: 100%;
 }
 
-/* This ensures each button stretches equally */
 #toolbar-buttons button {
   flex: 1;
   width: auto !important;
@@ -167,9 +207,9 @@ button:active:not(:disabled) {
 }
 
 .active-button {
-  background-color: rgba(104, 29, 133, 0.1);
+  background-color: #681D85;
   border-color: #681D85;
-  color: #681D85;
+  color: #AD37DB;
 }
 
 /* Context input */
@@ -200,6 +240,7 @@ button:active:not(:disabled) {
 #intention-input:disabled {
   cursor: not-allowed;
   opacity: 0.5;
+  color: #151515;
 }
 
 #inline-send-button {
@@ -220,31 +261,25 @@ button:active:not(:disabled) {
   color: #681D85 !important;
 }
 
-/* Reading Panel */
+/* READING PANEL */
 #reading-panel {
-  border-top-left-radius: 16px;
-  border-top-right-radius: 16px;
+  border-top-left-radius: 36px;
+  border-top-right-radius: 0;
   position: fixed;
   top: 0;
-  right: -100%;
+  right: -400px; /* hidden by default; slides in when .active */
   width: 400px;
-  height: 100%;
+  height: 100vh;
   background-color: var(--dark-gray);
-  display: flex;
+  display: none; /* hidden unless .active */
   flex-direction: column;
   transition: right 0.3s ease;
-  border-top-left-radius: 16px;
-  border-top-right-radius: 0;
-  display: none; /* Hide by default */
+  z-index: 1;
 }
 
 #reading-panel.active {
   right: 0;
-  display: flex; /* Show when active */
-}
-
-#card-area.panel-open {
-  margin-right: 400px;
+  display: flex;
 }
 
 #close-panel {
@@ -252,14 +287,13 @@ button:active:not(:disabled) {
   top: 10px;
   right: 10px;
   color: #fff;
-  font-size: 40px;
-  font-weight: bold;
+  font-size: 20px;
   cursor: pointer;
 }
 
 #user-prompt-wrapper {
-  border-top-left-radius: 32px;
-  border-top-right-radius: 32px;
+  border-top-left-radius: 36px;
+  border-top-right-radius: 36px;
   margin-top: 20px;
   padding: 0 20px;
 }
@@ -286,7 +320,7 @@ button:active:not(:disabled) {
   width: 95%;
   background-color: var(--dark-gray);
   border: 1px solid #787878;
-  border-radius: 12px;
+  border-radius: 16px;
   color: #787878;
   transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
 }
@@ -372,11 +406,10 @@ button:active:not(:disabled) {
 
 .close {
   position: absolute;
-  top: 0px;
-  right: 0px;
+  top: 10px;
+  right: 10px;
   color: #fff;
-  font-size: 40px;
-  font-weight: bold;
+  font-size: 20px;
   cursor: pointer;
 }
 
@@ -388,45 +421,51 @@ button:active:not(:disabled) {
 
 /* Responsive adjustments */
 @media (max-width: 900px) {
-  #app-container {
-    position: relative;
-  }
   #card-area {
     align-items: flex-start;
-    height: auto; /* Allow natural height */
-    min-height: 200px; /* Ensure minimum height for content */
-    overflow: hidden; /* Prevent scrolling in card-area */
-    position: sticky; /* Fix at top */
+    height: auto;
+    min-height: 200px;
+    overflow: hidden;
+    position: sticky;
     top: 0;
+    margin-top: 20px;
+    margin-right: 0; /* Prevent side shift on narrow screens */
   }
+
+  #logo {
+    margin-bottom: 0px;
+  }
+
   #card-images-container {
-    flex-wrap: nowrap; /* Keep cards horizontal */
-    justify-content: center; /* Center cards */
-    overflow-x: auto; /* Allow horizontal scrolling if needed */
+    flex-wrap: nowrap;
+    justify-content: center;
+    overflow-x: auto; /* allow horizontal scroll if needed */
   }
   .card-image {
-    max-width: 200px; /* Smaller width on mobile */
-    max-height: 300px; /* Limit height on mobile */
+    max-width: 200px; /* smaller width on mobile if you like */
+    max-height: 300px;
   }
+
+  /* Let reading panel stack in flow on mobile */
   #reading-panel {
-    position: relative; /* Stack in flow */
+    position: relative;
     top: auto;
-    bottom: auto;
     right: auto;
     width: 100%;
-    flex: 1; /* Take remaining height */
-    min-height: 200px; /* Ensure minimum space */
-    border-top-left-radius: 32px;
-    border-top-right-radius: 32px;
+    height: auto;
+    display: none; /* stays hidden unless active */
+    border-top-left-radius: 36px;
+    border-top-right-radius: 36px;
+    margin-top: 20px;
   }
   #reading-panel.active {
-    border-top-left-radius: 32px;
-    border-top-right-radius: 32px;
+    display: flex;
   }
   #card-area.panel-open {
-    margin-right: 0;
+    margin-right: 0; /* no side shift on small screens */
   }
+
   #bottom-toolbar {
-    display: none; /* Hidden on mobile during reading */
+    display: none; /* Hide the desktop toolbar on mobile if desired */
   }
 }

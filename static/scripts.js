@@ -1,5 +1,7 @@
+
 /* DOM References */
 const cardArea = document.getElementById("card-area");
+const appContainer = document.getElementById("app-container"); // Added
 const cardImagesContainer = document.getElementById("card-images-container");
 const codexBrand = document.getElementById("codex-brand");
 const intentionInput = document.getElementById("intention-input");
@@ -17,6 +19,7 @@ const inlineContextContainer = document.getElementById("inline-context-container
 const modal = document.getElementById("card-modal");
 const modalImage = document.getElementById("modal-image");
 const closeModal = document.querySelector("#card-modal .close");
+const logo = document.getElementById("logo"); // Reference to logo
 
 let currentSpreadType = "";
 
@@ -27,11 +30,11 @@ const buttonTextStates = {
   five: { full: "Five Cards Read", short: "5 Cards" }
 };
 
-// --- NEW: Starry Particle Logic ---
+// --- Starry Particle Logic ---
 // Configurable parameters (edit these to fine-tune)
-const PARTICLE_COUNT = 75;          // Number of particles (50–100 recommended)
-const MIN_SIZE = 0.5;               // Minimum particle radius (pixels) - very small
-const MAX_SIZE = 1;                 // Maximum particle radius (pixels) - very small
+const PARTICLE_COUNT = 111;          // Number of particles (50–100 recommended)
+const MIN_SIZE = 0.2;               // Minimum particle radius (pixels) - very small
+const MAX_SIZE = 0.7;               // Maximum particle radius (pixels) - very small
 const MIN_SPEED = -0.2;             // Minimum velocity (pixels per frame) - slow
 const MAX_SPEED = 0.1;              // Maximum velocity (pixels per frame) - slow
 const TWINKLE_SPEED = 0.02;         // Speed of opacity oscillation (higher = faster)
@@ -46,6 +49,14 @@ const ctx = canvas.getContext("2d");
 let particles = [];
 let showParticles = true; // Control particle visibility
 let canvasOpacity = 1;    // Track canvas opacity for fade-out
+
+// Vanta.js fog setup
+const vantaBackground = document.getElementById("vanta-background");
+let vantaEffect = null;   // Store Vanta.js effect instance
+let vantaOpacity = 1;     // Track Vanta.js div opacity for fade-out
+
+// Track branding text opacity
+let brandOpacity = 1;     // Track codex-brand opacity for fade-out
 
 // Particle class
 class Particle {
@@ -117,8 +128,8 @@ function checkCollisions() {
   }
 }
 
-// Fade out particles over 5 seconds
-function fadeOutParticles() {
+// Fade out particles, fog, and branding text over 5 seconds
+function fadeOutEffects() {
   if (!showParticles) return; // Already fading or hidden
   showParticles = false;
 
@@ -129,16 +140,28 @@ function fadeOutParticles() {
   const fadeTimer = setInterval(() => {
     step++;
     canvasOpacity = 1 - (step / fadeSteps); // Linear fade from 1 to 0
+    vantaOpacity = 1 - (step / fadeSteps);
+    brandOpacity = 1 - (step / fadeSteps); // Fade out branding text
     canvas.style.opacity = canvasOpacity;
+    vantaBackground.style.opacity = vantaOpacity;
+    codexBrand.style.opacity = brandOpacity;
 
     if (step >= fadeSteps) {
       clearInterval(fadeTimer);
-      canvas.remove(); // NEW: Remove canvas from DOM
+      // Remove all elements from the DOM
+      canvas.remove();
+      vantaBackground.remove();
+      codexBrand.remove();
+      // Destroy Vanta.js effect
+      if (vantaEffect) {
+        vantaEffect.destroy();
+        vantaEffect = null;
+      }
     }
   }, fadeInterval);
 }
 
-// Animation loop
+// Animation loop for particles
 function animateParticles() {
   if (!showParticles) return; // Stop animating if hidden
 
@@ -166,6 +189,31 @@ function debounce(func, delay) {
     timeoutId = setTimeout(() => func.apply(this, args), delay);
   };
 }
+
+// Initialize Vanta.js Fog Effect and Particles
+document.addEventListener("DOMContentLoaded", () => {
+  // Initialize Vanta.js fog
+  vantaEffect = VANTA.FOG({
+    el: "#vanta-background",
+    mouseControls: true,
+    touchControls: true,
+    gyroControls: true,
+    minHeight: 200.00,
+    minWidth: 200.00,
+    highlightColor: 0x6e00b9, // Purple
+    midtoneColor: 0x370069,   // Darker purple
+    lowlightColor: 0xAD37DB,  // White
+    baseColor: 0x0,           // Black
+    blurFactor: 0.6,
+    speed: -1,
+    zoom: 0.6,
+    backgroundAlpha: 0        // Fully transparent base color
+  });
+
+  // Initialize particles
+  resizeCanvas();
+  animateParticles();
+});
 
 // --- Existing Button Text Logic ---
 function updateButtonText() {
@@ -313,6 +361,13 @@ function sendQuery(queryString, intention) {
   shuffleButton.style.display = "none";
   shuffleButton.disabled = true;
 
+  // Slide in logo when loading starts
+  logo.style.top = "20px";
+  logo.style.opacity = 1;
+
+  // Add panel-open class to app-container to shift logo with card-area
+  appContainer.classList.add("panel-open");
+
   // Timeout in case server is unresponsive
   const timeoutPromise = new Promise((_, reject) => {
     setTimeout(() => reject(new Error("Request timed out")), 20000);
@@ -376,6 +431,10 @@ function sendQuery(queryString, intention) {
       // Show shuffle button to allow reset
       shuffleButton.disabled = false;
       shuffleButton.style.display = "block";
+    })
+    .finally(() => {
+      // Clean up panel-open class when request completes (success or failure)
+      appContainer.classList.remove("panel-open");
     });
 }
 
@@ -433,8 +492,8 @@ function handleContextSubmission() {
   const intentionText = intentionInput.value.trim();
   if (!intentionText) return;
 
-  // Fade out particles when submitting a query
-  fadeOutParticles();
+  // Fade out both fog and particles
+  fadeOutEffects();
 
   sendQuery(`${currentSpreadType.toLowerCase()} card spread about ${intentionText}`, intentionText);
 }
@@ -453,6 +512,7 @@ function showReadingPanel() {
 function hideReadingPanel() {
   readingPanel.classList.remove("active");
   cardArea.classList.remove("panel-open");
+  appContainer.classList.remove("panel-open"); // Ensure app-container class is removed
   readingPanel.style.display = "none"; // Hide panel
   bottomToolbar.style.display = "flex"; // Restore toolbar
 
@@ -474,7 +534,7 @@ function resetToDefault() {
   intentionInput.value = "";
   currentSpreadType = "";      
   [btnRandomCard, btnThreeCard, btnFiveCard].forEach(b => b.classList.remove("active-button"));
-  // Note: Do NOT re-enable particles here
+  // Note: Do NOT re-enable effects or branding here
 }
 
 /* Event Listeners */
@@ -525,10 +585,8 @@ document.addEventListener("click", event => {
 document.addEventListener("DOMContentLoaded", () => {
   // Double-check we keep the send button disabled if no text
   intentionInput.addEventListener("input", handleSendButtonState);
-  hideReadingPanel(); // Ensure panel is hidden on page load
+  hideReadingPanel(); // Ensure panel is hidden on load
   updateButtonText();
-  resizeCanvas();
-  animateParticles();
 });
 
 window.addEventListener("resize", debouncedUpdateButtonText);
