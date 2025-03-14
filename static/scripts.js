@@ -42,9 +42,9 @@ let currentSpreadType = "";
 
 // Button text states
 const buttonTextStates = {
-  random: { full: "Single Card Read", short: "Single" },
-  three: { full: "Three Cards Read", short: "3 Cards" },
-  five: { full: "Five Cards Read", short: "5 Cards" }
+  random: { full: "SINGLE CARD READ", short: "SINGLE" },
+  three: { full: "THREE CARDS READ", short: "3 CARDS" },
+  five: { full: "FIVE CARDS READ", short: "5 CARDS" }
 };
 
 // --- Starry Particle Logic ---
@@ -220,7 +220,7 @@ document.addEventListener("DOMContentLoaded", () => {
     midtoneColor: 0x370069,
     lowlightColor: 0x240E37,
     baseColor: 0x0,
-    blurFactor: 0.9,
+    blurFactor: 0.8,
     speed: -1,
     zoom: 0.4,
     backgroundAlpha: 0

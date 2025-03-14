@@ -91,7 +91,6 @@ h3 {
   text-align: center;
   font-family: 'Sorts Mill Goudy', serif;
   pointer-events: none;
-  text-shadow: 0 0 55px #AD37DB;
   z-index: -2;
 }
 
@@ -105,7 +104,7 @@ h3 {
 #codex-brand p {
   font-family: 'IBM Plex Sans', sans-serif;
   font-size: 18px;
-  color: #787878;
+  color: #000000;
   margin: 0;
 }
 
@@ -165,9 +164,12 @@ h3 {
 #toolbar-buttons button {
   flex: 1;
   width: auto !important;
+  font-size: 0.8rem;
 }
 
 button {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.8rem;
   background-color: transparent;
   border: 1px solid #787878;
   color: #787878;
@@ -457,8 +459,9 @@ button:active:not(:disabled) {
   position: absolute; 
   top: 20px; 
   left: 20px;
+  z-index: 5000; /* Keep it high to ensure clickability over #card-area */
+  transition: opacity 0.3s ease; /* Smooth fade */
 }
-
 
 /* ==============================
    NEW TOP NAV BAR & APPRENTICE
@@ -470,7 +473,7 @@ button:active:not(:disabled) {
   left: -300px; /* Shifted further left so it's hidden on load */
   width: 250px; /* Fixed width for sidebar */
   height: 100vh; /* Full height */
-  background: linear-gradient(to bottom, var(--dark-gray) 0%, transparent 100%);
+  background: #000000;
   display: flex;
   flex-direction: column; /* Stack items vertically */
   justify-content: flex-start; /* Start from top */
