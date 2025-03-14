@@ -16,6 +16,8 @@ body {
   font-size: 1rem;
   line-height: 1.4;
   position: relative;
+  overflow-x: hidden;
+  height: 100%;
 }
 
 h3 {
@@ -35,11 +37,11 @@ h3 {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  height: auto;
   background-color: transparent;
-  position: relative; /* No margin-right shift here anymore */
+  position: relative;
+  padding-top: 0;
 }
-
-/* NEW: Remove the old #app-container.panel-open shift entirely */
 
 /* Vanta.js fog effect container */
 #vanta-background {
@@ -47,17 +49,17 @@ h3 {
   top: 0;
   left: 0;
   width: 100%;
-  height: 100vh;
-  z-index: -1; /* Above card-area, below toolbar */
+  height: 100%;
+  z-index: -1; /* Above card-area, below the nav and other UI */
 }
 
 /* Canvas styling */
 #starry-canvas {
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
-  height: 100vh;
+  height: 100%;
   z-index: -1; /* Same layer as fog */
   pointer-events: none; /* Prevent canvas from blocking clicks */
 }
@@ -72,29 +74,13 @@ h3 {
   background-color: transparent;
   min-height: 0;
   z-index: 0;
-  margin-top: 40px; /* Space for logo */
-  transition: margin-right 0.3s ease; /* We shift it when panel opens */
+  margin-top: 60px; /* Extra space, if desired for brand text */
+  transition: margin-right 0.3s ease; /* Shift if reading panel opens */
 }
 
 /* When the reading panel is open, shift card-area left by 400px */
 #card-area.panel-open {
   margin-right: 400px;
-}
-
-#logo {
-  position: relative;
-  top: -100px; /* Start off-screen */
-  left: 53%;
-  transform: translateX(-50%);
-  opacity: 0; /* Initially invisible */
-  transition: top 1s ease, opacity 1s ease; /* Slide and fade in over 1 second */
-  z-index: 2; /* Above card-area but below reading panel */
-  pointer-events: none;
-}
-
-#logo img {
-  max-height: 50px;
-  width: auto;
 }
 
 #codex-brand {
@@ -137,7 +123,7 @@ h3 {
   margin: 10px;
   text-align: center;
   cursor: pointer;
-  max-width: 300px; /* default for desktop, can override w/ media query */
+  max-width: 300px;
   max-height: 450px;
   height: auto;
 }
@@ -305,7 +291,7 @@ button:active:not(:disabled) {
   min-height: 150px;
 }
 
-/* Shuffle Container at the bottom */
+/* Shuffle Container */
 #shuffle-container {
   position: sticky;
   bottom: 0;
@@ -420,7 +406,7 @@ button:active:not(:disabled) {
 }
 
 /* Responsive adjustments */
-@media (max-width: 900px) {
+@media (max-width: 768px) {
   #card-area {
     align-items: flex-start;
     height: auto;
@@ -432,17 +418,14 @@ button:active:not(:disabled) {
     margin-right: 0; /* Prevent side shift on narrow screens */
   }
 
-  #logo {
-    margin-bottom: 0px;
-  }
-
   #card-images-container {
     flex-wrap: nowrap;
     justify-content: center;
     overflow-x: auto; /* allow horizontal scroll if needed */
   }
+
   .card-image {
-    max-width: 200px; /* smaller width on mobile if you like */
+    max-width: 200px;
     max-height: 300px;
   }
 
@@ -453,7 +436,7 @@ button:active:not(:disabled) {
     right: auto;
     width: 100%;
     height: auto;
-    display: none; /* stays hidden unless active */
+    display: none;
     border-top-left-radius: 36px;
     border-top-right-radius: 36px;
     margin-top: 20px;
@@ -462,10 +445,117 @@ button:active:not(:disabled) {
     display: flex;
   }
   #card-area.panel-open {
-    margin-right: 0; /* no side shift on small screens */
+    margin-right: 0;
   }
 
   #bottom-toolbar {
     display: none; /* Hide the desktop toolbar on mobile if desired */
   }
+}
+
+#nav-toggle {
+  position: absolute; 
+  top: 20px; 
+  left: 20px;
+}
+
+
+/* ==============================
+   NEW TOP NAV BAR & APPRENTICE
+   ============================== */
+
+#top-navbar {
+  position: fixed;
+  top: 0;
+  left: -300px; /* Shifted further left so it's hidden on load */
+  width: 250px; /* Fixed width for sidebar */
+  height: 100vh; /* Full height */
+  background: linear-gradient(to bottom, var(--dark-gray) 0%, transparent 100%);
+  display: flex;
+  flex-direction: column; /* Stack items vertically */
+  justify-content: flex-start; /* Start from top */
+  align-items: flex-start; /* Align items to the left */
+  padding: 20px;
+  z-index: 9999;
+  transition: left 0.4s ease; /* Slide in/out */
+  border-top-right-radius: 36px; 
+}
+
+#top-navbar.active {
+  left: 0; /* Slide in when active */
+}
+
+#nav-logo {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+#nav-logo img {
+  height: 40px;
+  width: auto;
+}
+
+#nav-close {
+  border: none;
+  background: transparent;
+  font-size: 1.6rem;
+  cursor: pointer;
+  color: #787878;
+  width: 40px;
+  height: 40px;
+}
+
+#nav-close:hover {
+  color: #681D85;
+}
+
+#nav-close:active {
+  color: #FFFFFF;
+}
+
+#nav-links {
+  display: flex;
+  flex-direction: column; /* Stack buttons vertically */
+  gap: 15px; /* More space between vertical items */
+  width: 100%; /* Full width of sidebar */
+}
+
+#nav-links button {
+  background-color: transparent;
+  text-align: center;
+  color: #787878;
+  height: 60px;
+  padding: 0 0.8rem;
+  border-radius: 16px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+  white-space: nowrap;
+  width: 100%; /* Full width buttons */
+}
+
+#nav-links button:hover:not(:disabled) {
+  background-color: rgba(104, 29, 133, 0.1);
+  border-color: #681D85;
+  color: #681D85;
+}
+
+#nav-links button:active:not(:disabled) {
+  background-color: #681D85;
+  border-color: #681D85;
+  color: #FFFFFF;
+}
+
+#apprentice-mode-container {
+  display: none; /* hidden by default, shown via JS */
+  padding: 20px;
+  color: #fff;
+}
+
+#apprentice-mode-container h2 {
+  margin-top: 0;
 }

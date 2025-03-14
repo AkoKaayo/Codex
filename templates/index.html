@@ -4,28 +4,43 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Tarot Academia</title>
+
+  <!-- Fonts and Favicons -->
   <link
-    href="https://fonts.googleapis.com/css2?family=Sorts+Mill+Goudy:wght@400;700&family=IBM+Plex+Sans:wght@200;400;600&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Sorts+Mill+Goudy:wght@400;700&family=IBM+Plex+Sans:wght@200;400;600&family=IBM+Plex+Mono:wght@400;700&display=swap"
     rel="stylesheet"
   />
   <link rel="icon" href="/static/images/favicon.svg" type="image/favicon" sizes="32x32">
-  <!-- Adjust path to your static folder as needed -->
+
+  <!-- Your CSS -->
   <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
-  <!-- NEW: Add Vanta.js and Three.js CDNs -->
+
+  <!-- Vanta.js and Three.js CDNs -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.fog.min.js"></script>
 </head>
 <body>
   <div id="app-container">
-    <!-- NEW: Div for Vanta.js fog effect -->
-    <div id="vanta-background"></div>
-    <!-- Canvas for starry particles -->
-    <canvas id="starry-canvas"></canvas>
-    <!-- Centered Logo -->
-    <div id="logo">
-      <img src="/static/images/tarotacademialogo.svg" alt="logo">
+    <!-- Menu toggle button -->
+    <button id="nav-toggle">☰</button>
+
+    <!-- TOP NAV BAR -->
+    <div id="top-navbar">
+      <div id="nav-logo">
+        <img src="/static/images/tarotacademialogo.svg" alt="Tarot Academia Logo" />
+        <button id="nav-close" aria-label="Close navigation">←</button>
+      </div>
+      <div id="nav-links">
+        <button id="nav-spread-reading-btn">SPREAD READING</button>
+        <button id="nav-apprentice-btn">APPRENTICE MODE</button>
+      </div>
     </div>
-    <!-- Centered Card Area -->
+
+    <!-- Background Layers -->
+    <div id="vanta-background"></div>
+    <canvas id="starry-canvas"></canvas>
+
+    <!-- CARD AREA -->
     <div id="card-area">
       <div id="codex-brand">
         <h1>TAROT<br>ACADEMIA</h1>
@@ -34,7 +49,7 @@
       <div id="card-images-container"></div>
     </div>
 
-    <!-- Bottom Toolbar -->
+    <!-- BOTTOM TOOLBAR -->
     <div id="bottom-toolbar">
       <div id="toolbar-container">
         <div id="toolbar-buttons">
@@ -53,7 +68,7 @@
       </div>
     </div>
 
-    <!-- Reading Panel -->
+    <!-- READING PANEL -->
     <div id="reading-panel">
       <div id="user-prompt-wrapper"></div>
       <div id="reading-text-container"></div>
@@ -62,14 +77,21 @@
       </div>
     </div>
 
-    <!-- Card Zoom Modal -->
+    <!-- NEW: APPRENTICE MODE CONTAINER (Hidden by default, toggled via JS) -->
+    <div id="apprentice-mode-container">
+      <h2>Apprentice Mode</h2>
+      <p>Welcome to your personalized learning and customization area!</p>
+      <!-- Add further content or features for your “Apprentice” section. -->
+    </div>
+
+    <!-- CARD ZOOM MODAL -->
     <div id="card-modal" class="modal">
       <span class="close">×</span>
       <img class="modal-content" id="modal-image">
     </div>
   </div>
 
-  <!-- Adjust path to your static folder as needed -->
+  <!-- Main Script -->
   <script src="{{ url_for('static', filename='scripts.js') }}"></script>
 </body>
 </html>

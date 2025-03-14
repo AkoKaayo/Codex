@@ -1,7 +1,9 @@
-
 /* DOM References */
 const cardArea = document.getElementById("card-area");
-const appContainer = document.getElementById("app-container"); // Added
+const navToggle = document.getElementById('nav-toggle');
+const navbar = document.getElementById('top-navbar');
+const navClose = document.getElementById('nav-close');
+const appContainer = document.getElementById("app-container");
 const cardImagesContainer = document.getElementById("card-images-container");
 const codexBrand = document.getElementById("codex-brand");
 const intentionInput = document.getElementById("intention-input");
@@ -19,7 +21,22 @@ const inlineContextContainer = document.getElementById("inline-context-container
 const modal = document.getElementById("card-modal");
 const modalImage = document.getElementById("modal-image");
 const closeModal = document.querySelector("#card-modal .close");
-const logo = document.getElementById("logo"); // Reference to logo
+
+/* Toggling the sidebar nav on button click */
+navToggle.addEventListener('click', () => {
+  navbar.classList.toggle('active');
+});
+
+/* Close nav on arrow button click */
+navClose.addEventListener('click', () => {
+  navbar.classList.remove('active');
+});
+
+/* NEW: Top nav references */
+const topNavbar = document.getElementById("top-navbar");
+const navSpreadReadingBtn = document.getElementById("nav-spread-reading-btn");
+const navApprenticeBtn = document.getElementById("nav-apprentice-btn");
+const apprenticeModeContainer = document.getElementById("apprentice-mode-container");
 
 let currentSpreadType = "";
 
@@ -31,32 +48,31 @@ const buttonTextStates = {
 };
 
 // --- Starry Particle Logic ---
-// Configurable parameters (edit these to fine-tune)
-const PARTICLE_COUNT = 111;          // Number of particles (50–100 recommended)
-const MIN_SIZE = 0.2;               // Minimum particle radius (pixels) - very small
-const MAX_SIZE = 0.7;               // Maximum particle radius (pixels) - very small
-const MIN_SPEED = -0.2;             // Minimum velocity (pixels per frame) - slow
-const MAX_SPEED = 0.1;              // Maximum velocity (pixels per frame) - slow
-const TWINKLE_SPEED = 0.02;         // Speed of opacity oscillation (higher = faster)
-const COLLISION_DISTANCE = 5;       // Distance for collision detection (pixels)
-const COLLISION_BRIGHTNESS = 3;     // Brightness increase on collision (multiplier)
-const COLLISION_DURATION = 500;     // Duration of brightness in ms
-const FADE_DURATION = 5000;         // Fade-out duration in ms (5 seconds)
+const PARTICLE_COUNT = 77;
+const MIN_SIZE = 0.2;
+const MAX_SIZE = 0.7;
+const MIN_SPEED = -0.2;
+const MAX_SPEED = 0.1;
+const TWINKLE_SPEED = 0.02;
+const COLLISION_DISTANCE = 5;
+const COLLISION_BRIGHTNESS = 3;
+const COLLISION_DURATION = 500;
+const FADE_DURATION = 5000;
 
 // Canvas setup
 const canvas = document.getElementById("starry-canvas");
 const ctx = canvas.getContext("2d");
 let particles = [];
-let showParticles = true; // Control particle visibility
-let canvasOpacity = 1;    // Track canvas opacity for fade-out
+let showParticles = true;
+let canvasOpacity = 1;
 
 // Vanta.js fog setup
 const vantaBackground = document.getElementById("vanta-background");
-let vantaEffect = null;   // Store Vanta.js effect instance
-let vantaOpacity = 1;     // Track Vanta.js div opacity for fade-out
+let vantaEffect = null;
+let vantaOpacity = 1;
 
 // Track branding text opacity
-let brandOpacity = 1;     // Track codex-brand opacity for fade-out
+let brandOpacity = 1;
 
 // Particle class
 class Particle {
@@ -66,16 +82,16 @@ class Particle {
     this.size = Math.random() * (MAX_SIZE - MIN_SIZE) + MIN_SIZE;
     this.dx = Math.random() * (MAX_SPEED - MIN_SPEED) + MIN_SPEED;
     this.dy = Math.random() * (MAX_SPEED - MIN_SPEED) + MIN_SPEED;
-    this.opacity = 0.5 + Math.random() * 0.5; // 0.5 to 1.0
+    this.opacity = 0.5 + Math.random() * 0.5; // range 0.5 to 1
     this.twinklePhase = Math.random() * Math.PI * 2;
-    this.brightness = 1; // Multiplier for collision effect
+    this.brightness = 1;
     this.brightnessTimeout = null;
   }
 
   draw() {
     ctx.beginPath();
     ctx.arc(this.x, this.y, this.size * this.brightness, 0, Math.PI * 2);
-    ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`; // White stars
+    ctx.fillStyle = `rgba(255, 255, 255, ${this.opacity})`;
     ctx.fill();
     ctx.closePath();
   }
@@ -91,11 +107,11 @@ class Particle {
     if (this.y < 0) this.y = canvas.height;
     if (this.y > canvas.height) this.y = 0;
 
-    // Twinkle effect
+    // Twinkle
     this.twinklePhase += TWINKLE_SPEED;
-    this.opacity = 0.5 + Math.sin(this.twinklePhase) * 0.25; // 0.25 to 0.75
+    this.opacity = 0.5 + Math.sin(this.twinklePhase) * 0.25;
 
-    // Reset brightness after collision duration
+    // Reset brightness
     if (this.brightness > 1) {
       clearTimeout(this.brightnessTimeout);
       this.brightnessTimeout = setTimeout(() => {
@@ -128,31 +144,31 @@ function checkCollisions() {
   }
 }
 
-// Fade out particles, fog, and branding text over 5 seconds
+// Fade out particles, fog, and brand text
 function fadeOutEffects() {
-  if (!showParticles) return; // Already fading or hidden
+  if (!showParticles) return;
   showParticles = false;
 
-  const fadeSteps = 100; // Number of steps for smooth fade
-  const fadeInterval = FADE_DURATION / fadeSteps; // Time per step (50ms per step)
+  const fadeSteps = 100;
+  const fadeInterval = FADE_DURATION / fadeSteps;
   let step = 0;
 
   const fadeTimer = setInterval(() => {
     step++;
-    canvasOpacity = 1 - (step / fadeSteps); // Linear fade from 1 to 0
+    canvasOpacity = 1 - (step / fadeSteps);
     vantaOpacity = 1 - (step / fadeSteps);
-    brandOpacity = 1 - (step / fadeSteps); // Fade out branding text
+    brandOpacity = 1 - (step / fadeSteps);
+
     canvas.style.opacity = canvasOpacity;
     vantaBackground.style.opacity = vantaOpacity;
     codexBrand.style.opacity = brandOpacity;
 
     if (step >= fadeSteps) {
       clearInterval(fadeTimer);
-      // Remove all elements from the DOM
+      // Remove starry canvas & vanta background & codex brand
       canvas.remove();
       vantaBackground.remove();
       codexBrand.remove();
-      // Destroy Vanta.js effect
       if (vantaEffect) {
         vantaEffect.destroy();
         vantaEffect = null;
@@ -161,27 +177,28 @@ function fadeOutEffects() {
   }, fadeInterval);
 }
 
-// Animation loop for particles
+// Animation loop
 function animateParticles() {
-  if (!showParticles) return; // Stop animating if hidden
-
+  if (!showParticles) return;
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  particles.forEach(particle => {
+
+  particles.forEach((particle) => {
     particle.update();
     particle.draw();
   });
+
   checkCollisions();
   requestAnimationFrame(animateParticles);
 }
 
-// Resize canvas
+// Resize
 function resizeCanvas() {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
-  initParticles(); // Reinitialize particles to fit new size
+  initParticles();
 }
 
-// Debounce function (reused from button text)
+// Debounce
 function debounce(func, delay) {
   let timeoutId;
   return function (...args) {
@@ -190,9 +207,8 @@ function debounce(func, delay) {
   };
 }
 
-// Initialize Vanta.js Fog Effect and Particles
+// Vanta.js initialization
 document.addEventListener("DOMContentLoaded", () => {
-  // Initialize Vanta.js fog
   vantaEffect = VANTA.FOG({
     el: "#vanta-background",
     mouseControls: true,
@@ -200,22 +216,21 @@ document.addEventListener("DOMContentLoaded", () => {
     gyroControls: true,
     minHeight: 200.00,
     minWidth: 200.00,
-    highlightColor: 0x6e00b9, // Purple
-    midtoneColor: 0x370069,   // Darker purple
-    lowlightColor: 0xAD37DB,  // White
-    baseColor: 0x0,           // Black
-    blurFactor: 0.6,
+    highlightColor: 0x6e00b9,
+    midtoneColor: 0x370069,
+    lowlightColor: 0x240E37,
+    baseColor: 0x0,
+    blurFactor: 0.9,
     speed: -1,
-    zoom: 0.6,
-    backgroundAlpha: 0        // Fully transparent base color
+    zoom: 0.4,
+    backgroundAlpha: 0
   });
 
-  // Initialize particles
   resizeCanvas();
   animateParticles();
 });
 
-// --- Existing Button Text Logic ---
+// Button text logic (existing)
 function updateButtonText() {
   const breakpoint = 768;
   if (window.innerWidth <= breakpoint) {
@@ -228,7 +243,6 @@ function updateButtonText() {
     btnFiveCard.textContent = buttonTextStates.five.full;
   }
 }
-
 const debouncedUpdateButtonText = debounce(updateButtonText, 200);
 
 /* Input Handling */
@@ -261,7 +275,7 @@ disableInput();
 hideReadingPanel(); // Ensure panel is hidden on load
 
 /* Speed dial buttons enable the text area. */
-[btnRandomCard, btnThreeCard, btnFiveCard].forEach(button => {
+[btnRandomCard, btnThreeCard, btnFiveCard].forEach((button) => {
   button.addEventListener("click", enableInput);
 });
 
@@ -315,9 +329,8 @@ function clearUI() {
   readingTextContainer.innerHTML = "";
 }
 
-/* Add a function to scale cards dynamically */
+/* Scale cards dynamically */
 function scaleCards() {
-  const cardImagesContainer = document.getElementById("card-images-container");
   const cardImages = cardImagesContainer.getElementsByClassName("card-image");
 
   if (cardImages.length > 0) {
@@ -325,18 +338,18 @@ function scaleCards() {
     const numCards = cardImages.length;
     let maxCardWidth;
 
-    if (window.innerWidth <= 900) { // Mobile
-      const totalMarginPerCard = 20; // 10px left + 10px right
+    if (window.innerWidth <= 900) {
+      const totalMarginPerCard = 20;
       maxCardWidth = Math.min((containerWidth - (numCards * totalMarginPerCard)) / numCards, 200);
-    } else { // Desktop and intermediate resolutions
+    } else {
       const totalMarginPerCard = 20;
       maxCardWidth = Math.min((containerWidth - (numCards * totalMarginPerCard)) / numCards, 300);
-      maxCardWidth = Math.max(maxCardWidth, 200); // Ensure minimum width for visibility
+      maxCardWidth = Math.max(maxCardWidth, 200);
     }
 
-    Array.from(cardImages).forEach(card => {
+    Array.from(cardImages).forEach((card) => {
       card.style.maxWidth = `${maxCardWidth}px`;
-      card.style.height = "auto"; // Maintain aspect ratio
+      card.style.height = "auto";
     });
   }
 }
@@ -344,31 +357,23 @@ function scaleCards() {
 /* Fetch Logic */
 function sendQuery(queryString, intention) {
   clearUI();
-
-  // Hide the bottom toolbar immediately
+  // Hide the bottom toolbar
   bottomToolbar.style.display = "none";
 
-  // Add a "loading" user prompt
+  // Add "loading" user prompt
   const userPromptObj = addUserPrompt(intention);
 
-  // Show the reading panel
+  // Show reading panel
   showReadingPanel();
 
   // Clear old card images
   clearCardImages();
 
-  // Hide & disable shuffle until loading finishes
+  // Hide & disable shuffle until load finishes
   shuffleButton.style.display = "none";
   shuffleButton.disabled = true;
 
-  // Slide in logo when loading starts
-  logo.style.top = "20px";
-  logo.style.opacity = 1;
-
-  // Add panel-open class to app-container to shift logo with card-area
-  appContainer.classList.add("panel-open");
-
-  // Timeout in case server is unresponsive
+  // Timeout
   const timeoutPromise = new Promise((_, reject) => {
     setTimeout(() => reject(new Error("Request timed out")), 20000);
   });
@@ -376,7 +381,7 @@ function sendQuery(queryString, intention) {
   const spreadType = currentSpreadType.toLowerCase();
   const cardCount = spreadType === "single" ? 1 : spreadType === "three" ? 3 : 5;
   const finalQuery = `${cardCount} card spread about ${intention}`;
-  console.log("Sending query:", finalQuery); // Debug log
+  console.log("Sending query:", finalQuery); // Debug
 
   Promise.race([
     fetch("/query", {
@@ -386,19 +391,19 @@ function sendQuery(queryString, intention) {
     }),
     timeoutPromise
   ])
-    .then(response => {
+    .then((response) => {
       if (!response.ok) throw new Error("Network response was not ok");
       return response.json();
     })
-    .then(data => {
-      // Stop the spinner
+    .then((data) => {
+      // Stop spinner
       clearInterval(userPromptObj.spinnerId);
       userPromptObj.spinnerSpan.remove();
 
-      // Show any returned card images
+      // Show returned cards
       if (data.cards && data.cards.length > 0) {
         addCardImages(data.cards, spreadType);
-        scaleCards(); // Scale after images are added
+        scaleCards();
       } else {
         console.warn("No cards in response:", data);
       }
@@ -413,27 +418,26 @@ function sendQuery(queryString, intention) {
 
       addReadingText(synergyContent);
 
-      // Enable & show shuffle now that reading is complete
+      // Enable & show shuffle
       shuffleButton.disabled = false;
       shuffleButton.style.display = "block";
     })
-    .catch(error => {
+    .catch((error) => {
       clearInterval(userPromptObj.spinnerId);
       userPromptObj.spinnerSpan.remove();
       console.error("Error:", error);
 
-      const errorMsg = error.message === "Request timed out"
+      const errorMsg = (error.message === "Request timed out")
         ? "<p class='assistant-message'>Request timed out. Please try again.</p>"
         : "<p class='assistant-message'>An error occurred while fetching the tarot reading.</p>";
 
       addReadingText(errorMsg);
 
-      // Show shuffle button to allow reset
       shuffleButton.disabled = false;
       shuffleButton.style.display = "block";
     })
     .finally(() => {
-      // Clean up panel-open class when request completes (success or failure)
+      // Remove panel-open class (cleanup)
       appContainer.classList.remove("panel-open");
     });
 }
@@ -459,7 +463,7 @@ function addCardImages(cards, layout) {
     cardImagesContainer.classList.add("three-card-layout");
   }
 
-  cards.forEach(card => {
+  cards.forEach((card) => {
     const cardDiv = document.createElement("div");
     cardDiv.classList.add("card-image");
     const img = document.createElement("img");
@@ -492,7 +496,7 @@ function handleContextSubmission() {
   const intentionText = intentionInput.value.trim();
   if (!intentionText) return;
 
-  // Fade out both fog and particles
+  // Fade out starry & fog
   fadeOutEffects();
 
   sendQuery(`${currentSpreadType.toLowerCase()} card spread about ${intentionText}`, intentionText);
@@ -502,9 +506,8 @@ function handleContextSubmission() {
 function showReadingPanel() {
   readingPanel.classList.add("active");
   cardArea.classList.add("panel-open");
-  readingPanel.style.display = "flex"; // Ensure panel is shown
+  readingPanel.style.display = "flex";
 
-  // Initially hide shuffle button each time we open the panel
   shuffleButton.style.display = "none";
   shuffleButton.disabled = true;
 }
@@ -512,11 +515,9 @@ function showReadingPanel() {
 function hideReadingPanel() {
   readingPanel.classList.remove("active");
   cardArea.classList.remove("panel-open");
-  appContainer.classList.remove("panel-open"); // Ensure app-container class is removed
-  readingPanel.style.display = "none"; // Hide panel
-  bottomToolbar.style.display = "flex"; // Restore toolbar
-
-  // Hide shuffle button
+  appContainer.classList.remove("panel-open");
+  readingPanel.style.display = "none";
+  bottomToolbar.style.display = "flex";
   shuffleButton.style.display = "none";
   shuffleButton.disabled = true;
 }
@@ -526,19 +527,15 @@ function resetToDefault() {
   clearUI();
   clearCardImages();
   hideReadingPanel();
-  
-  // Disable the input
+
   disableInput();
-  
-  // Make sure to clear out the text area and spread type
   intentionInput.value = "";
-  currentSpreadType = "";      
-  [btnRandomCard, btnThreeCard, btnFiveCard].forEach(b => b.classList.remove("active-button"));
-  // Note: Do NOT re-enable effects or branding here
+  currentSpreadType = "";
+  [btnRandomCard, btnThreeCard, btnFiveCard].forEach((b) => b.classList.remove("active-button"));
 }
 
 /* Event Listeners */
-intentionInput.addEventListener("keydown", e => {
+intentionInput.addEventListener("keydown", (e) => {
   if (e.key === "Enter") {
     e.preventDefault();
     handleContextSubmission();
@@ -562,7 +559,7 @@ btnFiveCard.addEventListener("click", () => {
 });
 
 function setActiveButton(clickedBtn) {
-  [btnRandomCard, btnThreeCard, btnFiveCard].forEach(b => b.classList.remove("active-button"));
+  [btnRandomCard, btnThreeCard, btnFiveCard].forEach((b) => b.classList.remove("active-button"));
   clickedBtn.classList.add("active-button");
 }
 
@@ -572,7 +569,7 @@ closeModal.addEventListener("click", () => {
   modal.style.display = "none";
 });
 
-document.addEventListener("click", event => {
+document.addEventListener("click", (event) => {
   if (
     event.target.tagName === "IMG" &&
     event.target.parentElement.classList.contains("card-image")
@@ -583,11 +580,40 @@ document.addEventListener("click", event => {
 });
 
 document.addEventListener("DOMContentLoaded", () => {
-  // Double-check we keep the send button disabled if no text
   intentionInput.addEventListener("input", handleSendButtonState);
-  hideReadingPanel(); // Ensure panel is hidden on load
+  hideReadingPanel();
   updateButtonText();
 });
 
 window.addEventListener("resize", debouncedUpdateButtonText);
 window.addEventListener("resize", resizeCanvas);
+
+/* NAV SWITCH: Spread Reading vs. Apprentice Mode */
+navSpreadReadingBtn.addEventListener("click", () => {
+  // Show reading UI, hide apprentice
+  apprenticeModeContainer.style.display = "none";
+  cardArea.style.display = "block";
+  bottomToolbar.style.display = "flex";
+  hideReadingPanel();
+});
+
+navApprenticeBtn.addEventListener("click", () => {
+  // Show apprentice UI, hide reading stuff
+  readingPanel.style.display = "none";
+  cardArea.style.display = "none";
+  bottomToolbar.style.display = "none";
+  apprenticeModeContainer.style.display = "block";
+});
+
+document.addEventListener("click", (event) => {
+  // Only proceed if navbar is currently active
+  if (navbar.classList.contains('active')) {
+    const clickedInsideNav = navbar.contains(event.target);
+    const clickedNavToggle = (event.target === navToggle);
+
+    // If click is outside nav & not on the toggle, close the nav
+    if (!clickedInsideNav && !clickedNavToggle) {
+      navbar.classList.remove('active');
+    }
+  }
+});
