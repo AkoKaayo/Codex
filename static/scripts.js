@@ -23,13 +23,20 @@ const modalImage = document.getElementById("modal-image");
 const closeModal = document.querySelector("#card-modal .close");
 
 /* Toggling the sidebar nav on button click */
-navToggle.addEventListener('click', () => {
-  navbar.classList.toggle('active');
+navToggle.addEventListener("click", () => {
+  navbar.classList.toggle("active");
+  const container = document.getElementById("app-container");
+  if (navbar.classList.contains("active")) {
+    container.classList.add("blurred");
+  } else {
+    container.classList.remove("blurred");
+  }
 });
 
-/* Close nav on arrow button click */
-navClose.addEventListener('click', () => {
-  navbar.classList.remove('active');
+navClose.addEventListener("click", () => {
+  navbar.classList.remove("active");
+  const container = document.getElementById("app-container");
+  container.classList.remove("blurred");
 });
 
 /* NEW: Top nav references */

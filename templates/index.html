@@ -4,37 +4,35 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Tarot Academia</title>
-
   <!-- Fonts and Favicons -->
-  <link
-    href="https://fonts.googleapis.com/css2?family=Sorts+Mill+Goudy:wght@400;700&family=IBM+Plex+Sans:wght@200;400;600&family=IBM+Plex+Mono:wght@400;700&display=swap"
-    rel="stylesheet"
-  />
+  <link href="https://fonts.googleapis.com/css2?family=Sorts+Mill+Goudy:wght@400;700&family=IBM+Plex+Sans:wght@200;400;600&family=IBM+Plex+Mono:wght@400;700&display=swap" rel="stylesheet" />
   <link rel="icon" href="/static/images/favicon.svg" type="image/favicon" sizes="32x32">
-
   <!-- Your CSS -->
   <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
-
   <!-- Vanta.js and Three.js CDNs -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.fog.min.js"></script>
 </head>
 <body>
+  <!-- TOP NAV BAR (moved outside of #app-container) -->
+  <div id="top-navbar">
+    <div id="nav-logo">
+      <img src="/static/images/tarotacademialogo.svg" alt="Tarot Academia Logo" />
+      <button id="nav-close" aria-label="Close navigation">←</button>
+    </div>
+    <div id="nav-links">
+      <button id="nav-spread-reading-btn">SPREAD READING</button>
+      <button id="nav-apprentice-btn" disabled>APPRENTICE MODE (COMING SOON)</button>
+    </div>
+    <div id="nav-footer">
+      <small>Version 0.1 Beta &mdash; Created by AkoKaayo &mdash; © 2025</small>
+    </div>
+  </div>
+
+  <!-- Main Content Container -->
   <div id="app-container">
     <!-- Menu toggle button -->
     <button id="nav-toggle">☰</button>
-
-    <!-- TOP NAV BAR -->
-    <div id="top-navbar">
-      <div id="nav-logo">
-        <img src="/static/images/tarotacademialogo.svg" alt="Tarot Academia Logo" />
-        <button id="nav-close" aria-label="Close navigation">←</button>
-      </div>
-      <div id="nav-links">
-        <button id="nav-spread-reading-btn">SPREAD READING</button>
-        <button id="nav-apprentice-btn">APPRENTICE MODE</button>
-      </div>
-    </div>
 
     <!-- Background Layers -->
     <div id="vanta-background"></div>
@@ -58,11 +56,7 @@
           <button id="btn-five-card">Five Cards Read</button>
         </div>
         <div id="inline-context-container">
-          <textarea
-            id="intention-input"
-            placeholder="Select the type of reading you seek for clarity on."
-            disabled
-          ></textarea>
+          <textarea id="intention-input" placeholder="Select the type of reading you seek for clarity on." disabled></textarea>
           <button id="inline-send-button" disabled></button>
         </div>
       </div>
@@ -77,11 +71,11 @@
       </div>
     </div>
 
-    <!-- NEW: APPRENTICE MODE CONTAINER (Hidden by default, toggled via JS) -->
+    <!-- APPRENTICE MODE CONTAINER -->
     <div id="apprentice-mode-container">
       <h2>Apprentice Mode</h2>
       <p>Welcome to your personalized learning and customization area!</p>
-      <!-- Add further content or features for your “Apprentice” section. -->
+      <!-- Additional apprentice content here -->
     </div>
 
     <!-- CARD ZOOM MODAL -->
