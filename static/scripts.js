@@ -49,8 +49,8 @@ const buttonTextStates = {
 
 // --- Starry Particle Logic ---
 const PARTICLE_COUNT = 77;
-const MIN_SIZE = 0.2;
-const MAX_SIZE = 0.7;
+const MIN_SIZE = 0.1;
+const MAX_SIZE = 0.4;
 const MIN_SPEED = -0.2;
 const MAX_SPEED = 0.1;
 const TWINKLE_SPEED = 0.02;
@@ -319,9 +319,22 @@ function addUserPrompt(promptText) {
 }
 
 function addReadingText(content) {
+  // 1) Remove the .visible class so we fade out any old content
+  readingTextContainer.classList.remove("visible");
+
+  // 2) Clear existing children (optional if you want a fresh start each time)
+  readingTextContainer.innerHTML = "";
+
+  // 3) Insert new content
   const readingDiv = document.createElement("div");
   readingDiv.innerHTML = content;
   readingTextContainer.appendChild(readingDiv);
+
+  // 4) Force a browser reflow (this ensures transitions will apply)
+  void readingTextContainer.offsetHeight;
+
+  // 5) Add the .visible class to trigger the fade-in + expansion
+  readingTextContainer.classList.add("visible");
 }
 
 function clearUI() {
@@ -506,7 +519,7 @@ function handleContextSubmission() {
 function showReadingPanel() {
   readingPanel.classList.add("active");
   cardArea.classList.add("panel-open");
-  readingPanel.style.display = "flex";
+  readingPanel.classList.add("active");
 
   shuffleButton.style.display = "none";
   shuffleButton.disabled = true;
@@ -516,7 +529,6 @@ function hideReadingPanel() {
   readingPanel.classList.remove("active");
   cardArea.classList.remove("panel-open");
   appContainer.classList.remove("panel-open");
-  readingPanel.style.display = "none";
   bottomToolbar.style.display = "flex";
   shuffleButton.style.display = "none";
   shuffleButton.disabled = true;
@@ -599,7 +611,7 @@ navSpreadReadingBtn.addEventListener("click", () => {
 
 navApprenticeBtn.addEventListener("click", () => {
   // Show apprentice UI, hide reading stuff
-  readingPanel.style.display = "none";
+  readingPanel.classList.add("active");
   cardArea.style.display = "none";
   bottomToolbar.style.display = "none";
   apprenticeModeContainer.style.display = "block";

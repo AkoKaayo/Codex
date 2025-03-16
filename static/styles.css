@@ -113,7 +113,7 @@ h3 {
   display: flex;
   justify-content: center;
   align-items: center;
-  flex-wrap: nowrap;  /* keep everything on one row */
+  flex-wrap: wrap;  /* keep everything on one row */
   padding: 3rem 0;
   margin: 0 auto;
 }
@@ -255,19 +255,25 @@ button:active:not(:disabled) {
   border-top-right-radius: 0;
   position: fixed;
   top: 0;
-  right: -400px; /* hidden by default; slides in when .active */
+  right: -441px; /* hidden by default; slides in when .active */
   width: 400px;
   height: 100vh;
   background-color: var(--dark-gray);
-  display: none; /* hidden unless .active */
   flex-direction: column;
-  transition: right 0.3s ease;
+  transition: right 0.6s ease;
   z-index: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  padding-left: 20px;
+  padding-right: 20px;
+  opacity: 0;
 }
 
 #reading-panel.active {
   right: 0;
-  display: flex;
+  opacity: 1;
+  padding-bottom: 20px;
 }
 
 #close-panel {
@@ -282,15 +288,33 @@ button:active:not(:disabled) {
 #user-prompt-wrapper {
   border-top-left-radius: 36px;
   border-top-right-radius: 36px;
-  margin-top: 20px;
-  padding: 0 20px;
+  margin-top: 40px;
 }
 
 #reading-text-container {
+  /* Remove max-height transition constraint */
+  opacity: 0;
+  overflow: hidden;
+  transition: opacity 1s ease;
+  /* Add flex-grow and proper height management */
   flex: 1;
-  overflow-y: auto;
-  padding: 0 20px 20px;
-  min-height: 150px;
+  height: 0; /* Allows flex-grow to control height */
+}
+
+/* Smooth fade transition for reading text */
+#reading-text-container {
+  /* Start hidden by default; transitions animate from these initial values */
+  opacity: 0;  
+  max-height: 0; 
+  overflow: hidden;
+  transition: opacity 1s ease, max-height 1s ease;
+}
+
+#reading-text-container.visible {
+  opacity: 1;
+  height: auto; /* Reset height */
+  max-height: none; /* Remove fixed max-height */
+  overflow: auto;
 }
 
 /* Shuffle Container */
@@ -300,12 +324,12 @@ button:active:not(:disabled) {
   z-index: 1;
   flex-shrink: 0;
   background-color: #151515;
-  padding: 10px;
-  width: 100%;
+  padding-bottom: 20px;
+  padding-top: 10px;
 }
 
 #shuffle-button {
-  width: 95%;
+  width: 100%;
   background-color: var(--dark-gray);
   border: 1px solid #787878;
   border-radius: 16px;
@@ -433,19 +457,22 @@ button:active:not(:disabled) {
 
   /* Let reading panel stack in flow on mobile */
   #reading-panel {
-    position: relative;
     top: auto;
-    right: auto;
-    width: 100%;
+    bottom: -100%;
+    width: auto;
     height: auto;
-    display: none;
     border-top-left-radius: 36px;
     border-top-right-radius: 36px;
     margin-top: 20px;
+    transition: bottom 0.6s ease;
   }
+  
   #reading-panel.active {
+    position: relative;
+    bottom: 0;
     display: flex;
   }
+  
   #card-area.panel-open {
     margin-right: 0;
   }
@@ -456,11 +483,13 @@ button:active:not(:disabled) {
 }
 
 #nav-toggle {
-  position: absolute; 
+  position: fixed; 
   top: 20px; 
   left: 20px;
+  background-color: #151515;
+  border-color: #151515;
   z-index: 5000; /* Keep it high to ensure clickability over #card-area */
-  transition: opacity 0.3s ease; /* Smooth fade */
+  transition: opacity 0.6s ease; /* Smooth fade */
 }
 
 /* ==============================
