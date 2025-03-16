@@ -476,16 +476,24 @@ function addCardImages(cards, layout) {
     cardImagesContainer.classList.add("three-card-layout");
   }
 
-  cards.forEach((card) => {
+  cards.forEach((card, index) => {
     const cardDiv = document.createElement("div");
     cardDiv.classList.add("card-image");
+    // Initially, do not add the .show class
+
     const img = document.createElement("img");
     img.src = card.image;
     img.alt = card.name;
     cardDiv.appendChild(img);
     cardImagesContainer.appendChild(cardDiv);
+
+    // Use a slight delay for the animation to trigger:
+    setTimeout(() => {
+      cardDiv.classList.add("show");
+    }, 888 * index); // Stagger each card's animation by 50ms (adjust as needed)
   });
 }
+
 
 /* UI Handlers */
 function showInlineContext(spreadType) {
@@ -519,8 +527,7 @@ function handleContextSubmission() {
 function showReadingPanel() {
   readingPanel.classList.add("active");
   cardArea.classList.add("panel-open");
-  readingPanel.classList.add("active");
-
+  bottomToolbar.classList.add("hidden");
   shuffleButton.style.display = "none";
   shuffleButton.disabled = true;
 }
@@ -539,11 +546,35 @@ function resetToDefault() {
   clearUI();
   clearCardImages();
   hideReadingPanel();
-
+  
   disableInput();
   intentionInput.value = "";
   currentSpreadType = "";
   [btnRandomCard, btnThreeCard, btnFiveCard].forEach((b) => b.classList.remove("active-button"));
+  
+  // Bring the toolbar back into view
+  bottomToolbar.classList.remove("hidden");
+}
+
+
+// CARDS
+function fadeOutCards() {
+  // Fade out card images
+  const cards = cardImagesContainer.querySelectorAll('.card-image');
+  cards.forEach(card => {
+    card.classList.remove("show");  // remove the show state
+    card.classList.add("fade-out");   // add fade-out to trigger transition
+  });
+
+  // After cards have faded (400ms), slide the reading panel out
+  setTimeout(() => {
+    readingPanel.classList.remove("active");
+    
+    // After the panel has finished sliding out (600ms), reset the UI
+    setTimeout(() => {
+      resetToDefault();
+    }, 600);
+  }, 400);
 }
 
 /* Event Listeners */
@@ -575,18 +606,27 @@ function setActiveButton(clickedBtn) {
   clickedBtn.classList.add("active-button");
 }
 
-shuffleButton.addEventListener("click", resetToDefault);
+shuffleButton.addEventListener("click", fadeOutCards);
 
 closeModal.addEventListener("click", () => {
-  modal.style.display = "none";
+  modal.classList.remove("active");
+  // Wait for the transition to complete before setting display to none
+  setTimeout(() => {
+    modal.style.display = "none";
+  }, 800); // Match this timeout with the CSS transition duration (0.4s)
 });
+
 
 document.addEventListener("click", (event) => {
   if (
     event.target.tagName === "IMG" &&
     event.target.parentElement.classList.contains("card-image")
   ) {
-    modal.style.display = "block";
+    modal.style.display = "block"; // Make sure it's rendered
+    // Use a tiny delay or requestAnimationFrame to allow CSS transition to kick in
+    requestAnimationFrame(() => {
+      modal.classList.add("active");
+    });
     modalImage.src = event.target.src;
   }
 });
@@ -602,19 +642,27 @@ window.addEventListener("resize", resizeCanvas);
 
 /* NAV SWITCH: Spread Reading vs. Apprentice Mode */
 navSpreadReadingBtn.addEventListener("click", () => {
-  // Show reading UI, hide apprentice
-  apprenticeModeContainer.style.display = "none";
-  cardArea.style.display = "block";
-  bottomToolbar.style.display = "flex";
-  hideReadingPanel();
+  navbar.classList.remove("active");
+  apprenticeModeContainer.classList.remove("active");
+  setTimeout(() => {
+    apprenticeModeContainer.style.display = "none";
+    cardArea.style.display = "block";
+    bottomToolbar.style.display = "flex";
+    hideReadingPanel();
+  }, 800);
 });
 
 navApprenticeBtn.addEventListener("click", () => {
-  // Show apprentice UI, hide reading stuff
-  readingPanel.classList.add("active");
+  navbar.classList.remove("active");
+  readingPanel.classList.remove("active");
   cardArea.style.display = "none";
   bottomToolbar.style.display = "none";
+  
+  // Show apprentice mode container with transition
   apprenticeModeContainer.style.display = "block";
+  requestAnimationFrame(() => {
+    apprenticeModeContainer.classList.add("active");
+  });
 });
 
 document.addEventListener("click", (event) => {
