@@ -104,7 +104,7 @@ h3 {
 }
 
 #codex-brand h1 {
-  font-size: 72px;
+  font-size: 5rem;
   line-height: 66px;
   color: #000000;
   margin: 0 0 10px 0;
@@ -550,7 +550,6 @@ button:active:not(:disabled) {
   width: 100%;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
 }
 
 #nav-logo img {

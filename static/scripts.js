@@ -255,7 +255,7 @@ const debouncedUpdateButtonText = debounce(updateButtonText, 200);
 /* Input Handling */
 function enableInput() {
   intentionInput.disabled = false;
-  intentionInput.placeholder = "What question or situation should the tarot address?";
+  intentionInput.placeholder = "What question or situation you need clarity on?";
   inlineSendButton.disabled = true;
   inlineSendButton.classList.remove("send-enabled");
 }
@@ -263,7 +263,7 @@ function enableInput() {
 function disableInput() {
   intentionInput.disabled = true;
   inlineSendButton.disabled = true;
-  intentionInput.placeholder = "Select the type of reading you seek for clarity on.";
+  intentionInput.placeholder = "Take a breath... What brings you here today?";
   inlineSendButton.classList.remove("send-enabled");
 }
 
@@ -395,7 +395,7 @@ function sendQuery(queryString, intention) {
 
   // Timeout
   const timeoutPromise = new Promise((_, reject) => {
-    setTimeout(() => reject(new Error("Request timed out")), 20000);
+    setTimeout(() => reject(new Error("Request timed out")), 130000);
   });
 
   const spreadType = currentSpreadType.toLowerCase();
@@ -651,6 +651,7 @@ window.addEventListener("resize", resizeCanvas);
 navSpreadReadingBtn.addEventListener("click", () => {
   navbar.classList.remove("active");
   apprenticeModeContainer.classList.remove("active");
+  appContainer.classList.remove("blurred");
   setTimeout(() => {
     apprenticeModeContainer.style.display = "none";
     cardArea.style.display = "block";
@@ -661,6 +662,7 @@ navSpreadReadingBtn.addEventListener("click", () => {
 
 navApprenticeBtn.addEventListener("click", () => {
   navbar.classList.remove("active");
+  appContainer.classList.remove("blurred");
   readingPanel.classList.remove("active");
   cardArea.style.display = "none";
   bottomToolbar.style.display = "none";
@@ -681,8 +683,16 @@ document.addEventListener("click", (event) => {
     // If click is outside nav & not on the toggle, close the nav
     if (!clickedInsideNav && !clickedNavToggle) {
       navbar.classList.remove('active');
+      appContainer.classList.remove("blurred");
     }
   }
+});
+
+document.querySelectorAll('#nav-links button').forEach(button => {
+  button.addEventListener('click', () => {
+    navbar.classList.remove("active");
+    appContainer.classList.remove("blurred");
+  });
 });
 
 // Start the global loader spinner when DOM content is loaded

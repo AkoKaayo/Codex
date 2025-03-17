@@ -6,7 +6,7 @@ from flask import Flask, request, jsonify
 from load_yaml import load_all_cards, load_yaml_files, structure_data
 
 openai.api_key = os.getenv("OPENAI_API_KEY")
-AI_MODEL = "gpt-3.5-turbo"
+AI_MODEL = "gpt-4-turbo"
 MAX_TOKENS = 2000
 
 # Layout definitions
