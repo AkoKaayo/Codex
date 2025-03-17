@@ -684,3 +684,28 @@ document.addEventListener("click", (event) => {
     }
   }
 });
+
+// Start the global loader spinner when DOM content is loaded
+document.addEventListener("DOMContentLoaded", () => {
+  const spinnerElement = document.getElementById("global-spinner");
+  const spinnerFrames = ["|", "/", "-", "\\"];
+  let index = 0;
+  const spinnerInterval = setInterval(() => {
+    spinnerElement.innerText = spinnerFrames[index];
+    index = (index + 1) % spinnerFrames.length;
+  }, 200);
+
+  // Clear spinner interval on window load so it stops animating
+  window.addEventListener("load", () => {
+    clearInterval(spinnerInterval);
+
+    // Fade out the global loader
+    const loader = document.getElementById("global-loader");
+    loader.classList.add("hidden");
+
+    // Remove the loader from the DOM after the fade-out transition
+    setTimeout(() => {
+      loader.remove();
+    }, 500); // 500ms matches the CSS transition duration
+  });
+});

@@ -11,7 +11,7 @@ MAX_TOKENS = 2000
 
 # Layout definitions
 SPREAD_LAYOUTS = {
-    "default": ["Central Theme"],
+    "default": ["MAIN ACTOR"],
     "three": ["PAST", "PRESENT", "FUTURE"],
     "plus": [
         "WHAT PREVENTS YOU FORM BEING YOURSELF?",
