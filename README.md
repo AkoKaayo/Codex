@@ -1,182 +1,83 @@
-Below is an updated README.md file for your project. You can copy and paste this into your repository:
+# Tarot Academia
 
-```markdown
-# Codex Arcana: AI Tarot Oracle
+**Version: 0.1 Beta**  
+**Last Updated: March 17, 2025**  
+**Created by: AkoKaayo**  
+**© 2025**
 
-Codex Arcana is an AI-powered tarot oracle that generates insightful tarot readings based solely on user queries and an indexed source text (a tarot book). It extracts tarot card names from user input, retrieves relevant passages from the book using vector search, and synthesizes detailed readings with individual card analyses and integrated summaries.
-
----
+## Overview
+Tarot Academia is an interactive web application that provides personalized tarot card readings using AI-powered interpretations. Users can request single-card, three-card, or five-card spreads to gain insights into their past, present, and future, guided by a sophisticated algorithm and OpenAI's GPT-4 model. This project combines mysticism with modern technology, offering a unique and engaging experience for tarot enthusiasts.
 
 ## Features
+- **Single Card Reading**: A focused reading for quick insights.
+- **Three Card Spread**: Explores past, present, and future perspectives.
+- **Five Card Spread**: Offers a deeper analysis with a plus-shaped layout.
+- **AI-Generated Interpretations**: Uses GPT-4 to provide warm, insightful readings in British English.
+- **Dynamic UI**: Features a visually appealing interface with animated backgrounds.
 
-- **Query Preprocessing:**  
-  Extracts tarot card names (including alternative names and positional cues) from user queries.  
-  *Ambiguous queries* (those without clear card references) either default to a one-card reading (if phrased as a question) or prompt the user to be more specific.
-
-- **Retrieval & Re-ranking (RAG):**  
-  Uses a vector store (via Chroma) with HuggingFace embeddings to retrieve context from the source text, re-ranking the retrieved chunks based on cosine similarity.
-
-- **Synthesis Prompt:**  
-  Generates detailed tarot readings using GPT-3.5-turbo.  
-  Supports specific spreads:
-  - **3-Card Spread:** Cards are interpreted progressively (e.g., past, present, future).
-  - **5-Card Spread (Plus Layout):** Cards are arranged in a plus configuration:
-    - **Row 1:** 1 card (centered)
-    - **Row 2:** 3 cards (left, center, right)
-    - **Row 3:** 1 card (centered)
-  - **Random Card:** Returns a single card reading.
-
-- **User Interface:**  
-  - Responsive chat area for displaying user prompts and generated readings.
-  - Card preview area showing card images retrieved by the system.
-  - **Speed Dial Buttons:** Quick-access buttons for "Random Card", "3-Card Spread", and "5-Card Spread".
-  - **Modal Card Zoom:** Click on any card image to view it in a fullscreen modal (resized to fit within 80% of the viewport height).
-
-- **Error Handling:**  
-  Provides user-friendly error messages and suggestions if the query lacks clear card references.
-
----
-
-## Setup Instructions
-
-### Prerequisites
-
-- Python 3.8 or higher
-- [pip](https://pip.pypa.io/en/stable/)
-- An OpenAI API key
-
-### Installation
-
-1. **Clone the repository:**
-
+## Installation
+1. **Clone the Repository**:
    ```bash
-   git clone https://github.com/yourusername/codex-arcana.git
-   cd codex-arcana
-   ```
+   git clone https://github.com/your-username/tarot-academia.git
+   cd tarot-academia
+(Replace your-username and tarot-academia with your actual GitHub repo details.)
 
-2. **Create and activate a virtual environment:**
+Set Up a Virtual Environment:
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
 
-   ```bash
-   python -m venv venv
-   # On Windows:
-   venv\Scripts\activate
-   # On macOS/Linux:
-   source venv/bin/activate
-   ```
+Install Dependencies: Install the required Python packages from requirements.txt:
+pip install -r requirements.txt
 
-3. **Install dependencies:**
+Configure OpenAI API Key:
+Obtain an API key from OpenAI.
 
-   ```bash
-   pip install -r requirements.txt
-   ```
+Set it as an environment variable:
+export OPENAI_API_KEY="your-api-key-here"
 
-   *(Make sure your `requirements.txt` includes packages such as Flask, flask-cors, openai, langchain_community, sentence-transformers, transformers, etc.)*
+Alternatively, create a .env file in the project root with:
+OPENAI_API_KEY=your-api-key-here
+And ensure python-dotenv is installed (included in requirements.txt).
 
-4. **Set your OpenAI API Key:**
+Run the Application:
+Open your browser and visit http://localhost:5000 to start using the app.
 
-   Set the environment variable `OPENAI_API_KEY` in your terminal:
+Usage
+Select a reading type (Single, Three, or Five Cards) from the bottom toolbar.
+Enter your intention or question in the text area (e.g., "What does my future hold?").
+Submit to receive a tarot reading with card images, analyses, and a synthesized message.
+Use the "Shuffle & Start Again" button to reset and try a new reading.
 
-   ```bash
-   export OPENAI_API_KEY="your_openai_api_key_here"
-   ```
+Dependencies
+Flask==3.1.0: Web framework.
+Flask-Cors==5.0.0: Cross-origin resource sharing support.
+PyYAML==6.0.2: YAML file parsing.
+openai==1.51.0: OpenAI API integration.
+requests==2.32.3: HTTP requests.
+httpx==0.24.1: HTTP client (pinned for compatibility).
+python-dotenv==1.0.1 (optional): Environment variable management.
+Project Structure
 
-   *(On Windows, use `set OPENAI_API_KEY="your_openai_api_key_here"`)*
+tarot-academia/
+├── FlaskApp.py         # Main Flask application
+├── tarot_reading.py    # Tarot reading logic
+├── load_yaml.py        # YAML data loading
+├── requirements.txt    # Python dependencies
+├── static/             # Static files (CSS, JS, images)
+│   ├── styles.css      # Stylesheet
+│   ├── scripts.js      # JavaScript
+│   └── cards/          # Tarot card images
+├── templates/          # HTML templates
+│   └── index.html      # Main HTML
+├── data/               # YAML data files
+└── README.md           # This file
 
-5. **Ensure your vector store and source text (e.g., tarot book PDF) are in the appropriate directories (e.g., `data/vectorstore`, `data/book.pdf`).**
+Contributing
+Contributions are welcome! Please open an issue or submit a pull request on GitHub. For major changes, please discuss them first via issues.
 
----
+License
+[Add your license here, e.g., MIT, GPL, or proprietary notice. Default is © 2025 AkoKaayo.]
 
-## Running the Application
-
-1. **Start the Flask Application:**
-
-   ```bash
-   python flaskapp.py
-   ```
-
-2. **Access the Interface:**
-
-   Open your web browser and navigate to [http://127.0.0.1:5000](http://127.0.0.1:5000).
-
----
-
-## Usage
-
-- **Manual Input:**  
-  Type a tarot question in the input field (e.g., "What does The Fool mean?") and press Enter or click the "Send" button.
-
-- **Speed Dial Options:**  
-  Use the buttons on the right panel for quick queries:
-  - **Random Card:** Returns a one-card reading.
-  - **3-Card Spread:** Returns a three-card reading interpreted as past, present, and future.
-  - **5-Card Spread:** Returns five cards arranged in a plus layout:
-    - Top row: 1 card (centered)
-    - Middle row: 3 cards (left, center, right)
-    - Bottom row: 1 card (centered)
-
-- **Card Zoom:**  
-  Click on any card image to open a modal with a zoomed-in view.
-
-- **Ambiguous Queries:**  
-  If your query does not contain a clear card reference, the system will either default to a one-card reading (if the query appears as a question) or prompt you to include a card name or use the speed dial options.
-
----
-
-## Configuration
-
-- **Vector Store:**  
-  Configured to load from `data/vectorstore` using the `langchain_community` package.
-  
-- **Embeddings Model:**  
-  Uses `sentence-transformers/all-MiniLM-L12-v2` for query and document embeddings.
-  
-- **Token Limits:**  
-  The system truncates retrieved context to 250-500 tokens (adjustable in `truncate_by_tokens()`).
-
-- **Spread Overrides:**  
-  - "3 card spread" returns 3 cards.
-  - "5 card spread" returns 5 cards with a `"plus"` layout.
-  - "Random card" returns 1 card.
-
-Feel free to adjust these parameters in the code as needed.
-
----
-
-## Integration Testing & QA
-
-- **End-to-End Testing:**  
-  Test with a variety of queries, including:
-  - Specific card queries (e.g., "What does The Fool mean?")
-  - Spread commands (e.g., "3 card spread", "5 card spread")
-  - Ambiguous queries (e.g., "Tell me something")
-  
-- **UI/UX Checks:**  
-  Verify that:
-  - Chat messages and card previews update correctly.
-  - Speed dial buttons trigger the expected readings.
-  - The modal displays a zoomed-in view of card images.
-  
-- **Error Handling:**  
-  Ensure that if a query is ambiguous, the system prompts you to include a valid card reference or use the speed dial options.
-
----
-
-## Future Improvements
-
-- Enhance error messages and fallback logic.
-- Expand the range of alternative card names.
-- Refine the UI for better responsiveness and accessibility.
-- Deploy the application on a production server with appropriate monitoring.
-
----
-
-## License
-
-Codex Arcana © 2025 by Kaayo is licensed under Creative Commons Attribution-NonCommercial 4.0 International 
-
----
-
-Happy reading and exploring your tarot insights with Codex Arcana!
-```
-
-Feel free to adjust any sections to match your project's specifics. Let me know if you need further modifications or additional sections!
+Acknowledgements
+Powered by OpenAI's GPT-4 model.
+Built with Flask and enhanced with Vanta.js for visual effects.
