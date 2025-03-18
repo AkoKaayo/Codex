@@ -1,4 +1,4 @@
-# Tarot Academia
+# Codex Tarot
 
 **Version: 0.1 Beta**  
 **Last Updated: March 17, 2025**  
