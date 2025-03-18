@@ -7,8 +7,8 @@ from load_yaml import load_all_cards, load_yaml_files, structure_data
 
 # Initialize the OpenAI client with your API key
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-AI_MODEL = "o3-mini"
-MAX_TOKENS = 2000
+AI_MODEL = "gpt-3.5-turbo-16k"
+MAX_TOKENS=5000
 
 # Layout definitions
 SPREAD_LAYOUTS = {
@@ -32,7 +32,7 @@ def get_ai_response(prompt):
             model=AI_MODEL,
             messages=[{"role": "user", "content": prompt}],
             max_tokens=MAX_TOKENS,
-            temperature=0.5
+            temperature=0.3
         )
         return response.choices[0].message.content.strip()
     except Exception as e:
