@@ -1,11 +1,12 @@
 import os
 import random
-import openai
+from openai import OpenAI
 import yaml
 from flask import Flask, request, jsonify
 from load_yaml import load_all_cards, load_yaml_files, structure_data
 
-openai.api_key = os.getenv("OPENAI_API_KEY")
+# Initialize the OpenAI client with your API key
+client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 AI_MODEL = "gpt-4-turbo"
 MAX_TOKENS = 2000
 
@@ -27,7 +28,7 @@ SPREAD_LAYOUTS = {
 ###################################################
 def get_ai_response(prompt):
     try:
-        response = openai.ChatCompletion.create(
+        response = client.chat.completions.create(
             model=AI_MODEL,
             messages=[{"role": "user", "content": prompt}],
             max_tokens=MAX_TOKENS,
@@ -64,7 +65,7 @@ def generate_image_path(card):
 def generate_paraphrased_intention(intention):
     """
     Produce an interesting opening line that transforms the user intention into an open sentence.
-    Expand, elborate, avoiding verbatim repetition and contradicting the initial query.
+    Expand, elaborate, avoiding verbatim repetition and contradicting the initial query.
     """
     if not intention or len(intention) < 10:
         return "Let us explore the Tarot’s guidance on your situation."
@@ -228,38 +229,25 @@ Details:
 # synergy for multiple cards
 ###################################################
 def generate_spread_synthesis(card_summaries, layout, intention, synergy_text=""):
-    """
-    Builds the synergy for multi-card spreads WITHOUT using GPT.
-    1) Creates HTML 'card-position' headings and 'card-analysis' paragraphs
-       for each card.
-    2) After bullet entries, appends a short synergy paragraph that merges 
-       each card's 'official_reading' text plus the card position and name.
-    3) No external knowledge is introduced - zero risk of 'foreign text.'
-    """
-
-    # 1. Build the bullet entries (no user query repeated).
     entries = []
     for cs in card_summaries:
         pos_label = cs.get("position", "Unknown")
-        analysis  = cs.get("analysis", "")
-        # a short heading for the position, then the analysis paragraph
-        entry = (
-            f"<h3 class='card-position'>{pos_label}</h3>"
-            f"<p class='card-analysis'>{analysis}</p>"
-        )
+        analysis = cs.get("analysis", "")
+        # Each entry is now an HTML snippet with a header for the position and a paragraph for the analysis.
+        entry = f"<h3 class='card-position'>{pos_label}</h3><p class='card-analysis'>{analysis}</p>"
         entries.append(entry)
     bullet_body = "\n".join(entries)
-
-    # 2. Start synergy result with bullet entries
+    
+    # Start with the bullet entries and append any additional synergy text if provided.
     synergy_result = bullet_body
     if synergy_text:
         synergy_result += f"\n\n{synergy_text}"
-
-    # 3. Build a final synergy paragraph from official readings
-    synergy_result += build_noAI_synergy_paragraph(card_summaries, intention)
-
+    
+    # Add a titled final synergy paragraph.
+    synergy_paragraph = generate_spread_summary_paragraph(card_summaries, layout, intention)
+    synergy_result += f"\n\n<h3 class='tarot-message-title'>THE TAROT'S MESSAGE</h3>\n<p class='tarot-message'>{synergy_paragraph}</p>"
+    
     return synergy_result
-
 
 def build_noAI_synergy_paragraph(card_summaries, intention):
     """
@@ -279,8 +267,8 @@ def build_noAI_synergy_paragraph(card_summaries, intention):
     # E.g. "Past (Ten of Wands): Official reading text..."
     content = ""
     for c in card_summaries:
-        pos   = c.get("position", "Unknown")
-        name  = c.get("name", "Unnamed Card")
+        pos = c.get("position", "Unknown")
+        name = c.get("name", "Unnamed Card")
         offic = c.get("official_reading", "").strip()
 
         # If no official reading is found, we can do a fallback
@@ -299,136 +287,6 @@ def build_noAI_synergy_paragraph(card_summaries, intention):
 
     return "\n".join(synergy_lines)
 
-
-###################################################
-# Oracle not from 1st card but combined monologues
-###################################################
-app = Flask(__name__)
-
-@app.route("/query", methods=["POST"])
-def query():
-    data = request.get_json() or {}
-    user_query = data.get("query", "").strip()
-    intention = data.get("intention", "").strip()
-
-    if not user_query:
-        return jsonify({"error": "No query provided."}), 400
-
-    outcome = generate_reading(user_query, intention)
-    return jsonify(outcome)
-
-def generate_reading(user_query, intention=""):
-    from collections import defaultdict
-    try:
-        # Load
-        cards, reading_instructions = load_all_cards('./data')
-        if not cards:
-            return {"error": "No cards found. Check YAML data.", "cards": [], "layout": "default"}
-
-        loaded_data = load_yaml_files('./data')
-        integrated_data = structure_data(loaded_data)
-        degrees_data = integrated_data.get('degrees', [])
-        suits_data = integrated_data.get('suits', [])
-
-        # Build lookups
-        degrees_lookup = {}
-        if isinstance(degrees_data, list):
-            for deg in degrees_data:
-                key = str(deg.get("degree", "")).lower()
-                if key:
-                    degrees_lookup[key] = deg
-
-        suits_lookup = {}
-        if isinstance(suits_data, list):
-            for s in suits_data:
-                skey = s.get("suit", "").lower()
-                if skey:
-                    suits_lookup[skey] = s
-
-        # Decide layout
-        query_lower = user_query.lower()
-        if "3 card" in query_lower:
-            selected_cards = random.sample(cards, 3)
-            layout = "three"
-        elif "5 card" in query_lower:
-            selected_cards = random.sample(cards, 5)
-            layout = "plus"
-        else:
-            selected_cards = [random.choice(cards)]
-            layout = "default"
-
-        positions = SPREAD_LAYOUTS.get(layout, ["Central Theme"])
-
-        # Introduction
-        intro_text = generate_introduction(intention)
-
-        card_summaries = []
-        cards_info = []
-        monologues_list = []  # gather all monologues for final synergy
-
-        for idx, raw_card in enumerate(selected_cards):
-            card = ensure_card(raw_card)
-            pos_name = positions[idx] if idx < len(positions) else "Extra"
-            analysis = generate_card_analysis(card, pos_name, suits_lookup, degrees_lookup)
-
-            # keep track
-            cdict = {
-                "name": card.get("name", "Unknown"),
-                "suit": card.get("suit", ""),
-                "position": pos_name,
-                "analysis": analysis,
-                "image": generate_image_path(card)
-            }
-            # store card monologue
-            mon = card.get("monologue", "")
-            if mon:
-                monologues_list.append(mon)
-
-            card_summaries.append(cdict)
-            cards_info.append(cdict)
-
-        # Suit synergy
-        synergy_notes = detect_suit_synergy(card_summaries, layout)
-
-        # Single vs multi synergy
-        if layout == "default":
-            # single card synergy
-            # Expand a bit + integrate the monologue
-            single_analysis = card_summaries[0]["analysis"]
-            card_monologue = monologues_list[0] if monologues_list else ""
-            single_synthesis = single_analysis
-            if card_monologue:
-                single_synthesis += (
-                    f"\n\nHere's a deeper reflection from this card's essence:\n{card_monologue}"
-                )
-            single_synthesis += f"\n\nThis single card reading explores your question in a focused manner."
-            final_synthesis = single_synthesis
-        else:
-            # multi synergy
-            final_synthesis = generate_spread_synthesis(card_summaries, layout, intention, synergy_notes)
-
-        # Combine monologues for final overall oracle
-        final_oracle = generate_spread_monologue(monologues_list, intention)
-
-        return {
-            "introduction": intro_text,
-            "cards": cards_info,
-            "synthesis": final_synthesis,
-            "oracle_message": final_oracle,
-            "layout": layout
-        }
-
-    except Exception as e:
-        err_msg = f"ERROR: Reading Generation Error: {str(e)}"
-        print(err_msg)
-        return {"error": err_msg}
-
-if __name__ == "__main__":
-    app.run(debug=True)
-
-###################################################
-# New function: Generate synergy summary paragraph
-###################################################
 def generate_spread_summary_paragraph(card_summaries, layout, intention):
     """
     Creates a short synergy paragraph referencing each card's position,
@@ -456,33 +314,10 @@ Be direct, warm, and write in British English.
     return response if response else "A broad synergy emerges, inviting reflection on all positions."
 
 ###################################################
-# Updated synergy function for multi-card spreads
-###################################################
-def generate_spread_synthesis(card_summaries, layout, intention, synergy_text=""):
-    entries = []
-    for cs in card_summaries:
-        pos_label = cs.get("position", "Unknown")
-        analysis = cs.get("analysis", "")
-        # Each entry is now an HTML snippet with a header for the position and a paragraph for the analysis.
-        entry = f"<h3 class='card-position'>{pos_label}</h3><p class='card-analysis'>{analysis}</p>"
-        entries.append(entry)
-    bullet_body = "\n".join(entries)
-    
-    # Start with the bullet entries and append any additional synergy text if provided.
-    synergy_result = bullet_body
-    if synergy_text:
-        synergy_result += f"\n\n{synergy_text}"
-    
-    # Add a titled final synergy paragraph.
-    synergy_paragraph = generate_spread_summary_paragraph(card_summaries, layout, intention)
-    synergy_result += f"\n\n<h3 class='tarot-message-title'>THE TAROT'S MESSAGE</h3>\n<p class='tarot-message'>{synergy_paragraph}</p>"
-    
-    return synergy_result
-
-###################################################
-# Updated generate_reading function (only relevant section)
+# Updated generate_reading function
 ###################################################
 def generate_reading(user_query, intention=""):
+    from collections import defaultdict
     try:
         # Load cards and reading instructions from YAML
         cards, reading_instructions = load_all_cards('./data')

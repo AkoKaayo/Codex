@@ -395,7 +395,7 @@ function sendQuery(queryString, intention) {
 
   // Timeout
   const timeoutPromise = new Promise((_, reject) => {
-    setTimeout(() => reject(new Error("Request timed out")), 130000);
+      setTimeout(() => reject(new Error("Request timed out")), 130000);
   });
 
   const spreadType = currentSpreadType.toLowerCase();
@@ -404,62 +404,69 @@ function sendQuery(queryString, intention) {
   console.log("Sending query:", finalQuery); // Debug
 
   Promise.race([
-    fetch("/query", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ query: finalQuery, intention })
-    }),
-    timeoutPromise
+      fetch("/query", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ query: finalQuery, intention })
+      }),
+      timeoutPromise
   ])
-    .then((response) => {
-      if (!response.ok) throw new Error("Network response was not ok");
-      return response.json();
-    })
-    .then((data) => {
-      // Stop spinner
-      clearInterval(userPromptObj.spinnerId);
-      userPromptObj.spinnerSpan.remove();
+      .then((response) => {
+          if (!response.ok) {
+              return response.json().then((data) => {
+                  throw new Error(data.error || "An error occurred while fetching the tarot reading.");
+              });
+          }
+          return response.json();
+      })
+      .then((data) => {
+          // Stop spinner
+          clearInterval(userPromptObj.spinnerId);
+          userPromptObj.spinnerSpan.remove();
 
-      // Show returned cards
-      if (data.cards && data.cards.length > 0) {
-        addCardImages(data.cards, spreadType);
-        scaleCards();
-      } else {
-        console.warn("No cards in response:", data);
-      }
+          // Show returned cards
+          if (data.cards && data.cards.length > 0) {
+              addCardImages(data.cards, spreadType);
+              scaleCards();
+          } else {
+              console.warn("No cards in response:", data);
+          }
 
-      // Build synergyContent
-      let synergyContent = "";
-      if (data.introduction) synergyContent += `<p class="assistant-message">${data.introduction}</p>`;
-      if (data.synthesis) synergyContent += data.synthesis;
-      else if (data.error) synergyContent += `<p class="assistant-message">${data.error}</p>`;
-      else synergyContent += `<p class="assistant-message">No results found. Try rephrasing your question.</p>`;
-      if (data.oracle_message) synergyContent += `<p class="tarot-message">${data.oracle_message}</p>`;
+          // Build synergyContent
+          let synergyContent = "";
+          if (data.introduction) synergyContent += `<p class="assistant-message">${data.introduction}</p>`;
+          if (data.synthesis) synergyContent += data.synthesis;
+          else if (data.error) synergyContent += `<p class="assistant-message">${data.error}</p>`;
+          else synergyContent += `<p class="assistant-message">No results found. Try rephrasing your question.</p>`;
+          if (data.oracle_message) synergyContent += `<p class="tarot-message">${data.oracle_message}</p>`;
 
-      addReadingText(synergyContent);
+          addReadingText(synergyContent);
 
-      // Enable & show shuffle
-      shuffleButton.disabled = false;
-      shuffleButton.style.display = "block";
-    })
-    .catch((error) => {
-      clearInterval(userPromptObj.spinnerId);
-      userPromptObj.spinnerSpan.remove();
-      console.error("Error:", error);
+          // Enable & show shuffle
+          shuffleButton.disabled = false;
+          shuffleButton.style.display = "block";
+      })
+      .catch((error) => {
+          clearInterval(userPromptObj.spinnerId);
+          userPromptObj.spinnerSpan.remove();
+          console.error("Error:", error.message);
 
-      const errorMsg = (error.message === "Request timed out")
-        ? "<p class='assistant-message'>Request timed out. Please try again.</p>"
-        : "<p class='assistant-message'>An error occurred while fetching the tarot reading.</p>";
+          let errorMsg = "<p class='assistant-message'>An error occurred while fetching the tarot reading. Give it one more try.</p>";
+          if (error.message === "Request timed out") {
+              errorMsg = "<p class='assistant-message'>Request timed out. Please try again.</p>";
+          } else {
+              errorMsg = `<p class='assistant-message'>${error.message}</p>`;
+          }
 
-      addReadingText(errorMsg);
+          addReadingText(errorMsg);
 
-      shuffleButton.disabled = false;
-      shuffleButton.style.display = "block";
-    })
-    .finally(() => {
-      // Remove panel-open class (cleanup)
-      appContainer.classList.remove("panel-open");
-    });
+          shuffleButton.disabled = false;
+          shuffleButton.style.display = "block";
+      })
+      .finally(() => {
+          // Remove panel-open class (cleanup)
+          appContainer.classList.remove("panel-open");
+      });
 }
 
 /* Card Display */
