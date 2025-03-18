@@ -7,7 +7,7 @@ from load_yaml import load_all_cards, load_yaml_files, structure_data
 
 # Initialize the OpenAI client with your API key
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-AI_MODEL = "gpt-4-turbo"
+AI_MODEL = "gpt-3-turbo"
 MAX_TOKENS = 2000
 
 # Layout definitions
