@@ -662,3 +662,17 @@ button:active:not(:disabled) {
   color: var(--purple);    /* Uses your purple variable */
   margin: 0;
 }
+
+/* =========================================
+   Scrollbar Styles
+   ========================================= */
+   #reading-text-container::-webkit-scrollbar {
+    width: 0;
+    background: transparent;
+  }
+  
+  #reading-text-container {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;     /* Firefox */
+  }
+  

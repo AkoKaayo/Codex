@@ -32,7 +32,7 @@ def get_ai_response(prompt):
             model=AI_MODEL,
             messages=[{"role": "user", "content": prompt}],
             max_tokens=MAX_TOKENS,
-            temperature=0.3
+            temperature=0.5
         )
         return response.choices[0].message.content.strip()
     except Exception as e:

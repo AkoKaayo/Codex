@@ -663,9 +663,12 @@ navSpreadReadingBtn.addEventListener("click", () => {
     apprenticeModeContainer.style.display = "none";
     cardArea.style.display = "block";
     bottomToolbar.style.display = "flex";
-    hideReadingPanel();
+
+    // Call the same fade/reset logic used by the Shuffle button:
+    fadeOutCards(); 
   }, 800);
 });
+
 
 navApprenticeBtn.addEventListener("click", () => {
   navbar.classList.remove("active");
