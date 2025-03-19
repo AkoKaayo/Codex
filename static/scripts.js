@@ -21,6 +21,9 @@ const inlineContextContainer = document.getElementById("inline-context-container
 const modal = document.getElementById("card-modal");
 const modalImage = document.getElementById("modal-image");
 const closeModal = document.querySelector("#card-modal .close");
+const infoToggle = document.getElementById('info-toggle');
+const infoModal = document.getElementById('info-modal');
+const closeInfoModal = document.querySelector('#info-modal .close');
 
 /* Toggling the sidebar nav on button click */
 navToggle.addEventListener("click", () => {
@@ -214,29 +217,6 @@ function debounce(func, delay) {
   };
 }
 
-// Vanta.js initialization
-document.addEventListener("DOMContentLoaded", () => {
-  vantaEffect = VANTA.FOG({
-    el: "#vanta-background",
-    mouseControls: true,
-    touchControls: true,
-    gyroControls: true,
-    minHeight: 200.00,
-    minWidth: 200.00,
-    highlightColor: 0x6e00b9,
-    midtoneColor: 0x370069,
-    lowlightColor: 0x240E37,
-    baseColor: 0x0,
-    blurFactor: 0.8,
-    speed: -1,
-    zoom: 0.4,
-    backgroundAlpha: 0
-  });
-
-  resizeCanvas();
-  animateParticles();
-});
-
 // Button text logic (existing)
 function updateButtonText() {
   const breakpoint = 768;
@@ -276,15 +256,6 @@ function handleSendButtonState() {
     inlineSendButton.classList.remove("send-enabled");
   }
 }
-
-/* On page load, disable input and hide reading panel */
-disableInput();
-hideReadingPanel(); // Ensure panel is hidden on load
-
-/* Speed dial buttons enable the text area. */
-[btnRandomCard, btnThreeCard, btnFiveCard].forEach((button) => {
-  button.addEventListener("click", enableInput);
-});
 
 /* UI Rendering */
 function addUserPrompt(promptText) {
@@ -533,6 +504,9 @@ function handleContextSubmission() {
   // Fade out starry & fog
   fadeOutEffects();
 
+  // Hide the info toggle button
+  infoToggle.classList.add("hidden");
+
   sendQuery(`${currentSpreadType.toLowerCase()} card spread about ${intentionText}`, intentionText);
 }
 
@@ -565,8 +539,9 @@ function resetToDefault() {
   currentSpreadType = "";
   [btnRandomCard, btnThreeCard, btnFiveCard].forEach((b) => b.classList.remove("active-button"));
   
-  // Bring the toolbar back into view
+  // Bring the toolbar and info toggle back into view
   bottomToolbar.classList.remove("hidden");
+  infoToggle.classList.remove("hidden");
 }
 
 // CARDS
@@ -589,128 +564,166 @@ function fadeOutCards() {
   }, 400);
 }
 
-/* Event Listeners */
-intentionInput.addEventListener("keydown", (e) => {
-  if (e.key === "Enter") {
-    e.preventDefault();
-    handleContextSubmission();
-  }
-});
-intentionInput.addEventListener("input", handleInputChange);
-intentionInput.addEventListener("input", capitalizeFirstLetter);
-inlineSendButton.addEventListener("click", handleContextSubmission);
-
-btnRandomCard.addEventListener("click", () => {
-  setActiveButton(btnRandomCard);
-  showInlineContext("Single");
-});
-btnThreeCard.addEventListener("click", () => {
-  setActiveButton(btnThreeCard);
-  showInlineContext("Three");
-});
-btnFiveCard.addEventListener("click", () => {
-  setActiveButton(btnFiveCard);
-  showInlineContext("Five");
-});
-
-function setActiveButton(clickedBtn) {
-  [btnRandomCard, btnThreeCard, btnFiveCard].forEach((b) => b.classList.remove("active-button"));
-  clickedBtn.classList.add("active-button");
-}
-
-shuffleButton.addEventListener("click", fadeOutCards);
-
-closeModal.addEventListener("click", () => {
-  modal.classList.remove("active");
-  // Wait for the transition to complete before setting display to none
-  setTimeout(() => {
-    modal.style.display = "none";
-  }, 800); // Match this timeout with the CSS transition duration (0.8s)
-});
-
-// Add tap-to-close functionality to the modal image
-modalImage.addEventListener("click", () => {
-  modal.classList.remove("active");
-  setTimeout(() => {
-    modal.style.display = "none";
-  }, 800); // Match this timeout with the CSS transition duration (0.8s)
-});
-
-document.addEventListener("click", (event) => {
-  if (
-    event.target.tagName === "IMG" &&
-    event.target.parentElement.classList.contains("card-image")
-  ) {
-    modal.style.display = "block"; // Make sure it's rendered
-    // Use a tiny delay or requestAnimationFrame to allow CSS transition to kick in
-    requestAnimationFrame(() => {
-      modal.classList.add("active");
-    });
-    modalImage.src = event.target.src;
-  }
-});
-
+/* Event Listeners (Combined into a single DOMContentLoaded block) */
 document.addEventListener("DOMContentLoaded", () => {
+  // Vanta.js initialization
+  vantaEffect = VANTA.FOG({
+    el: "#vanta-background",
+    mouseControls: true,
+    touchControls: true,
+    gyroControls: true,
+    minHeight: 200.00,
+    minWidth: 200.00,
+    highlightColor: 0x6e00b9,
+    midtoneColor: 0x370069,
+    lowlightColor: 0x240E37,
+    baseColor: 0x0,
+    blurFactor: 0.8,
+    speed: -1,
+    zoom: 0.4,
+    backgroundAlpha: 0
+  });
+
+  resizeCanvas();
+  animateParticles();
+
+  // Input and UI initialization
   intentionInput.addEventListener("input", handleSendButtonState);
   hideReadingPanel();
   updateButtonText();
-});
+  disableInput();
 
-window.addEventListener("resize", debouncedUpdateButtonText);
-window.addEventListener("resize", resizeCanvas);
-
-/* NAV SWITCH: Spread Reading vs. Apprentice Mode */
-navSpreadReadingBtn.addEventListener("click", () => {
-  navbar.classList.remove("active");
-  apprenticeModeContainer.classList.remove("active");
-  appContainer.classList.remove("blurred");
-  setTimeout(() => {
-    apprenticeModeContainer.style.display = "none";
-    cardArea.style.display = "block";
-    bottomToolbar.style.display = "flex";
-
-    // Call the same fade/reset logic used by the Shuffle button:
-    fadeOutCards(); 
-  }, 800);
-});
-
-navApprenticeBtn.addEventListener("click", () => {
-  navbar.classList.remove("active");
-  appContainer.classList.remove("blurred");
-  readingPanel.classList.remove("active");
-  cardArea.style.display = "none";
-  bottomToolbar.style.display = "none";
-  
-  // Show apprentice mode container with transition
-  apprenticeModeContainer.style.display = "block";
-  requestAnimationFrame(() => {
-    apprenticeModeContainer.classList.add("active");
+  // Speed dial buttons enable the text area
+  [btnRandomCard, btnThreeCard, btnFiveCard].forEach((button) => {
+    button.addEventListener("click", enableInput);
   });
-});
 
-document.addEventListener("click", (event) => {
-  // Only proceed if navbar is currently active
-  if (navbar.classList.contains('active')) {
-    const clickedInsideNav = navbar.contains(event.target);
-    const clickedNavToggle = (event.target === navToggle);
-
-    // If click is outside nav & not on the toggle, close the nav
-    if (!clickedInsideNav && !clickedNavToggle) {
-      navbar.classList.remove('active');
-      appContainer.classList.remove("blurred");
+  // Intention input events
+  intentionInput.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      handleContextSubmission();
     }
-  }
-});
+  });
+  intentionInput.addEventListener("input", handleInputChange);
+  intentionInput.addEventListener("input", capitalizeFirstLetter);
+  inlineSendButton.addEventListener("click", handleContextSubmission);
 
-document.querySelectorAll('#nav-links button').forEach(button => {
-  button.addEventListener('click', () => {
+  // Spread type buttons
+  btnRandomCard.addEventListener("click", () => {
+    setActiveButton(btnRandomCard);
+    showInlineContext("Single");
+  });
+  btnThreeCard.addEventListener("click", () => {
+    setActiveButton(btnThreeCard);
+    showInlineContext("Three");
+  });
+  btnFiveCard.addEventListener("click", () => {
+    setActiveButton(btnFiveCard);
+    showInlineContext("Five");
+  });
+
+  // Shuffle button
+  shuffleButton.addEventListener("click", fadeOutCards);
+
+  // Card modal events
+  closeModal.addEventListener("click", () => {
+    modal.classList.remove("active");
+    setTimeout(() => {
+      modal.style.display = "none";
+    }, 800); // Match this timeout with the CSS transition duration (0.8s)
+  });
+
+  modalImage.addEventListener("click", () => {
+    modal.classList.remove("active");
+    setTimeout(() => {
+      modal.style.display = "none";
+    }, 800); // Match this timeout with the CSS transition duration (0.8s)
+  });
+
+  document.addEventListener("click", (event) => {
+    if (
+      event.target.tagName === "IMG" &&
+      event.target.parentElement.classList.contains("card-image")
+    ) {
+      modal.style.display = "block"; // Make sure it's rendered
+      requestAnimationFrame(() => {
+        modal.classList.add("active");
+      });
+      modalImage.src = event.target.src;
+    }
+  });
+
+  // Info modal events
+  infoToggle.addEventListener('click', () => {
+    console.log('Info toggle clicked. Current display:', infoModal.style.display, 'Has active class:', infoModal.classList.contains('active'));
+    infoModal.style.display = 'block';
+    requestAnimationFrame(() => {
+      infoModal.classList.add('active');
+      console.log('After adding active class. Display:', infoModal.style.display, 'Has active class:', infoModal.classList.contains('active'));
+    });
+  });
+
+  closeInfoModal.addEventListener('click', () => {
+    infoModal.classList.remove('active');
+    setTimeout(() => {
+      infoModal.style.display = 'none';
+    }, 600); // Match CSS transition duration
+  });
+
+  document.addEventListener('click', (event) => {
+    if (event.target === infoModal && infoModal.classList.contains('active')) {
+      infoModal.classList.remove('active');
+      setTimeout(() => {
+        infoModal.style.display = 'none';
+      }, 600); // Match CSS transition duration
+    }
+  });
+
+  // Navigation events
+  navSpreadReadingBtn.addEventListener("click", () => {
+    navbar.classList.remove("active");
+    apprenticeModeContainer.classList.remove("active");
+    appContainer.classList.remove("blurred");
+    setTimeout(() => {
+      apprenticeModeContainer.style.display = "none";
+      cardArea.style.display = "block";
+      bottomToolbar.style.display = "flex";
+      fadeOutCards();
+    }, 800);
+  });
+
+  navApprenticeBtn.addEventListener("click", () => {
     navbar.classList.remove("active");
     appContainer.classList.remove("blurred");
+    readingPanel.classList.remove("active");
+    cardArea.style.display = "none";
+    bottomToolbar.style.display = "none";
+    apprenticeModeContainer.style.display = "block";
+    requestAnimationFrame(() => {
+      apprenticeModeContainer.classList.add("active");
+    });
   });
-});
 
-// Start the global loader spinner when DOM content is loaded
-document.addEventListener("DOMContentLoaded", () => {
+  document.addEventListener("click", (event) => {
+    if (navbar.classList.contains('active')) {
+      const clickedInsideNav = navbar.contains(event.target);
+      const clickedNavToggle = (event.target === navToggle);
+      if (!clickedInsideNav && !clickedNavToggle) {
+        navbar.classList.remove('active');
+        appContainer.classList.remove("blurred");
+      }
+    }
+  });
+
+  document.querySelectorAll('#nav-links button').forEach(button => {
+    button.addEventListener('click', () => {
+      navbar.classList.remove("active");
+      appContainer.classList.remove("blurred");
+    });
+  });
+
+  // Global loader spinner
   const spinnerElement = document.getElementById("global-spinner");
   const spinnerFrames = ["|", "/", "-", "\\"];
   let index = 0;
@@ -719,17 +732,20 @@ document.addEventListener("DOMContentLoaded", () => {
     index = (index + 1) % spinnerFrames.length;
   }, 200);
 
-  // Clear spinner interval on window load so it stops animating
   window.addEventListener("load", () => {
     clearInterval(spinnerInterval);
-
-    // Fade out the global loader
     const loader = document.getElementById("global-loader");
     loader.classList.add("hidden");
-
-    // Remove the loader from the DOM after the fade-out transition
     setTimeout(() => {
       loader.remove();
     }, 500); // 500ms matches the CSS transition duration
   });
 });
+
+window.addEventListener("resize", debouncedUpdateButtonText);
+window.addEventListener("resize", resizeCanvas);
+
+function setActiveButton(clickedBtn) {
+  [btnRandomCard, btnThreeCard, btnFiveCard].forEach((b) => b.classList.remove("active-button"));
+  clickedBtn.classList.add("active-button");
+}

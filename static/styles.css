@@ -231,7 +231,7 @@ button:active:not(:disabled) {
 .active-button {
   background-color: #681D85;
   border-color: #681D85;
-  color: #AD37DB;
+  color: #bbb;
 }
 
 /* Context Input */
@@ -517,8 +517,14 @@ button:active:not(:disabled) {
   left: 20px;
   background-color: #000;
   border-color: #000;
-  z-index: 5000;
-  transition: opacity 0.6s ease;
+  z-index: 1;
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, opacity 1s ease; /* Added opacity transition */
+}
+
+#nav-toggle:hover {
+  background-color: rgba(104, 29, 133, 0.1);
+  border-color: #681D85;
+  color: #681D85;
 }
 
 /* TOP NAV BAR & APPRENTICE */
@@ -676,3 +682,112 @@ button:active:not(:disabled) {
     scrollbar-width: none;     /* Firefox */
   }
   
+/* Info Toggle Button */
+#info-toggle {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background-color: #000;
+  border-color: #000;
+  font-size: 1rem;
+  line-height: 1.4;
+  cursor: pointer;
+  z-index: 5000;
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, opacity 1s ease; /* Added opacity transition */
+}
+
+#info-toggle.hidden {
+  opacity: 0;
+  pointer-events: none; /* Prevent interaction when hidden */
+}
+
+#info-toggle:hover {
+  background-color: rgba(104, 29, 133, 0.1);
+  border-color: #681D85;
+  color: #681D85;
+}
+
+#info-toggle:active {
+  background-color: #681D85;
+  border-color: #681D85;
+  color: #FFFFFF;
+}
+
+/* Info Modal Adjustments */
+#info-modal {
+  display: none;
+  align-content:center;
+  position: fixed;
+  z-index: 120000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.8);
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  background: rgba(0, 0, 0, 0.8); /* Fallback for browsers that don't support backdrop-filter */
+}
+
+#info-modal.active {
+  display: block;
+  opacity: 1;
+}
+
+#info-content {
+  margin: 5% auto;
+  padding: 20px;
+  max-width: 600px;
+  background-color: #151515;
+  border-radius: 16px;
+  color: #fff;
+  text-align: left;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 1rem;
+  line-height: 1.6;
+  display: block;
+  object-fit: unset;
+  overflow-y: auto; /* Enable vertical scrolling */
+  overflow-x: hidden; /* Prevent horizontal overflow */
+  height: auto; /* Allow the height to grow with content */
+  max-height: 80vh; /* Ensure it doesn’t exceed 80% of the viewport height */
+}
+
+#info-content h2 {
+  font-family: 'Sorts Mill Goudy', serif;
+  font-size: 1.6rem;
+  margin-bottom: 10px;
+}
+
+#info-modal .close {
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  color: #fff;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+#info-modal.active .modal-content {
+  transform: scale(1);
+}
+
+#seo-footer {
+  position: absolute;
+  bottom: 10px;
+  width: 100%;
+  text-align: center;
+  color: #787878; /* Matches the gray used in #nav-footer */
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 0.65rem; /* Very small font size, on the limit of legibility */
+  line-height: 1.2;
+  opacity: 0.4; /* Very faint, blending into the background */
+  padding: 5px 0;
+  z-index: 0; /* Above background layers but below interactive elements */
+}
+
+#seo-footer p {
+  margin: 0;
+}

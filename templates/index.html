@@ -1,18 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Codex Tarot</title>
-  <!-- Fonts and Favicons -->
-  <link href="https://fonts.googleapis.com/css2?family=Sorts+Mill+Goudy:wght@400;700&family=IBM+Plex+Sans:wght@200;400;600&family=IBM+Plex+Mono:wght@400;700&display=swap" rel="stylesheet" />
-  <link rel="icon" href="/static/images/favicon.svg" type="image/favicon" sizes="32x32">
-  <!-- Your CSS -->
-  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
-  <!-- Vanta.js and Three.js CDNs -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.fog.min.js"></script>
-</head>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Codex Tarot - Free Marseilles Tarot Readings</title>
+    <!-- Meta Tags for SEO -->
+    <meta name="description" content="Codex Tarot offers free Marseilles Tarot readings with the Jodorowsky-Camoin deck. Perfect for quick spreads, learning tarot, or exploring custom spreads and card meanings.">
+    <meta name="keywords" content="Marseilles Tarot, Jodorowsky-Camoin deck, free tarot readings, learn tarot, custom tarot spreads, tarot card meanings">
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="AkoKaayo">
+    <!-- Open Graph Tags for Social Sharing -->
+    <meta property="og:title" content="Codex Tarot - Free Marseilles Tarot Readings">
+    <meta property="og:description" content="Discover Marseilles Tarot with Codex Tarot. Free readings, learning resources, and custom spreads for beginners and experienced readers.">
+    <meta property="og:image" content="/static/images/codextarotlogo.svg">
+    <meta property="og:url" content="https://codextarot.com">
+    <meta property="og:type" content="website">
+
+    <link rel="alternate" hreflang="en" href="https://codextarot.com" />
+    <link rel="alternate" hreflang="x-default" href="https://codextarot.com" />
+
+    <!-- Fonts and Favicons -->
+    <link href="https://fonts.googleapis.com/css2?family=Sorts+Mill+Goudy:wght@400;700&family=IBM+Plex+Sans:wght@200;400;600&family=IBM+Plex+Mono:wght@400;700&display=swap" rel="stylesheet" />
+    <link rel="icon" href="/static/images/favicon.svg" type="image/favicon" sizes="32x32">
+    <!-- Your CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+    <!-- Vanta.js and Three.js CDNs -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.fog.min.js"></script>
+  </head>
 <body>
     <!-- Global Loader -->
     <div id="global-loader">
@@ -21,7 +36,7 @@
   <!-- TOP NAV BAR (moved outside of #app-container) -->
   <div id="top-navbar">
     <div id="nav-logo">
-      <img src="/static/images/codextarotlogo.svg" alt="Codex Tarot Logo" />
+      <img src="/static/images/codextarotlogo.svg" alt="Codex Tarot Logo - Free Marseilles Tarot Reading App" />
       <button id="nav-close" aria-label="Close navigation">←</button>
     </div>
     <div id="nav-links">
@@ -29,7 +44,7 @@
       <button id="nav-apprentice-btn" disabled>APPRENTICE MODE (COMING SOON)</button>
     </div>
     <div id="nav-footer">
-      <small>Version 0.3 Beta &mdash; Created by AkoKaayo &mdash; © 2025</small>
+      <small>Version 0.5 Beta &mdash; Created by AkoKaayo &mdash; © 2025</small>
     </div>
   </div>
 
@@ -87,9 +102,61 @@
       <span class="close">×</span>
       <img class="modal-content" id="modal-image">
     </div>
-  </div>
+
+    <!-- INFO BUTTON -->
+    <button id="info-toggle">?</button>
+
+    <!-- INFO MODAL -->
+    <div id="info-modal" class="modal">
+      <span class="close">×</span>
+      <div class="modal-content" id="info-content">
+        <h2>The Codex Tarot</h2>
+        <p>Welcome to Codex Tarot, your free online Marseilles Tarot reading app. Discover the ancient wisdom of the classic Marseilles Tarot, beautifully restored in the Jodorowsky-Camoin deck. Whether you're seeking personal insight, spiritual guidance, or a deeper understanding of tarot, our app offers accurate readings and learning resources for beginners and seasoned readers alike.</p>
+    
+        <h3>How to Use Codex Tarot</h3>
+        <p>Getting started with your tarot reading is simple:</p>
+        <ol>
+          <li><strong>Choose Your Spread:</strong> Select from a single card, three-card, or five-card reading using the buttons at the bottom of the screen.</li>
+          <li><strong>Set Your Intention:</strong> Enter a question or focus for your reading in the text box (e.g., "What should I focus on today?").</li>
+          <li><strong>Draw Your Cards:</strong> Press Enter or click the send button to draw your cards and reveal your reading.</li>
+          <li><strong>Explore Your Reading:</strong> View your cards and their meanings in the reading panel. Click on any card to zoom in for a closer look.</li>
+          <li><strong>Start Again:</strong> Use the "Shuffle & Start Again" button to clear your reading and begin anew.</li>
+        </ol>
+    
+        <h3>Why Choose Codex Tarot?</h3>
+        <p>Our app brings back the rich tradition of the Marseilles Tarot with the restored Jodorowsky-Camoin deck, known for its vibrant symbolism and historical significance and accuracy. Perfect for meditation, study, or daily guidance, Codex Tarot offers free, accurate Marseilles Tarot readings online. Explore tarot for beginners, deepen your practice, or find clarity with our intuitive spreads.</p>
+      </div>
+    </div>
+      
+    <!-- Footer for SEO -->
+      <footer id="seo-footer">
+      <p>Free Marseilles Tarot readings with the Jodorowsky-Camoin restored deck at Codex Tarot.</p>
+      </footer>
 
   <!-- Main Script -->
   <script src="{{ url_for('static', filename='scripts.js') }}"></script>
+  <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'922aa5b74c484552',t:'MTc0MjM2Mjk1NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Codex Tarot",
+      "url": "https://codextarot.com",
+      "description": "Codex Tarot offers free Marseilles Tarot readings with the Jodorowsky-Camoin deck. Ideal for quick spreads, learning tarot, and exploring custom spreads and card meanings.",
+      "applicationCategory": "Lifestyle",
+      "operatingSystem": "All",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "creator": {
+        "@type": "Person",
+        "name": "AkoKaayo"
+      },
+      "inLanguage": "en-US",
+      "keywords": "Marseilles Tarot, Jodorowsky-Camoin deck, free tarot readings, learn tarot, custom tarot spreads"
+    }
+    </script>
 </body>
 </html>
