@@ -163,7 +163,7 @@ h3 {
 
 /* BOTTOM TOOLBAR */
 #bottom-toolbar {
-  padding: 20px;
+  padding: 40px;
   background-color: transparent;
   display: flex;
   justify-content: center;
@@ -180,12 +180,11 @@ h3 {
   display: flex;
   flex-direction: column;
   gap: 20px;
-  background-color: #151515;
+  background-color: #000;
   border-radius: 36px;
   padding: 20px;
   max-width: 600px;
   width: 100%;
-  opacity: 80%;
 }
 
 #toolbar-buttons {
@@ -239,14 +238,14 @@ button:active:not(:disabled) {
 #inline-context-container {
   display: flex;
   align-items: center;
-  min-height: 60px;
+  min-height: 80px;
   border-radius: 16px;
-  background-color: #2A2A2A;
+  background-color: #111111;
 }
 
 #intention-input {
   font-family: 'IBM Plex Sans', sans-serif;
-  font-size: 1rem;
+  font-size: 1.1rem;
   flex: 1;
   border: none;
   background: transparent;
@@ -269,10 +268,10 @@ button:active:not(:disabled) {
 #inline-send-button {
   border: none;
   background: transparent;
-  color: #2a2a2a;
-  font-size: 1.2rem;
+  color: #111111;
+  font-size: 2rem;
   cursor: pointer;
-  padding: 0 12px;
+  padding: 0 20px;
   transition: color 0.3s ease;
 }
 
@@ -351,6 +350,7 @@ button:active:not(:disabled) {
 
 #shuffle-button {
   width: 100%;
+  height: 68px;
   background-color: var(--dark-gray);
   border: 1px solid #787878;
   border-radius: 16px;
@@ -515,8 +515,8 @@ button:active:not(:disabled) {
   position: fixed;
   top: 20px;
   left: 20px;
-  background-color: #151515;
-  border-color: #151515;
+  background-color: #000;
+  border-color: #000;
   z-index: 5000;
   transition: opacity 0.6s ease;
 }

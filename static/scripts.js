@@ -255,7 +255,7 @@ const debouncedUpdateButtonText = debounce(updateButtonText, 200);
 /* Input Handling */
 function enableInput() {
   intentionInput.disabled = false;
-  intentionInput.placeholder = "What question or situation you need clarity on?";
+  intentionInput.placeholder = "What question or situation needs clarity?";
   inlineSendButton.disabled = true;
   inlineSendButton.classList.remove("send-enabled");
 }
@@ -508,7 +508,6 @@ function addCardImages(cards, layout) {
   });
 }
 
-
 /* UI Handlers */
 function showInlineContext(spreadType) {
   currentSpreadType = spreadType;
@@ -570,7 +569,6 @@ function resetToDefault() {
   bottomToolbar.classList.remove("hidden");
 }
 
-
 // CARDS
 function fadeOutCards() {
   // Fade out card images
@@ -627,9 +625,16 @@ closeModal.addEventListener("click", () => {
   // Wait for the transition to complete before setting display to none
   setTimeout(() => {
     modal.style.display = "none";
-  }, 800); // Match this timeout with the CSS transition duration (0.4s)
+  }, 800); // Match this timeout with the CSS transition duration (0.8s)
 });
 
+// Add tap-to-close functionality to the modal image
+modalImage.addEventListener("click", () => {
+  modal.classList.remove("active");
+  setTimeout(() => {
+    modal.style.display = "none";
+  }, 800); // Match this timeout with the CSS transition duration (0.8s)
+});
 
 document.addEventListener("click", (event) => {
   if (
@@ -668,7 +673,6 @@ navSpreadReadingBtn.addEventListener("click", () => {
     fadeOutCards(); 
   }, 800);
 });
-
 
 navApprenticeBtn.addEventListener("click", () => {
   navbar.classList.remove("active");
