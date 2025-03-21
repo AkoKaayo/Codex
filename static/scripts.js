@@ -97,6 +97,7 @@ const cardSelectorTemplate = (position) => `
       <button class="selector-button" data-type="minor">Minor</button>
       <button class="selector-button" data-type="court">Court</button>
       <button class="selector-button" data-type="random">Random</button>
+      <button class="back-button" disabled>Back</button>
     </div>
     <div class="selector-step" data-step="major" style="display: none;">
       <h4>Select a Card</h4>
@@ -124,6 +125,7 @@ const cardSelectorTemplate = (position) => `
         <button class="selector-button" data-value="Judgment">Judgment</button>
         <button class="selector-button" data-value="The World">The World</button>
       </div>
+      <button class="back-button">Back</button>
     </div>
     <div class="selector-step" data-step="minor-suit" style="display: none;">
       <h4>Select the Suit</h4>
@@ -131,6 +133,7 @@ const cardSelectorTemplate = (position) => `
       <button class="selector-button" data-value="Pentacles">Pentacles</button>
       <button class="selector-button" data-value="Cups">Cups</button>
       <button class="selector-button" data-value="Wands">Wands</button>
+      <button class="back-button">Back</button>
     </div>
     <div class="selector-step" data-step="minor-number" style="display: none;">
       <h4>Select the Card Number</h4>
@@ -144,6 +147,7 @@ const cardSelectorTemplate = (position) => `
       <button class="selector-button" data-value="Eight">Eight</button>
       <button class="selector-button" data-value="Nine">Nine</button>
       <button class="selector-button" data-value="Ten">Ten</button>
+      <button class="back-button">Back</button>
     </div>
     <div class="selector-step" data-step="court-suit" style="display: none;">
       <h4>Select the Suit</h4>
@@ -151,6 +155,7 @@ const cardSelectorTemplate = (position) => `
       <button class="selector-button" data-value="Pentacles">Pentacles</button>
       <button class="selector-button" data-value="Cups">Cups</button>
       <button class="selector-button" data-value="Wands">Wands</button>
+      <button class="back-button">Back</button>
     </div>
     <div class="selector-step" data-step="court-character" style="display: none;">
       <h4>Select the Character</h4>
@@ -158,6 +163,7 @@ const cardSelectorTemplate = (position) => `
       <button class="selector-button" data-value="Queen">Queen</button>
       <button class="selector-button" data-value="King">King</button>
       <button class="selector-button" data-value="Knight">Knight</button>
+      <button class="back-button">Back</button>
     </div>
     <button class="add-card-button" disabled>Add Selected Card</button>
   </div>
@@ -583,7 +589,8 @@ function addCardImages(cards, layout) {
   cards.forEach((card, index) => {
     const cardDiv = document.createElement("div");
     cardDiv.classList.add("card-image");
-    // Initially, do not add the .show class
+    cardDiv.setAttribute("data-position", card.position);
+    cardDiv.setAttribute("data-name", card.name);
 
     const img = document.createElement("img");
     img.src = card.image;
@@ -591,10 +598,9 @@ function addCardImages(cards, layout) {
     cardDiv.appendChild(img);
     cardImagesContainer.appendChild(cardDiv);
 
-    // Use a slight delay for the animation to trigger:
     setTimeout(() => {
       cardDiv.classList.add("show");
-    }, 888 * index); // Stagger each card's animation by 50ms (adjust as needed)
+    }, 888 * index);
   });
 }
 
@@ -633,99 +639,175 @@ function showCardSelectors(spreadType) {
   cardSelectorContainer.style.display = "flex";
   cardSelectorContainer.classList.add("active");
   
-  // Add event listeners for selector buttons
-  document.querySelectorAll(".selector-button").forEach((button) => {
-    button.addEventListener("click", handleSelectorButtonClick);
-  });
-  
-  document.querySelectorAll(".add-card-button").forEach((button) => {
-    button.addEventListener("click", handleAddCard);
-  });
-}
+  // Add event listeners for each card selector
+  document.querySelectorAll(".card-selector").forEach(selector => {
+    const steps = {
+      type: selector.querySelector('[data-step="type"]'),
+      major: selector.querySelector('[data-step="major"]'),
+      minorSuit: selector.querySelector('[data-step="minor-suit"]'),
+      minorNumber: selector.querySelector('[data-step="minor-number"]'),
+      courtSuit: selector.querySelector('[data-step="court-suit"]'),
+      courtCharacter: selector.querySelector('[data-step="court-character"]')
+    };
+    const addButton = selector.querySelector('.add-card-button');
+    // Track navigation history for this selector
+    const navigationHistory = ['type']; // Start at the "type" step
 
-function handleSelectorButtonClick(event) {
-  const button = event.target;
-  const selector = button.closest(".card-selector");
-  const type = button.dataset.type;
-  const value = button.dataset.value;
-  
-  // Highlight the selected button
-  const stepContainer = button.closest(".selector-step");
-  stepContainer.querySelectorAll(".selector-button").forEach((btn) => {
-    btn.classList.remove("selected");
-  });
-  button.classList.add("selected");
-  
-  // Hide all steps in this selector
-  selector.querySelectorAll(".selector-step").forEach((step) => {
-    step.style.display = "none";
-  });
-  
-  // Show the next step based on the selection
-  if (type === "major") {
-    selector.querySelector('.selector-step[data-step="major"]').style.display = "block";
-  } else if (type === "minor") {
-    selector.querySelector('.selector-step[data-step="minor-suit"]').style.display = "block";
-  } else if (type === "court") {
-    selector.querySelector('.selector-step[data-step="court-suit"]').style.display = "block";
-  } else if (type === "random") {
-    // Mark as random and enable the Add button
-    selector.dataset.selection = JSON.stringify({ type: "random" });
-    selector.querySelector(".add-card-button").disabled = false;
-    selector.querySelector(".add-card-button").classList.add("enabled");
-  }
-  
-  // Handle sub-selections
-  if (stepContainer.dataset.step === "major") {
-    selector.dataset.selection = JSON.stringify({ type: "major", name: value });
-    selector.querySelector(".add-card-button").disabled = false;
-    selector.querySelector(".add-card-button").classList.add("enabled");
-  } else if (stepContainer.dataset.step === "minor-suit") {
-    selector.dataset.minorSuit = value;
-    selector.querySelector('.selector-step[data-step="minor-number"]').style.display = "block";
-  } else if (stepContainer.dataset.step === "minor-number") {
-    selector.dataset.selection = JSON.stringify({
-      type: "minor",
-      suit: selector.dataset.minorSuit,
-      number: value
-    });
-    selector.querySelector(".add-card-button").disabled = false;
-    selector.querySelector(".add-card-button").classList.add("enabled");
-  } else if (stepContainer.dataset.step === "court-suit") {
-    selector.dataset.courtSuit = value;
-    selector.querySelector('.selector-step[data-step="court-character"]').style.display = "block";
-  } else if (stepContainer.dataset.step === "court-character") {
-    selector.dataset.selection = JSON.stringify({
-      type: "court",
-      suit: selector.dataset.courtSuit,
-      character: value
-    });
-    selector.querySelector(".add-card-button").disabled = false;
-    selector.querySelector(".add-card-button").classList.add("enabled");
-  }
-}
+    const showStep = (stepName) => {
+      // Hide all steps
+      Object.values(steps).forEach(step => step.style.display = 'none');
+      // Show the specified step
+      steps[stepName].style.display = 'block';
+    };
 
-function handleAddCard(event) {
-  const selector = event.target.closest(".card-selector");
-  const position = selector.dataset.position;
-  const selection = JSON.parse(selector.dataset.selection || "{}");
-  
-  // Store the selection
-  selectedCards = selectedCards.filter((card) => card.position !== position);
-  selectedCards.push({ position, ...selection });
-  
-  // Disable the selector to indicate it's done
-  selector.querySelectorAll(".selector-button").forEach((btn) => {
-    btn.disabled = true;
+    selector.addEventListener('click', (e) => {
+      if (e.target.classList.contains('selector-button')) {
+        const step = e.target.closest('.selector-step').dataset.step;
+        const type = e.target.dataset.type;
+        const value = e.target.dataset.value;
+
+        // Highlight the selected button
+        const stepContainer = e.target.closest(".selector-step");
+        stepContainer.querySelectorAll(".selector-button").forEach((btn) => {
+          btn.classList.remove("selected");
+        });
+        e.target.classList.add("selected");
+
+        if (step === 'type') {
+          navigationHistory.push(type === 'major' ? 'major' : type === 'minor' ? 'minorSuit' : type === 'court' ? 'courtSuit' : 'type');
+          showStep(type === 'major' ? 'major' : type === 'minor' ? 'minorSuit' : type === 'court' ? 'courtSuit' : 'type');
+          if (type === 'random') {
+            selector.dataset.selection = JSON.stringify({ type: "random" });
+            addButton.disabled = false;
+            addButton.classList.add("enabled");
+          }
+        } else if (step === 'major') {
+          selector.dataset.selection = JSON.stringify({ type: "major", name: value });
+          addButton.disabled = false;
+          addButton.classList.add("enabled");
+        } else if (step === 'minor-suit') {
+          navigationHistory.push('minorNumber');
+          selector.dataset.minorSuit = value;
+          showStep('minorNumber');
+        } else if (step === 'minor-number') {
+          selector.dataset.selection = JSON.stringify({
+            type: "minor",
+            suit: selector.dataset.minorSuit,
+            number: value
+          });
+          addButton.disabled = false;
+          addButton.classList.add("enabled");
+        } else if (step === 'court-suit') {
+          navigationHistory.push('courtCharacter');
+          selector.dataset.courtSuit = value;
+          showStep('courtCharacter');
+        } else if (step === 'court-character') {
+          selector.dataset.selection = JSON.stringify({
+            type: "court",
+            suit: selector.dataset.courtSuit,
+            character: value
+          });
+          addButton.disabled = false;
+          addButton.classList.add("enabled");
+        }
+      } else if (e.target.classList.contains('back-button') && !e.target.disabled) {
+        // Remove the current step from history
+        navigationHistory.pop();
+        // Get the previous step
+        const previousStep = navigationHistory[navigationHistory.length - 1];
+        showStep(previousStep);
+        // Reset the add button and selection if going back
+        addButton.disabled = true;
+        addButton.classList.remove("enabled");
+        delete selector.dataset.selection;
+        delete selector.dataset.minorSuit;
+        delete selector.dataset.courtSuit;
+        // Remove "selected" class from buttons in the previous step
+        const previousStepContainer = selector.querySelector(`[data-step="${previousStep}"]`);
+        previousStepContainer.querySelectorAll(".selector-button").forEach(btn => {
+          btn.classList.remove("selected");
+        });
+      }
+    });
+
+    addButton.addEventListener('click', () => {
+      const position = selector.dataset.position;
+      const selection = JSON.parse(selector.dataset.selection || "{}");
+
+      // Store the selection
+      selectedCards = selectedCards.filter((card) => card.position !== position);
+      selectedCards.push({ position, ...selection });
+
+      // Determine the card name to display and fetch
+      let cardName = "";
+      if (selection.type === "random") {
+        cardName = "random";
+      } else if (selection.type === "major") {
+        cardName = selection.name;
+      } else if (selection.type === "minor") {
+        cardName = `${selection.number} of ${selection.suit}`;
+      } else if (selection.type === "court") {
+        cardName = `${selection.character} of ${selection.suit}`;
+      }
+
+      // Update the header to show the position and card name
+      selector.querySelector('h3').textContent = `${position}: ${cardName === "random" ? "Random Card" : cardName}`;
+
+      // Fetch the card image from the backend
+      fetch("/query", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          query: "1 card spread about test",
+          intention: "test",
+          selectedCards: [cardName]
+        })
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error("Failed to fetch card image");
+        }
+        return response.json();
+      })
+      .then(data => {
+        if (data.cards && data.cards.length > 0) {
+          const card = data.cards[0];
+          // Remove all selector steps
+          selector.querySelectorAll(".selector-step").forEach(step => step.remove());
+          // Remove the add button
+          addButton.remove();
+          // Add the card image
+          const cardImageDiv = document.createElement("div");
+          cardImageDiv.classList.add("card-image");
+          cardImageDiv.setAttribute("data-position", position);
+          cardImageDiv.setAttribute("data-name", card.name);
+          const img = document.createElement("img");
+          img.src = card.image;
+          img.alt = card.name;
+          cardImageDiv.appendChild(img);
+          selector.appendChild(cardImageDiv);
+        } else {
+          throw new Error("No card data returned");
+        }
+      })
+      .catch(error => {
+        console.error("Error fetching card image:", error);
+        // Fallback: show a placeholder or error message
+        selector.querySelectorAll(".selector-step").forEach(step => step.remove());
+        addButton.remove();
+        const errorDiv = document.createElement("div");
+        errorDiv.classList.add("card-error");
+        errorDiv.textContent = "Unable to load card image.";
+        selector.appendChild(errorDiv);
+      });
+
+      // Check if all positions have a selection
+      const positions = spreadPositions[currentSpreadType.toLowerCase()] || ["MAIN ACTOR"];
+      if (selectedCards.length === positions.length) {
+        confirmSelectionButton.disabled = false;
+      }
+    });
   });
-  event.target.disabled = true;
-  event.target.textContent = "Card Selected";
-  
-  // Check if all positions have a selection
-  const positions = spreadPositions[currentSpreadType.toLowerCase()] || ["MAIN ACTOR"];
-  if (selectedCards.length === positions.length) {
-    confirmSelectionButton.disabled = false;
-  }
 }
 
 function handleInputChange() {
