@@ -1,4 +1,5 @@
 /* DOM References */
+const isCustomReadingPage = window.location.pathname.includes("/custom");
 const cardArea = document.getElementById("card-area");
 const navToggle = document.getElementById('nav-toggle');
 const navbar = document.getElementById('top-navbar');
@@ -24,6 +25,41 @@ const closeModal = document.querySelector("#card-modal .close");
 const infoToggle = document.getElementById('info-toggle');
 const infoModal = document.getElementById('info-modal');
 const closeInfoModal = document.querySelector('#info-modal .close');
+// DOM References (add these to the existing list)
+const cardSelectorContainer = document.getElementById("card-selector-container");
+const cardSelectors = document.getElementById("card-selectors");
+const confirmSelectionButton = document.getElementById("confirm-selection-button");
+const cancelSelectionButton = document.getElementById("cancel-selection-button");
+
+// Track selected cards for Custom Reading
+let selectedCards = [];
+const spreadPositions = {
+  single: ["MAIN ACTOR"],
+  three: ["PAST & GENESIS", "PRESENT & ACTUALITY", "FUTURE & CONSEQUENCE"],
+  five: [
+    "WHAT PREVENTS YOU FROM BEING YOURSELF?",
+    "WITH WHAT MEANS CAN YOU FREE YOURSELF?",
+    "WHAT ACTION SHOULD YOU UNDERTAKE?",
+    "INTO WHAT TRANSFORMATION ARE YOU BEING LED?",
+    "WHAT IS YOUR ULTIMATE PURPOSE OR DESTINY?"
+  ]
+};
+
+// Format selected cards into a list of card names
+function formatSelectedCards(cards) {
+  return cards.map((card) => {
+    if (card.type === "random") {
+      return "random"; // Backend will handle random selection
+    } else if (card.type === "major") {
+      return card.name; // e.g., "The Fool"
+    } else if (card.type === "minor") {
+      return `${card.number} of ${card.suit}`; // e.g., "Ace of Wands"
+    } else if (card.type === "court") {
+      return `${card.character} of ${card.suit}`; // e.g., "Queen of Swords"
+    }
+    return "random"; // Fallback
+  });
+}
 
 /* Toggling the sidebar nav on button click */
 navToggle.addEventListener("click", () => {
@@ -45,10 +81,87 @@ navClose.addEventListener("click", () => {
 /* NEW: Top nav references */
 const topNavbar = document.getElementById("top-navbar");
 const navSpreadReadingBtn = document.getElementById("nav-spread-reading-btn");
+const navCustomReadingBtn = document.getElementById("nav-custom-reading-btn");
 const navApprenticeBtn = document.getElementById("nav-apprentice-btn");
 const apprenticeModeContainer = document.getElementById("apprentice-mode-container");
 
 let currentSpreadType = "";
+
+// Card Selector
+const cardSelectorTemplate = (position) => `
+  <div class="card-selector" data-position="${position}">
+    <h3>${position}</h3>
+    <div class="selector-step" data-step="type">
+      <h4>Select the Card Type</h4>
+      <button class="selector-button" data-type="major">Major</button>
+      <button class="selector-button" data-type="minor">Minor</button>
+      <button class="selector-button" data-type="court">Court</button>
+      <button class="selector-button" data-type="random">Random</button>
+    </div>
+    <div class="selector-step" data-step="major" style="display: none;">
+      <h4>Select a Card</h4>
+      <div class="selector-options">
+        <button class="selector-button" data-value="The Fool">The Fool</button>
+        <button class="selector-button" data-value="The Magician">The Magician</button>
+        <button class="selector-button" data-value="The High Priestess">The High Priestess</button>
+        <button class="selector-button" data-value="The Empress">The Empress</button>
+        <button class="selector-button" data-value="The Emperor">The Emperor</button>
+        <button class="selector-button" data-value="The Pope">The Pope</button>
+        <button class="selector-button" data-value="The Lover">The Lover</button>
+        <button class="selector-button" data-value="The Chariot">The Chariot</button>
+        <button class="selector-button" data-value="Strength">Strength</button>
+        <button class="selector-button" data-value="The Hermit">The Hermit</button>
+        <button class="selector-button" data-value="The Wheel of Fortune">The Wheel of Fortune</button>
+        <button class="selector-button" data-value="Justice">Justice</button>
+        <button class="selector-button" data-value="The Hanged Man">The Hanged Man</button>
+        <button class="selector-button" data-value="The Nameless Arcanum">The Nameless Arcanum</button>
+        <button class="selector-button" data-value="Temperance">Temperance</button>
+        <button class="selector-button" data-value="The Devil">The Devil</button>
+        <button class="selector-button" data-value="The Tower">The Tower</button>
+        <button class="selector-button" data-value="The Star">The Star</button>
+        <button class="selector-button" data-value="The Moon">The Moon</button>
+        <button class="selector-button" data-value="The Sun">The Sun</button>
+        <button class="selector-button" data-value="Judgment">Judgment</button>
+        <button class="selector-button" data-value="The World">The World</button>
+      </div>
+    </div>
+    <div class="selector-step" data-step="minor-suit" style="display: none;">
+      <h4>Select the Suit</h4>
+      <button class="selector-button" data-value="Swords">Swords</button>
+      <button class="selector-button" data-value="Pentacles">Pentacles</button>
+      <button class="selector-button" data-value="Cups">Cups</button>
+      <button class="selector-button" data-value="Wands">Wands</button>
+    </div>
+    <div class="selector-step" data-step="minor-number" style="display: none;">
+      <h4>Select the Card Number</h4>
+      <button class="selector-button" data-value="Ace">Ace</button>
+      <button class="selector-button" data-value="Two">Two</button>
+      <button class="selector-button" data-value="Three">Three</button>
+      <button class="selector-button" data-value="Four">Four</button>
+      <button class="selector-button" data-value="Five">Five</button>
+      <button class="selector-button" data-value="Six">Six</button>
+      <button class="selector-button" data-value="Seven">Seven</button>
+      <button class="selector-button" data-value="Eight">Eight</button>
+      <button class="selector-button" data-value="Nine">Nine</button>
+      <button class="selector-button" data-value="Ten">Ten</button>
+    </div>
+    <div class="selector-step" data-step="court-suit" style="display: none;">
+      <h4>Select the Suit</h4>
+      <button class="selector-button" data-value="Swords">Swords</button>
+      <button class="selector-button" data-value="Pentacles">Pentacles</button>
+      <button class="selector-button" data-value="Cups">Cups</button>
+      <button class="selector-button" data-value="Wands">Wands</button>
+    </div>
+    <div class="selector-step" data-step="court-character" style="display: none;">
+      <h4>Select the Character</h4>
+      <button class="selector-button" data-value="Page">Page</button>
+      <button class="selector-button" data-value="Queen">Queen</button>
+      <button class="selector-button" data-value="King">King</button>
+      <button class="selector-button" data-value="Knight">Knight</button>
+    </div>
+    <button class="add-card-button" disabled>Add Selected Card</button>
+  </div>
+`;
 
 // Button text states
 const buttonTextStates = {
@@ -348,8 +461,11 @@ function scaleCards() {
 /* Fetch Logic */
 function sendQuery(queryString, intention) {
   clearUI();
-  // Hide the bottom toolbar
+  // Hide the bottom toolbar and card selector container
   bottomToolbar.style.display = "none";
+  if (isCustomReadingPage) {
+    cardSelectorContainer.style.display = "none";
+  }
 
   // Add "loading" user prompt
   const userPromptObj = addUserPrompt(intention);
@@ -374,11 +490,14 @@ function sendQuery(queryString, intention) {
   const finalQuery = `${cardCount} card spread about ${intention}`;
   console.log("Sending query:", finalQuery); // Debug
 
+  // Format selected cards for Custom Reading
+  const cardsToSend = isCustomReadingPage ? formatSelectedCards(selectedCards) : [];
+
   Promise.race([
       fetch("/query", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ query: finalQuery, intention })
+          body: JSON.stringify({ query: finalQuery, intention, selectedCards: cardsToSend })
       }),
       timeoutPromise
   ])
@@ -482,8 +601,131 @@ function addCardImages(cards, layout) {
 /* UI Handlers */
 function showInlineContext(spreadType) {
   currentSpreadType = spreadType;
-  intentionInput.value = "";
-  intentionInput.focus();
+  if (isCustomReadingPage) {
+    // Show card selectors for Custom Reading
+    showCardSelectors(spreadType);
+  } else {
+    // Existing behavior for Spread Reading
+    intentionInput.value = "";
+    enableInput();
+    intentionInput.focus();
+  }
+}
+
+function showCardSelectors(spreadType) {
+  // Hide the bottom toolbar
+  bottomToolbar.style.display = "none";
+  
+  // Clear any previous selectors
+  cardSelectors.innerHTML = "";
+  selectedCards = [];
+  
+  // Determine the number of selectors based on spread type
+  const positions = spreadPositions[spreadType.toLowerCase()] || ["MAIN ACTOR"];
+  
+  // Generate a selector for each position
+  positions.forEach((position) => {
+    const selectorHtml = cardSelectorTemplate(position);
+    cardSelectors.insertAdjacentHTML("beforeend", selectorHtml);
+  });
+  
+  // Show the card selector container
+  cardSelectorContainer.style.display = "flex";
+  cardSelectorContainer.classList.add("active");
+  
+  // Add event listeners for selector buttons
+  document.querySelectorAll(".selector-button").forEach((button) => {
+    button.addEventListener("click", handleSelectorButtonClick);
+  });
+  
+  document.querySelectorAll(".add-card-button").forEach((button) => {
+    button.addEventListener("click", handleAddCard);
+  });
+}
+
+function handleSelectorButtonClick(event) {
+  const button = event.target;
+  const selector = button.closest(".card-selector");
+  const type = button.dataset.type;
+  const value = button.dataset.value;
+  
+  // Highlight the selected button
+  const stepContainer = button.closest(".selector-step");
+  stepContainer.querySelectorAll(".selector-button").forEach((btn) => {
+    btn.classList.remove("selected");
+  });
+  button.classList.add("selected");
+  
+  // Hide all steps in this selector
+  selector.querySelectorAll(".selector-step").forEach((step) => {
+    step.style.display = "none";
+  });
+  
+  // Show the next step based on the selection
+  if (type === "major") {
+    selector.querySelector('.selector-step[data-step="major"]').style.display = "block";
+  } else if (type === "minor") {
+    selector.querySelector('.selector-step[data-step="minor-suit"]').style.display = "block";
+  } else if (type === "court") {
+    selector.querySelector('.selector-step[data-step="court-suit"]').style.display = "block";
+  } else if (type === "random") {
+    // Mark as random and enable the Add button
+    selector.dataset.selection = JSON.stringify({ type: "random" });
+    selector.querySelector(".add-card-button").disabled = false;
+    selector.querySelector(".add-card-button").classList.add("enabled");
+  }
+  
+  // Handle sub-selections
+  if (stepContainer.dataset.step === "major") {
+    selector.dataset.selection = JSON.stringify({ type: "major", name: value });
+    selector.querySelector(".add-card-button").disabled = false;
+    selector.querySelector(".add-card-button").classList.add("enabled");
+  } else if (stepContainer.dataset.step === "minor-suit") {
+    selector.dataset.minorSuit = value;
+    selector.querySelector('.selector-step[data-step="minor-number"]').style.display = "block";
+  } else if (stepContainer.dataset.step === "minor-number") {
+    selector.dataset.selection = JSON.stringify({
+      type: "minor",
+      suit: selector.dataset.minorSuit,
+      number: value
+    });
+    selector.querySelector(".add-card-button").disabled = false;
+    selector.querySelector(".add-card-button").classList.add("enabled");
+  } else if (stepContainer.dataset.step === "court-suit") {
+    selector.dataset.courtSuit = value;
+    selector.querySelector('.selector-step[data-step="court-character"]').style.display = "block";
+  } else if (stepContainer.dataset.step === "court-character") {
+    selector.dataset.selection = JSON.stringify({
+      type: "court",
+      suit: selector.dataset.courtSuit,
+      character: value
+    });
+    selector.querySelector(".add-card-button").disabled = false;
+    selector.querySelector(".add-card-button").classList.add("enabled");
+  }
+}
+
+function handleAddCard(event) {
+  const selector = event.target.closest(".card-selector");
+  const position = selector.dataset.position;
+  const selection = JSON.parse(selector.dataset.selection || "{}");
+  
+  // Store the selection
+  selectedCards = selectedCards.filter((card) => card.position !== position);
+  selectedCards.push({ position, ...selection });
+  
+  // Disable the selector to indicate it's done
+  selector.querySelectorAll(".selector-button").forEach((btn) => {
+    btn.disabled = true;
+  });
+  event.target.disabled = true;
+  event.target.textContent = "Card Selected";
+  
+  // Check if all positions have a selection
+  const positions = spreadPositions[currentSpreadType.toLowerCase()] || ["MAIN ACTOR"];
+  if (selectedCards.length === positions.length) {
+    confirmSelectionButton.disabled = false;
+  }
 }
 
 function handleInputChange() {
@@ -539,8 +781,17 @@ function resetToDefault() {
   currentSpreadType = "";
   [btnRandomCard, btnThreeCard, btnFiveCard].forEach((b) => b.classList.remove("active-button"));
   
+  // Reset card selectors
+  if (isCustomReadingPage) {
+    cardSelectorContainer.style.display = "none";
+    cardSelectors.innerHTML = "";
+    selectedCards = [];
+    confirmSelectionButton.disabled = true;
+  }
+  
   // Bring the toolbar and info toggle back into view
   bottomToolbar.classList.remove("hidden");
+  bottomToolbar.style.display = "flex";
   infoToggle.classList.remove("hidden");
 }
 
@@ -593,9 +844,13 @@ document.addEventListener("DOMContentLoaded", () => {
   updateButtonText();
   disableInput();
 
-  // Speed dial buttons enable the text area
+  // Speed dial buttons enable the text area (only for Spread Reading)
   [btnRandomCard, btnThreeCard, btnFiveCard].forEach((button) => {
-    button.addEventListener("click", enableInput);
+    button.addEventListener("click", () => {
+      if (!isCustomReadingPage) {
+        enableInput();
+      }
+    });
   });
 
   // Intention input events
@@ -682,15 +937,35 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Navigation events
   navSpreadReadingBtn.addEventListener("click", () => {
-    navbar.classList.remove("active");
-    apprenticeModeContainer.classList.remove("active");
-    appContainer.classList.remove("blurred");
-    setTimeout(() => {
-      apprenticeModeContainer.style.display = "none";
-      cardArea.style.display = "block";
-      bottomToolbar.style.display = "flex";
-      fadeOutCards();
-    }, 800);
+    if (isCustomReadingPage) {
+      window.location.href = "/"; // Navigate to Spread Reading
+    } else {
+      navbar.classList.remove("active");
+      apprenticeModeContainer.classList.remove("active");
+      appContainer.classList.remove("blurred");
+      setTimeout(() => {
+        apprenticeModeContainer.style.display = "none";
+        cardArea.style.display = "block";
+        bottomToolbar.style.display = "flex";
+        fadeOutCards();
+      }, 800);
+    }
+  });
+
+  navCustomReadingBtn.addEventListener("click", () => {
+    if (!isCustomReadingPage) {
+      window.location.href = "/custom"; // Navigate to Custom Reading
+    } else {
+      navbar.classList.remove("active");
+      apprenticeModeContainer.classList.remove("active");
+      appContainer.classList.remove("blurred");
+      setTimeout(() => {
+        apprenticeModeContainer.style.display = "none";
+        cardArea.style.display = "block";
+        bottomToolbar.style.display = "flex";
+        fadeOutCards();
+      }, 800);
+    }
   });
 
   navApprenticeBtn.addEventListener("click", () => {
@@ -722,6 +997,28 @@ document.addEventListener("DOMContentLoaded", () => {
       appContainer.classList.remove("blurred");
     });
   });
+
+  // Custom Reading: Enable intention input after card selection
+  if (isCustomReadingPage) {
+    confirmSelectionButton.addEventListener("click", () => {
+      if (!confirmSelectionButton.disabled) {
+        // Hide the card selector container
+        cardSelectorContainer.style.display = "none";
+        // Show the bottom toolbar
+        bottomToolbar.style.display = "flex";
+        bottomToolbar.classList.remove("hidden");
+        // Enable and focus the intention input
+        enableInput();
+        intentionInput.focus();
+      }
+    });
+  
+    cancelSelectionButton.addEventListener("click", () => {
+      resetToDefault();
+      cardSelectorContainer.style.display = "none";
+      selectedCards = [];
+    });
+  }
 
   // Global loader spinner
   const spinnerElement = document.getElementById("global-spinner");

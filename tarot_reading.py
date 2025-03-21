@@ -8,7 +8,7 @@ from load_yaml import load_all_cards, load_yaml_files, structure_data
 # Initialize the OpenAI client with your API key
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 AI_MODEL = "gpt-3.5-turbo-16k"
-MAX_TOKENS=5000
+MAX_TOKENS = 5000
 
 # Layout definitions
 SPREAD_LAYOUTS = {
@@ -316,7 +316,7 @@ Be direct, warm, and write in British English.
 ###################################################
 # Updated generate_reading function
 ###################################################
-def generate_reading(user_query, intention=""):
+def generate_reading(user_query, intention="", selected_cards=None):
     from collections import defaultdict
     try:
         # Load cards and reading instructions from YAML
@@ -345,19 +345,57 @@ def generate_reading(user_query, intention=""):
                 if skey:
                     suits_lookup[skey] = s
 
+        # Build a card lookup dictionary for quick access by name (using only the English part)
+        card_lookup = {}
+        for card in cards:
+            card = ensure_card(card)
+            name = card.get("name", "").strip()
+            if name:
+                # Split the name to use only the English part (before the "/")
+                english_name = name.split("/")[0].strip()
+                card_lookup[english_name.lower()] = card
+
+        # Debug: Log all card names to verify
+        print("Available card names in card_lookup:")
+        for name in card_lookup.keys():
+            print(f"- {name}")
+
         # Determine spread type
         query_lower = user_query.lower()
         if "3 card" in query_lower:
-            selected_cards = random.sample(cards, 3)
+            num_cards = 3
             layout = "three"
         elif "5 card" in query_lower:
-            selected_cards = random.sample(cards, 5)
+            num_cards = 5
             layout = "plus"
         else:
-            selected_cards = [random.choice(cards)]
+            num_cards = 1
             layout = "default"
 
         positions = SPREAD_LAYOUTS.get(layout, ["Central Theme"])
+
+        # Select cards: use selected_cards if provided, otherwise draw randomly
+        final_cards = []
+        if selected_cards and len(selected_cards) == num_cards:
+            for card_name in selected_cards:
+                if card_name == "random":
+                    # Draw a random card
+                    raw_card = random.choice(cards)
+                    final_cards.append(ensure_card(raw_card))
+                else:
+                    # Look up the card by name (case-insensitive)
+                    card_name_lower = card_name.lower()
+                    card = card_lookup.get(card_name_lower)
+                    if not card:
+                        # Fallback to random if card not found
+                        print(f"Card not found: {card_name}. Drawing random card.")
+                        raw_card = random.choice(cards)
+                        final_cards.append(ensure_card(raw_card))
+                    else:
+                        final_cards.append(card)
+        else:
+            # Draw random cards (existing behavior)
+            final_cards = random.sample(cards, num_cards)
 
         # Generate paraphrased introduction
         intro_text = generate_introduction(intention)
@@ -366,7 +404,7 @@ def generate_reading(user_query, intention=""):
         cards_info = []
         monologues_list = []  # For oracle message
 
-        for idx, raw_card in enumerate(selected_cards):
+        for idx, raw_card in enumerate(final_cards):
             card = ensure_card(raw_card)
             pos_name = positions[idx] if idx < len(positions) else "Extra"
             analysis = generate_card_analysis(card, pos_name, suits_lookup, degrees_lookup)

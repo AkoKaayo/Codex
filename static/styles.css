@@ -41,12 +41,14 @@ h3 {
 #app-container {
   display: flex;
   flex-direction: column;
+  width: 100%;
   min-height: 100vh;
   height: auto;
   background-color: transparent;
   position: relative;
   padding-top: 0;
   transition: filter 0.3s ease;
+  overflow: visible;
 }
 
 #app-container.blurred {
@@ -64,7 +66,7 @@ h3 {
 }
 
 #starry-canvas {
-  position: fixed;
+  position: absolute;
   top: 0;
   left: 0;
   width: 100%;
@@ -800,4 +802,149 @@ button:active:not(:disabled) {
 
 #seo-footer p {
   margin: 0;
+}
+
+/* CARD SELECTOR CONTAINER */
+#card-selector-container {
+  padding: 40px;
+  background-color: transparent;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center; /* Center horizontally */
+  z-index: 2; /* Above background but below other UI elements if needed */
+  position: relative; /* Ensure it doesn't overlap incorrectly */
+  min-height: 50vh; /* Ensure it has enough space */
+  transition: transform 1s ease-in-out, opacity 1s ease;
+}
+
+#card-selector-container.active {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+#card-selectors {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  background-color: #000;
+  border-radius: 36px;
+  padding: 20px;
+  max-width: 1000px;
+  width: 100%;
+  margin: 0 auto;
+  box-sizing: border-box; /* Ensure padding doesn't cause overflow */
+}
+
+.card-selector {
+  background-color: #111111;
+  border-radius: 16px;
+  padding: 20px;
+  width: 300px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.card-selector h3 {
+  font-family: 'Sorts Mill Goudy', serif;
+  font-size: 1.25rem;
+  color: #bbb;
+  margin: 0 0 10px 0;
+  text-align: center;
+}
+
+.card-selector h4 {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 1rem;
+  color: #787878;
+  margin: 0 0 10px 0;
+  text-align: center;
+}
+
+.selector-step {
+  margin-bottom: 15px;
+}
+
+.selector-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+.selector-button {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.9rem;
+  background-color: transparent;
+  border: 1px solid #787878;
+  color: #787878;
+  padding: 0.5rem 1rem;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+.selector-button:hover:not(:disabled) {
+  background-color: rgba(104, 29, 133, 0.1);
+  border-color: #681D85;
+  color: #681D85;
+}
+
+.selector-button.selected {
+  background-color: #681D85;
+  border-color: #681D85;
+  color: #bbb;
+}
+
+.add-card-button {
+  width: 100%;
+  height: 48px;
+  background-color: transparent;
+  border: 1px solid #787878;
+  color: #787878;
+  border-radius: 16px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+.add-card-button:hover:not(:disabled) {
+  background-color: rgba(104, 29, 133, 0.1);
+  border-color: #681D85;
+  color: #681D85;
+}
+
+.add-card-button:active:not(:disabled),
+.add-card-button.enabled {
+  background-color: #681D85;
+  border-color: #681D85;
+  color: #bbb;
+}
+
+.add-card-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+#card-selector-actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+#confirm-selection-button,
+#cancel-selection-button {
+  width: 200px;
+  height: 48px;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 1rem;
+  border-radius: 16px;
+}
+
+#confirm-selection-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }

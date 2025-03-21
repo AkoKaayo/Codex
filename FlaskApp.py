@@ -9,15 +9,21 @@ logging.basicConfig(level=logging.DEBUG)
 def index():
     return render_template("index.html")
 
+@app.route("/custom")
+def custom():
+    return render_template("custom.html")
+
 @app.route("/query", methods=["POST"])
 def query():
     data = request.get_json() or {}
     user_query = data.get("query", "").strip()
     intention = data.get("intention", "").strip()
+    selected_cards = data.get("selectedCards", [])  # Extract selected cards from request
 
     # Log the lengths for debugging
     app.logger.debug(f"Length of user_query: {len(user_query)}")
     app.logger.debug(f"Length of intention: {len(intention)}")
+    app.logger.debug(f"Selected cards: {selected_cards}")
 
     # Check if user_query is empty
     if not user_query:
@@ -36,11 +42,15 @@ def query():
     if any(char in intention for char in harmful_chars):
         return jsonify({"error": "Invalid characters in intention. Avoid using <, >, {, or }."}), 400
 
+    # Validate selected cards (basic check)
+    if not isinstance(selected_cards, list):
+        return jsonify({"error": "Selected cards must be a list."}), 400
+
     app.logger.debug(f"User Query: {user_query}")
     app.logger.debug(f"Intention: {intention}")
 
     try:
-        reading_result = tarot_reading.generate_reading(user_query, intention)
+        reading_result = tarot_reading.generate_reading(user_query, intention, selected_cards)
         app.logger.debug(f"Reading Result: {reading_result}")
     except Exception as e:
         app.logger.error(f"Error generating reading: {e}")
