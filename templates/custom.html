@@ -59,46 +59,44 @@
   </div>
 
   <!-- Main Content Container -->
-  <div id="app-container">
+<div id="app-container">
     <!-- Menu toggle button -->
     <button id="nav-toggle">☰</button>
-
+  
     <!-- Background Layers -->
     <div id="vanta-background"></div>
     <canvas id="starry-canvas"></canvas>
-
+  
     <!-- CARD AREA -->
     <div id="card-area">
-      <div id="codex-brand">
+      
+    <div id="codex-brand">
         <h1>CUSTOM<br>READING</h1>
       </div>
+      
       <div id="card-images-container"></div>
     </div>
-
+  
     <!-- CARD SELECTOR CONTAINER -->
     <div id="card-selector-container" style="display: none;">
-    <div id="card-selectors"></div>
-    <div id="card-selector-actions">
-      <button id="confirm-selection-button" disabled>Generate Reading</button>
-      <button id="cancel-selection-button">Cancel</button>
+      <div id="card-selectors"></div>
     </div>
-  </div>
     
     <!-- BOTTOM TOOLBAR -->
-    <div id="bottom-toolbar">
-      <div id="toolbar-container">
-        <div id="toolbar-buttons">
-          <button id="btn-random-card">Single Card Read</button>
-          <button id="btn-three-card">Three Cards Read</button>
-          <button id="btn-five-card">Five Cards Read</button>
-        </div>
-        <div id="inline-context-container">
-          <textarea id="intention-input" placeholder="Take a breath... What brings you here today?" disabled></textarea>
-          <button id="inline-send-button" disabled></button>
-        </div>
+<div id="bottom-toolbar">
+    <div id="toolbar-container">
+      <div id="toolbar-buttons">
+        <button id="btn-random-card">Single Card Read</button>
+        <button id="btn-three-card">Three Cards Read</button>
+        <button id="btn-five-card">Five Cards Read</button>
+      </div>
+      <div id="inline-context-container">
+        <textarea id="intention-input" placeholder="Select your spread type and wich cards you seek to learn from." disabled></textarea>
+        <button id="inline-send-button" disabled></button>
       </div>
     </div>
-
+  </div>
+  
     <!-- READING PANEL -->
     <div id="reading-panel">
       <div id="user-prompt-wrapper"></div>
@@ -107,6 +105,9 @@
         <button id="shuffle-button" style="display: none;">SHUFFLE & START AGAIN</button>
       </div>
     </div>
+  
+    <!-- Rest of the HTML remains unchanged -->
+  </div>
 
     <!-- APPRENTICE MODE CONTAINER -->
     <div id="apprentice-mode-container">

@@ -28,8 +28,6 @@ const closeInfoModal = document.querySelector('#info-modal .close');
 // DOM References (add these to the existing list)
 const cardSelectorContainer = document.getElementById("card-selector-container");
 const cardSelectors = document.getElementById("card-selectors");
-const confirmSelectionButton = document.getElementById("confirm-selection-button");
-const cancelSelectionButton = document.getElementById("cancel-selection-button");
 
 // Track selected cards for Custom Reading
 let selectedCards = [];
@@ -97,14 +95,13 @@ const cardSelectorTemplate = (position) => `
       <button class="selector-button" data-type="minor">Minor</button>
       <button class="selector-button" data-type="court">Court</button>
       <button class="selector-button" data-type="random">Random</button>
-      <button class="back-button" disabled>Back</button>
     </div>
     <div class="selector-step" data-step="major" style="display: none;">
       <h4>Select a Card</h4>
       <div class="selector-options">
         <button class="selector-button" data-value="The Fool">The Fool</button>
         <button class="selector-button" data-value="The Magician">The Magician</button>
-        <button class="selector-button" data-value="The High Priestess">The High Priestess</button>
+        <button class="selector-button long-name" data-value="The High Priestess">The High Priestess</button>
         <button class="selector-button" data-value="The Empress">The Empress</button>
         <button class="selector-button" data-value="The Emperor">The Emperor</button>
         <button class="selector-button" data-value="The Pope">The Pope</button>
@@ -112,10 +109,10 @@ const cardSelectorTemplate = (position) => `
         <button class="selector-button" data-value="The Chariot">The Chariot</button>
         <button class="selector-button" data-value="Strength">Strength</button>
         <button class="selector-button" data-value="The Hermit">The Hermit</button>
-        <button class="selector-button" data-value="The Wheel of Fortune">The Wheel of Fortune</button>
+        <button class="selector-button long-name" data-value="The Wheel of Fortune">The Wheel of Fortune</button>
         <button class="selector-button" data-value="Justice">Justice</button>
         <button class="selector-button" data-value="The Hanged Man">The Hanged Man</button>
-        <button class="selector-button" data-value="The Nameless Arcanum">The Nameless Arcanum</button>
+        <button class="selector-button long-name" data-value="The Nameless Arcanum">The Nameless Arcanum</button>
         <button class="selector-button" data-value="Temperance">Temperance</button>
         <button class="selector-button" data-value="The Devil">The Devil</button>
         <button class="selector-button" data-value="The Tower">The Tower</button>
@@ -125,7 +122,6 @@ const cardSelectorTemplate = (position) => `
         <button class="selector-button" data-value="Judgment">Judgment</button>
         <button class="selector-button" data-value="The World">The World</button>
       </div>
-      <button class="back-button">Back</button>
     </div>
     <div class="selector-step" data-step="minor-suit" style="display: none;">
       <h4>Select the Suit</h4>
@@ -133,7 +129,6 @@ const cardSelectorTemplate = (position) => `
       <button class="selector-button" data-value="Pentacles">Pentacles</button>
       <button class="selector-button" data-value="Cups">Cups</button>
       <button class="selector-button" data-value="Wands">Wands</button>
-      <button class="back-button">Back</button>
     </div>
     <div class="selector-step" data-step="minor-number" style="display: none;">
       <h4>Select the Card Number</h4>
@@ -147,7 +142,6 @@ const cardSelectorTemplate = (position) => `
       <button class="selector-button" data-value="Eight">Eight</button>
       <button class="selector-button" data-value="Nine">Nine</button>
       <button class="selector-button" data-value="Ten">Ten</button>
-      <button class="back-button">Back</button>
     </div>
     <div class="selector-step" data-step="court-suit" style="display: none;">
       <h4>Select the Suit</h4>
@@ -155,7 +149,6 @@ const cardSelectorTemplate = (position) => `
       <button class="selector-button" data-value="Pentacles">Pentacles</button>
       <button class="selector-button" data-value="Cups">Cups</button>
       <button class="selector-button" data-value="Wands">Wands</button>
-      <button class="back-button">Back</button>
     </div>
     <div class="selector-step" data-step="court-character" style="display: none;">
       <h4>Select the Character</h4>
@@ -163,9 +156,11 @@ const cardSelectorTemplate = (position) => `
       <button class="selector-button" data-value="Queen">Queen</button>
       <button class="selector-button" data-value="King">King</button>
       <button class="selector-button" data-value="Knight">Knight</button>
-      <button class="back-button">Back</button>
     </div>
-    <button class="add-card-button" disabled>Add Selected Card</button>
+    <div class="selector-actions">
+      <button class="back-button" disabled>Back</button>
+      <button class="add-card-button" disabled>Add Selected Card</button>
+    </div>
   </div>
 `;
 
@@ -619,7 +614,7 @@ function showInlineContext(spreadType) {
 }
 
 function showCardSelectors(spreadType) {
-  // Hide the bottom toolbar
+  // Hide the bottom toolbar initially
   bottomToolbar.style.display = "none";
   
   // Clear any previous selectors
@@ -635,9 +630,11 @@ function showCardSelectors(spreadType) {
     cardSelectors.insertAdjacentHTML("beforeend", selectorHtml);
   });
   
-  // Show the card selector container
+  // Show the card selector container and toolbar
   cardSelectorContainer.style.display = "flex";
   cardSelectorContainer.classList.add("active");
+  bottomToolbar.style.display = "flex";
+  bottomToolbar.classList.remove("hidden");
   
   // Add event listeners for each card selector
   document.querySelectorAll(".card-selector").forEach(selector => {
@@ -650,13 +647,11 @@ function showCardSelectors(spreadType) {
       courtCharacter: selector.querySelector('[data-step="court-character"]')
     };
     const addButton = selector.querySelector('.add-card-button');
-    // Track navigation history for this selector
-    const navigationHistory = ['type']; // Start at the "type" step
+    const backButton = selector.querySelector('.selector-actions .back-button'); // Updated to target the new location
+    const navigationHistory = ['type'];
 
     const showStep = (stepName) => {
-      // Hide all steps
       Object.values(steps).forEach(step => step.style.display = 'none');
-      // Show the specified step
       steps[stepName].style.display = 'block';
     };
 
@@ -666,7 +661,6 @@ function showCardSelectors(spreadType) {
         const type = e.target.dataset.type;
         const value = e.target.dataset.value;
 
-        // Highlight the selected button
         const stepContainer = e.target.closest(".selector-step");
         stepContainer.querySelectorAll(".selector-button").forEach((btn) => {
           btn.classList.remove("selected");
@@ -676,6 +670,7 @@ function showCardSelectors(spreadType) {
         if (step === 'type') {
           navigationHistory.push(type === 'major' ? 'major' : type === 'minor' ? 'minorSuit' : type === 'court' ? 'courtSuit' : 'type');
           showStep(type === 'major' ? 'major' : type === 'minor' ? 'minorSuit' : type === 'court' ? 'courtSuit' : 'type');
+          backButton.disabled = false; // Enable Back button
           if (type === 'random') {
             selector.dataset.selection = JSON.stringify({ type: "random" });
             addButton.disabled = false;
@@ -711,18 +706,17 @@ function showCardSelectors(spreadType) {
           addButton.classList.add("enabled");
         }
       } else if (e.target.classList.contains('back-button') && !e.target.disabled) {
-        // Remove the current step from history
         navigationHistory.pop();
-        // Get the previous step
         const previousStep = navigationHistory[navigationHistory.length - 1];
         showStep(previousStep);
-        // Reset the add button and selection if going back
         addButton.disabled = true;
         addButton.classList.remove("enabled");
+        if (previousStep === 'type') {
+          backButton.disabled = true; // Disable Back button on the first step
+        }
         delete selector.dataset.selection;
         delete selector.dataset.minorSuit;
         delete selector.dataset.courtSuit;
-        // Remove "selected" class from buttons in the previous step
         const previousStepContainer = selector.querySelector(`[data-step="${previousStep}"]`);
         previousStepContainer.querySelectorAll(".selector-button").forEach(btn => {
           btn.classList.remove("selected");
@@ -734,11 +728,9 @@ function showCardSelectors(spreadType) {
       const position = selector.dataset.position;
       const selection = JSON.parse(selector.dataset.selection || "{}");
 
-      // Store the selection
       selectedCards = selectedCards.filter((card) => card.position !== position);
       selectedCards.push({ position, ...selection });
 
-      // Determine the card name to display and fetch
       let cardName = "";
       if (selection.type === "random") {
         cardName = "random";
@@ -750,12 +742,13 @@ function showCardSelectors(spreadType) {
         cardName = `${selection.character} of ${selection.suit}`;
       }
 
-      // Update the header to show the position and card name
       selector.querySelector('h3').textContent = `${position}: ${cardName === "random" ? "Random Card" : cardName}`;
 
-      // Add a loading spinner
       selector.querySelectorAll(".selector-step").forEach(step => step.remove());
       addButton.remove();
+      const actionsContainer = selector.querySelector(".selector-actions");
+      actionsContainer.querySelector(".back-button").remove(); // Remove the actions temporarily
+
       const loadingDiv = document.createElement("div");
       loadingDiv.classList.add("card-loading");
       const spinnerSpan = document.createElement("span");
@@ -764,7 +757,6 @@ function showCardSelectors(spreadType) {
       loadingDiv.appendChild(spinnerSpan);
       selector.appendChild(loadingDiv);
 
-      // Animate the spinner
       const spinnerFrames = ["|", "/", "-", "\\"];
       let index = 0;
       const spinnerId = setInterval(() => {
@@ -772,7 +764,6 @@ function showCardSelectors(spreadType) {
         index = (index + 1) % spinnerFrames.length;
       }, 200);
 
-      // Fetch the card image from the new endpoint
       fetch("/get_card_image", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -785,11 +776,9 @@ function showCardSelectors(spreadType) {
         return response.json();
       })
       .then(data => {
-        // Stop the spinner
         clearInterval(spinnerId);
         loadingDiv.remove();
 
-        // Add the card image
         const cardImageDiv = document.createElement("div");
         cardImageDiv.classList.add("card-image");
         cardImageDiv.setAttribute("data-position", position);
@@ -799,24 +788,30 @@ function showCardSelectors(spreadType) {
         img.alt = data.name;
         cardImageDiv.appendChild(img);
         selector.appendChild(cardImageDiv);
+
+        // Re-append the actions container below the card image
+        selector.appendChild(actionsContainer);
+
+        // Check if all positions have a selection and auto-enable intention input
+        const positions = spreadPositions[currentSpreadType.toLowerCase()] || ["MAIN ACTOR"];
+        if (selectedCards.length === positions.length) {
+          enableInput();
+          intentionInput.focus();
+          inlineContextContainer.classList.add("enabled");
+        }
       })
       .catch(error => {
         console.error("Error fetching card image:", error);
-        // Stop the spinner
         clearInterval(spinnerId);
         loadingDiv.remove();
-        // Show an error message
         const errorDiv = document.createElement("div");
         errorDiv.classList.add("card-error");
         errorDiv.textContent = "Unable to load card image.";
         selector.appendChild(errorDiv);
-      });
 
-      // Check if all positions have a selection
-      const positions = spreadPositions[currentSpreadType.toLowerCase()] || ["MAIN ACTOR"];
-      if (selectedCards.length === positions.length) {
-        confirmSelectionButton.disabled = false;
-      }
+        // Re-append the actions container even if there's an error
+        selector.appendChild(actionsContainer);
+      });
     });
   });
 }
@@ -879,10 +874,8 @@ function resetToDefault() {
     cardSelectorContainer.style.display = "none";
     cardSelectors.innerHTML = "";
     selectedCards = [];
-    confirmSelectionButton.disabled = true;
   }
   
-  // Bring the toolbar and info toggle back into view
   bottomToolbar.classList.remove("hidden");
   bottomToolbar.style.display = "flex";
   infoToggle.classList.remove("hidden");
@@ -1090,28 +1083,6 @@ document.addEventListener("DOMContentLoaded", () => {
       appContainer.classList.remove("blurred");
     });
   });
-
-  // Custom Reading: Enable intention input after card selection
-  if (isCustomReadingPage) {
-    confirmSelectionButton.addEventListener("click", () => {
-      if (!confirmSelectionButton.disabled) {
-        // Hide the card selector container
-        cardSelectorContainer.style.display = "none";
-        // Show the bottom toolbar
-        bottomToolbar.style.display = "flex";
-        bottomToolbar.classList.remove("hidden");
-        // Enable and focus the intention input
-        enableInput();
-        intentionInput.focus();
-      }
-    });
-  
-    cancelSelectionButton.addEventListener("click", () => {
-      resetToDefault();
-      cardSelectorContainer.style.display = "none";
-      selectedCards = [];
-    });
-  }
 
   // Global loader spinner
   const spinnerElement = document.getElementById("global-spinner");
