@@ -753,15 +753,30 @@ function showCardSelectors(spreadType) {
       // Update the header to show the position and card name
       selector.querySelector('h3').textContent = `${position}: ${cardName === "random" ? "Random Card" : cardName}`;
 
-      // Fetch the card image from the backend
-      fetch("/query", {
+      // Add a loading spinner
+      selector.querySelectorAll(".selector-step").forEach(step => step.remove());
+      addButton.remove();
+      const loadingDiv = document.createElement("div");
+      loadingDiv.classList.add("card-loading");
+      const spinnerSpan = document.createElement("span");
+      spinnerSpan.classList.add("spinner");
+      spinnerSpan.innerText = " ";
+      loadingDiv.appendChild(spinnerSpan);
+      selector.appendChild(loadingDiv);
+
+      // Animate the spinner
+      const spinnerFrames = ["|", "/", "-", "\\"];
+      let index = 0;
+      const spinnerId = setInterval(() => {
+        spinnerSpan.innerText = spinnerFrames[index];
+        index = (index + 1) % spinnerFrames.length;
+      }, 200);
+
+      // Fetch the card image from the new endpoint
+      fetch("/get_card_image", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          query: "1 card spread about test",
-          intention: "test",
-          selectedCards: [cardName]
-        })
+        body: JSON.stringify({ card_name: cardName })
       })
       .then(response => {
         if (!response.ok) {
@@ -770,31 +785,27 @@ function showCardSelectors(spreadType) {
         return response.json();
       })
       .then(data => {
-        if (data.cards && data.cards.length > 0) {
-          const card = data.cards[0];
-          // Remove all selector steps
-          selector.querySelectorAll(".selector-step").forEach(step => step.remove());
-          // Remove the add button
-          addButton.remove();
-          // Add the card image
-          const cardImageDiv = document.createElement("div");
-          cardImageDiv.classList.add("card-image");
-          cardImageDiv.setAttribute("data-position", position);
-          cardImageDiv.setAttribute("data-name", card.name);
-          const img = document.createElement("img");
-          img.src = card.image;
-          img.alt = card.name;
-          cardImageDiv.appendChild(img);
-          selector.appendChild(cardImageDiv);
-        } else {
-          throw new Error("No card data returned");
-        }
+        // Stop the spinner
+        clearInterval(spinnerId);
+        loadingDiv.remove();
+
+        // Add the card image
+        const cardImageDiv = document.createElement("div");
+        cardImageDiv.classList.add("card-image");
+        cardImageDiv.setAttribute("data-position", position);
+        cardImageDiv.setAttribute("data-name", data.name);
+        const img = document.createElement("img");
+        img.src = data.image;
+        img.alt = data.name;
+        cardImageDiv.appendChild(img);
+        selector.appendChild(cardImageDiv);
       })
       .catch(error => {
         console.error("Error fetching card image:", error);
-        // Fallback: show a placeholder or error message
-        selector.querySelectorAll(".selector-step").forEach(step => step.remove());
-        addButton.remove();
+        // Stop the spinner
+        clearInterval(spinnerId);
+        loadingDiv.remove();
+        // Show an error message
         const errorDiv = document.createElement("div");
         errorDiv.classList.add("card-error");
         errorDiv.textContent = "Unable to load card image.";

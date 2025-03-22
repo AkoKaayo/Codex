@@ -23,25 +23,7 @@ SPREAD_LAYOUTS = {
     ]
 }
 
-###################################################
-# Minimal OpenAI Caller
-###################################################
-def get_ai_response(prompt):
-    try:
-        response = client.chat.completions.create(
-            model=AI_MODEL,
-            messages=[{"role": "user", "content": prompt}],
-            max_tokens=MAX_TOKENS,
-            temperature=0.3
-        )
-        return response.choices[0].message.content.strip()
-    except Exception as e:
-        print(f"AI API Error: {e}")
-        return None
-
-###################################################
-# Basic Utility
-###################################################
+# Basic Utility Functions (moved above the global block)
 def ensure_card(card):
     while isinstance(card, list) and card:
         card = card[0]
@@ -58,6 +40,59 @@ def generate_image_path(card):
         .replace("-", "_")
     )
     return f"/static/cards/{english_name}.png"
+
+# Load cards and build card_lookup at module level
+cards, reading_instructions = load_all_cards('./data')
+card_lookup = {}
+for card in cards:
+    card = ensure_card(card)
+    name = card.get("name", "").strip()
+    if name:
+        english_name = name.split("/")[0].strip()
+        card_lookup[english_name.lower()] = card
+
+# Debug: Log all card names to verify
+print("Available card names in card_lookup:")
+for name in card_lookup.keys():
+    print(f"- {name}")
+
+# Load additional data for degrees and suits
+loaded_data = load_yaml_files('./data')
+integrated_data = structure_data(loaded_data)
+degrees_data = integrated_data.get('degrees', [])
+suits_data = integrated_data.get('suits', [])
+
+# Build degrees lookup
+degrees_lookup = {}
+if isinstance(degrees_data, list):
+    for deg in degrees_data:
+        key = str(deg.get("degree", "")).lower()
+        if key:
+            degrees_lookup[key] = deg
+
+# Build suits lookup
+suits_lookup = {}
+if isinstance(suits_data, list):
+    for s in suits_data:
+        skey = s.get("suit", "").lower()
+        if skey:
+            suits_lookup[skey] = s
+
+###################################################
+# Minimal OpenAI Caller
+###################################################
+def get_ai_response(prompt):
+    try:
+        response = client.chat.completions.create(
+            model=AI_MODEL,
+            messages=[{"role": "user", "content": prompt}],
+            max_tokens=MAX_TOKENS,
+            temperature=0.3
+        )
+        return response.choices[0].message.content.strip()
+    except Exception as e:
+        print(f"AI API Error: {e}")
+        return None
 
 ###################################################
 # Paraphrasing the user intention
@@ -253,8 +288,7 @@ def build_noAI_synergy_paragraph(card_summaries, intention):
     """
     Construct a short synergy block by concatenating each card's 
     official reading in a single paragraph. We reference the position,
-    card name, and the official reading text from the YAML, 
-    guaranteeing no external knowledge is introduced.
+    card name, and the official reading text from the YAML, guaranteeing no external knowledge is introduced.
     
     Return HTML snippet that:
       - starts with a heading <h2>THE TAROT'S MESSAGE</h2>
@@ -317,48 +351,9 @@ Be direct, warm, and write in British English.
 # Updated generate_reading function
 ###################################################
 def generate_reading(user_query, intention="", selected_cards=None):
-    from collections import defaultdict
     try:
-        # Load cards and reading instructions from YAML
-        cards, reading_instructions = load_all_cards('./data')
-        if not cards:
-            return {"error": "No cards found. Please check your YAML data.", "cards": [], "layout": "default"}
-
-        loaded_data = load_yaml_files('./data')
-        integrated_data = structure_data(loaded_data)
-        degrees_data = integrated_data.get('degrees', [])
-        suits_data = integrated_data.get('suits', [])
-
-        # Build degrees lookup
-        degrees_lookup = {}
-        if isinstance(degrees_data, list):
-            for deg in degrees_data:
-                key = str(deg.get("degree", "")).lower()
-                if key:
-                    degrees_lookup[key] = deg
-
-        # Build suits lookup
-        suits_lookup = {}
-        if isinstance(suits_data, list):
-            for s in suits_data:
-                skey = s.get("suit", "").lower()
-                if skey:
-                    suits_lookup[skey] = s
-
-        # Build a card lookup dictionary for quick access by name (using only the English part)
-        card_lookup = {}
-        for card in cards:
-            card = ensure_card(card)
-            name = card.get("name", "").strip()
-            if name:
-                # Split the name to use only the English part (before the "/")
-                english_name = name.split("/")[0].strip()
-                card_lookup[english_name.lower()] = card
-
-        # Debug: Log all card names to verify
-        print("Available card names in card_lookup:")
-        for name in card_lookup.keys():
-            print(f"- {name}")
+        # Use the global card_lookup, degrees_lookup, and suits_lookup
+        global card_lookup, degrees_lookup, suits_lookup
 
         # Determine spread type
         query_lower = user_query.lower()

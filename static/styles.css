@@ -804,37 +804,6 @@ button:active:not(:disabled) {
 }
 
 /* CARD SELECTOR CONTAINER */
-#card-selector-container {
-  padding: 40px;
-  background-color: transparent;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center; /* Center horizontally */
-  z-index: 2; /* Above background but below other UI elements if needed */
-  position: relative; /* Ensure it doesn't overlap incorrectly */
-  min-height: 50vh; /* Ensure it has enough space */
-  transition: transform 1s ease-in-out, opacity 1s ease;
-}
-
-#card-selector-container.active {
-  transform: translateY(0);
-  opacity: 1;
-}
-
-#card-selectors {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 20px;
-  border-radius: 36px;
-  padding: 20px;
-  max-width: 1000px;
-  width: 100%;
-  margin: 0 auto;
-  box-sizing: border-box; /* Ensure padding doesn't cause overflow */
-}
-
 /* Card Selector Styling */
 .card-selector {
   background-color: #f8f8f8;
@@ -914,6 +883,22 @@ button:active:not(:disabled) {
 
 .add-card-button:hover:not(:disabled) {
   background-color: #3700b3;
+}
+
+/* Loading Indicator in Card Selector */
+.card-loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 150px; /* Match the approximate height of the card image */
+}
+
+.spinner {
+  font-size: 1.2em;
+  color: #6200ea; /* Match the theme color */
+  display: inline-block;
+  width: 20px;
+  text-align: center;
 }
 
 /* Card Image within Card Selector */
