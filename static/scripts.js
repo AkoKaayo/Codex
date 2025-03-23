@@ -285,14 +285,16 @@ function fadeOutEffects() {
 
     canvas.style.opacity = canvasOpacity;
     vantaBackground.style.opacity = vantaOpacity;
-    codexBrand.style.opacity = brandOpacity;
+    if (codexBrand) codexBrand.style.opacity = brandOpacity; // Check existence
 
     if (step >= fadeSteps) {
       clearInterval(fadeTimer);
-      // Remove starry canvas & vanta background & codex brand
+      // Remove elements only if they exist
       canvas.remove();
       vantaBackground.remove();
-      codexBrand.remove();
+      if (codexBrand && !cardSelectorContainer.classList.contains("active")) {
+        codexBrand.remove(); // Only remove if selectors aren’t active
+      }
       if (vantaEffect) {
         vantaEffect.destroy();
         vantaEffect = null;
@@ -465,7 +467,9 @@ function sendQuery(queryString, intention) {
   // Hide the bottom toolbar and card selector container
   bottomToolbar.style.display = "none";
   if (isCustomReadingPage) {
-    cardSelectorContainer.style.display = "none";
+    cardSelectorContainer.style.display = "none"; // Hide card selectors
+    cardSelectorContainer.classList.remove("active");
+    cardArea.style.display = "flex"; // Show card-area for card display
   }
 
   // Add "loading" user prompt
@@ -483,7 +487,7 @@ function sendQuery(queryString, intention) {
 
   // Timeout
   const timeoutPromise = new Promise((_, reject) => {
-      setTimeout(() => reject(new Error("Request timed out")), 130000);
+    setTimeout(() => reject(new Error("Request timed out")), 130000);
   });
 
   const spreadType = currentSpreadType.toLowerCase();
@@ -495,69 +499,69 @@ function sendQuery(queryString, intention) {
   const cardsToSend = isCustomReadingPage ? formatSelectedCards(selectedCards) : [];
 
   Promise.race([
-      fetch("/query", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ query: finalQuery, intention, selectedCards: cardsToSend })
-      }),
-      timeoutPromise
+    fetch("/query", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ query: finalQuery, intention, selectedCards: cardsToSend })
+    }),
+    timeoutPromise
   ])
-      .then((response) => {
-          if (!response.ok) {
-              return response.json().then((data) => {
-                  throw new Error(data.error || "An error occurred while fetching the tarot reading.");
-              });
-          }
-          return response.json();
-      })
-      .then((data) => {
-          // Stop spinner
-          clearInterval(userPromptObj.spinnerId);
-          userPromptObj.spinnerSpan.remove();
+    .then((response) => {
+      if (!response.ok) {
+        return response.json().then((data) => {
+          throw new Error(data.error || "An error occurred while fetching the tarot reading.");
+        });
+      }
+      return response.json();
+    })
+    .then((data) => {
+      // Stop spinner
+      clearInterval(userPromptObj.spinnerId);
+      userPromptObj.spinnerSpan.remove();
 
-          // Show returned cards
-          if (data.cards && data.cards.length > 0) {
-              addCardImages(data.cards, spreadType);
-              scaleCards();
-          } else {
-              console.warn("No cards in response:", data);
-          }
+      // Show returned cards
+      if (data.cards && data.cards.length > 0) {
+        addCardImages(data.cards, spreadType);
+        scaleCards();
+      } else {
+        console.warn("No cards in response:", data);
+      }
 
-          // Build synergyContent
-          let synergyContent = "";
-          if (data.introduction) synergyContent += `<p class="assistant-message">${data.introduction}</p>`;
-          if (data.synthesis) synergyContent += data.synthesis;
-          else if (data.error) synergyContent += `<p class="assistant-message">${data.error}</p>`;
-          else synergyContent += `<p class="assistant-message">No results found. Try rephrasing your question.</p>`;
-          if (data.oracle_message) synergyContent += `<p class="tarot-message">${data.oracle_message}</p>`;
+      // Build synergyContent
+      let synergyContent = "";
+      if (data.introduction) synergyContent += `<p class="assistant-message">${data.introduction}</p>`;
+      if (data.synthesis) synergyContent += data.synthesis;
+      else if (data.error) synergyContent += `<p class="assistant-message">${data.error}</p>`;
+      else synergyContent += `<p class="assistant-message">No results found. Try rephrasing your question.</p>`;
+      if (data.oracle_message) synergyContent += `<p class="tarot-message">${data.oracle_message}</p>`;
 
-          addReadingText(synergyContent);
+      addReadingText(synergyContent);
 
-          // Enable & show shuffle
-          shuffleButton.disabled = false;
-          shuffleButton.style.display = "block";
-      })
-      .catch((error) => {
-          clearInterval(userPromptObj.spinnerId);
-          userPromptObj.spinnerSpan.remove();
-          console.error("Error:", error.message);
+      // Enable & show shuffle
+      shuffleButton.disabled = false;
+      shuffleButton.style.display = "block";
+    })
+    .catch((error) => {
+      clearInterval(userPromptObj.spinnerId);
+      userPromptObj.spinnerSpan.remove();
+      console.error("Error:", error.message);
 
-          let errorMsg = "<p class='assistant-message'>An error occurred while fetching the tarot reading. Give it one more try.</p>";
-          if (error.message === "Request timed out") {
-              errorMsg = "<p class='assistant-message'>Request timed out. Please try again.</p>";
-          } else {
-              errorMsg = `<p class='assistant-message'>${error.message}</p>`;
-          }
+      let errorMsg = "<p class='assistant-message'>An error occurred while fetching the tarot reading. Give it one more try.</p>";
+      if (error.message === "Request timed out") {
+        errorMsg = "<p class='assistant-message'>Request timed out. Please try again.</p>";
+      } else {
+        errorMsg = `<p class='assistant-message'>${error.message}</p>`;
+      }
 
-          addReadingText(errorMsg);
+      addReadingText(errorMsg);
 
-          shuffleButton.disabled = false;
-          shuffleButton.style.display = "block";
-      })
-      .finally(() => {
-          // Remove panel-open class (cleanup)
-          appContainer.classList.remove("panel-open");
-      });
+      shuffleButton.disabled = false;
+      shuffleButton.style.display = "block";
+    })
+    .finally(() => {
+      // Remove panel-open class (cleanup)
+      appContainer.classList.remove("panel-open");
+    });
 }
 
 /* Card Display */
@@ -565,8 +569,11 @@ function clearCardImages() {
   cardImagesContainer.innerHTML = "";
   cardImagesContainer.classList.remove("plus-layout", "three-card-layout");
   setTimeout(() => {
-    if (cardImagesContainer.children.length === 0) {
-      codexBrand.style.display = "block";
+    if (cardImagesContainer.children.length === 0 && codexBrand) {
+      // Only show codex-brand if it exists and selectors are not active
+      if (!cardSelectorContainer.classList.contains("active")) {
+        codexBrand.style.display = "block";
+      }
     }
   }, 100);
 }
@@ -616,6 +623,10 @@ function showInlineContext(spreadType) {
 function showCardSelectors(spreadType) {
   // Hide the bottom toolbar initially
   bottomToolbar.style.display = "none";
+  
+  // Hide codex-brand and card-area
+  codexBrand.style.display = "none";
+  cardArea.style.display = "none"; // Hide card-area
   
   // Clear any previous selectors
   cardSelectors.innerHTML = "";
@@ -872,8 +883,12 @@ function resetToDefault() {
   // Reset card selectors
   if (isCustomReadingPage) {
     cardSelectorContainer.style.display = "none";
+    cardSelectorContainer.classList.remove("active");
     cardSelectors.innerHTML = "";
     selectedCards = [];
+    // Show codex-brand and card-area when resetting
+    if (codexBrand) codexBrand.style.display = "block";
+    cardArea.style.display = "flex"; // Show card-area
   }
   
   bottomToolbar.classList.remove("hidden");

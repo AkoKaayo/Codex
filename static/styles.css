@@ -47,8 +47,9 @@ h3 {
   background-color: transparent;
   position: relative;
   padding-top: 0;
+  padding-bottom: 120px; /* Add padding to prevent content from being hidden under toolbar */
   transition: filter 0.3s ease;
-  overflow: visible;
+  overflow-y: auto; /* Enable page scrolling */
 }
 
 #app-container.blurred {
@@ -78,14 +79,15 @@ h3 {
 /* CARD AREA */
 #card-area {
   flex: 1;
-  display: table-column;
-  justify-content: space-between;
+  display: flex; /* Changed from table-column for better control */
+  flex-direction: column;
+  justify-content: center; /* Center cards vertically when visible */
+  justify-content: flex-start;
   align-items: center;
   position: relative;
   background-color: transparent;
   min-height: 0;
   z-index: 0;
-  margin-top: 60px;
   transition: margin-right 0.3s ease;
 }
 
@@ -164,11 +166,13 @@ h3 {
 
 /* BOTTOM TOOLBAR */
 #bottom-toolbar {
-  padding: 40px;
+  position: fixed; /* Changed from static positioning */
+  justify-content: center;
+  bottom: 20px;
+  width: 100%;
   background-color: transparent;
   display: flex;
-  justify-content: center;
-  z-index: 1;
+  z-index: 10; /* Higher than card-selector-container */
   transition: transform 1s ease-in-out, opacity 1s ease;
 }
 
@@ -180,6 +184,7 @@ h3 {
 #toolbar-container {
   display: flex;
   flex-direction: column;
+  justify-content: center;
   gap: 20px;
   background-color: #000;
   border-radius: 36px;
@@ -193,6 +198,7 @@ h3 {
   gap: 10px;
   justify-content: space-between;
   width: 100%;
+  flex-wrap: wrap;
 }
 
 #toolbar-buttons button {
@@ -475,14 +481,8 @@ button:active:not(:disabled) {
 /* RESPONSIVE ADJUSTMENTS */
 @media (max-width: 768px) {
   #card-area {
-    align-items: flex-start;
-    height: auto;
-    min-height: 200px;
-    overflow: hidden;
-    position: sticky;
-    top: 0;
+    justify-content: flex-start; /* On mobile, align cards at the top */
     margin-top: 20px;
-    margin-right: 0;
   }
   .selector-step .selector-button {
     flex: 0 0 calc(50% - 5px); /* Maintain 2 buttons per row */
@@ -521,7 +521,10 @@ button:active:not(:disabled) {
     margin-right: 0;
   }
   #bottom-toolbar {
-    display: none;
+    padding: 10px;
+  }
+  #toolbar-buttons button {
+    padding: 0.3rem 0.6rem; /* Adjust padding for buttons */
   }
 }
 
@@ -799,8 +802,8 @@ button:active:not(:disabled) {
 }
 
 #seo-footer {
-  position: absolute;
-  bottom: 10px;
+  position: fixed;
+  bottom: 0;
   width: 100%;
   text-align: center;
   color: #787878; /* Matches the gray used in #nav-footer */
@@ -809,7 +812,7 @@ button:active:not(:disabled) {
   line-height: 1.2;
   opacity: 0.4; /* Very faint, blending into the background */
   padding: 5px 0;
-  z-index: 0; /* Above background layers but below interactive elements */
+  z-index: 9; /* Above background layers but below interactive elements */
 }
 
 #seo-footer p {
@@ -950,7 +953,7 @@ button:active:not(:disabled) {
   display: flex;
   flex-direction: column;
   width: 300px;
-  height: 500px;
+  height: 565px;
   box-sizing: border-box;
 }
 
@@ -1042,7 +1045,7 @@ button:active:not(:disabled) {
   .card-selector {
     width: 100%; /* Full width on smaller screens */
     max-width: 300px; /* Prevent it from getting too wide */
-    height: 350px; /* Slightly shorter on mobile */
+    height: 365px; /* Slightly shorter on mobile */
   }
 
   .selector-button {
@@ -1075,13 +1078,14 @@ button:active:not(:disabled) {
 
 /* CARD SELECTOR CONTAINER */
 #card-selector-container {
-  display: none; /* Hidden by default, as in your original */
+  display: none;
   flex-direction: column;
   align-items: center;
-  background-color: transparent; /* Ensure Vanta background shows through */
-  padding: 20px 0;
+  background-color: transparent;
+  padding: 20px 0 120px 0;
   width: 100%;
-  z-index: 0; /* Above Vanta background but below toolbar */
+  z-index: 5; /* Below toolbar but above background */
+  min-height: 100vh;
 }
 
 #card-selector-container.active {
