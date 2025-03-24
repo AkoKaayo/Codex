@@ -624,12 +624,11 @@ function addCardImages(cards, layout) {
 function showInlineContext(spreadType) {
   currentSpreadType = spreadType;
   if (isCustomReadingPage) {
-      // Show card selectors for Custom Reading
-      showCardSelectors(spreadType);
-      // Hide the bottom toolbar with slide animation
       bottomToolbar.classList.add("hidden");
+      setTimeout(() => {
+          showCardSelectors(spreadType);
+      }, 1000); // 50ms delay to allow transition to start
   } else {
-      // Existing behavior for Spread Reading
       intentionInput.value = "";
       enableInput();
       intentionInput.focus();
@@ -638,222 +637,223 @@ function showInlineContext(spreadType) {
 
 /* UI Handlers */
 function showCardSelectors(spreadType) {
-  // Hide the bottom toolbar initially (optional, based on UX preference)
-  // This is already handled in showInlineContext, so we can skip it here
+  try {
+      // Clear any previous selectors
+      cardSelectors.innerHTML = "";
+      selectedCards = [];
 
-  // Clear any previous selectors
-  cardSelectors.innerHTML = "";
-  selectedCards = [];
+      // Hide codex-brand
+      codexBrand.style.display = "none";
 
-  // Hide codex-brand
-  codexBrand.style.display = "none";
+      // Determine the number of selectors based on spread type
+      const positions = spreadPositions[spreadType.toLowerCase()] || ["MAIN ACTOR"];
 
-  // Determine the number of selectors based on spread type
-  const positions = spreadPositions[spreadType.toLowerCase()] || ["MAIN ACTOR"];
+      // Generate a selector for each position
+      positions.forEach((position) => {
+          const selectorHtml = cardSelectorTemplate(position);
+          cardSelectors.insertAdjacentHTML("beforeend", selectorHtml);
+      });
 
-  // Generate a selector for each position
-  positions.forEach((position) => {
-      const selectorHtml = cardSelectorTemplate(position);
-      cardSelectors.insertAdjacentHTML("beforeend", selectorHtml);
-  });
+      // Show the card selector container
+      cardSelectorContainer.style.display = "flex";
+      cardSelectorContainer.classList.add("active");
 
-  // Show the card selector container
-  cardSelectorContainer.style.display = "flex";
-  cardSelectorContainer.classList.add("active");
+      // Add event listeners for each card selector
+      document.querySelectorAll(".card-selector").forEach(selector => {
+          const steps = {
+              type: selector.querySelector('[data-step="type"]'),
+              major: selector.querySelector('[data-step="major"]'),
+              minorSuit: selector.querySelector('[data-step="minor-suit"]'),
+              minorNumber: selector.querySelector('[data-step="minor-number"]'),
+              courtSuit: selector.querySelector('[data-step="court-suit"]'),
+              courtCharacter: selector.querySelector('[data-step="court-character"]')
+          };
+          const addButton = selector.querySelector('.add-card-button');
+          const backButton = selector.querySelector('.selector-actions .back-button');
+          const actionsContainer = selector.querySelector(".selector-actions");
+          const navigationHistory = ['type'];
 
-  // Add event listeners for each card selector
-  document.querySelectorAll(".card-selector").forEach(selector => {
-      const steps = {
-          type: selector.querySelector('[data-step="type"]'),
-          major: selector.querySelector('[data-step="major"]'),
-          minorSuit: selector.querySelector('[data-step="minor-suit"]'),
-          minorNumber: selector.querySelector('[data-step="minor-number"]'),
-          courtSuit: selector.querySelector('[data-step="court-suit"]'),
-          courtCharacter: selector.querySelector('[data-step="court-character"]')
-      };
-      const addButton = selector.querySelector('.add-card-button');
-      const backButton = selector.querySelector('.selector-actions .back-button');
-      const actionsContainer = selector.querySelector(".selector-actions");
-      const navigationHistory = ['type'];
+          const showStep = (stepName) => {
+              Object.values(steps).forEach(step => step.style.display = 'none');
+              steps[stepName].style.display = 'block';
+          };
 
-      const showStep = (stepName) => {
-          Object.values(steps).forEach(step => step.style.display = 'none');
-          steps[stepName].style.display = 'block';
-      };
+          selector.addEventListener('click', (e) => {
+              if (e.target.classList.contains('selector-button')) {
+                  const step = e.target.closest('.selector-step').dataset.step;
+                  const type = e.target.dataset.type;
+                  const value = e.target.dataset.value;
 
-      selector.addEventListener('click', (e) => {
-          if (e.target.classList.contains('selector-button')) {
-              const step = e.target.closest('.selector-step').dataset.step;
-              const type = e.target.dataset.type;
-              const value = e.target.dataset.value;
+                  const stepContainer = e.target.closest(".selector-step");
+                  stepContainer.querySelectorAll(".selector-button").forEach((btn) => {
+                      btn.classList.remove("selected");
+                  });
+                  e.target.classList.add("selected");
 
-              const stepContainer = e.target.closest(".selector-step");
-              stepContainer.querySelectorAll(".selector-button").forEach((btn) => {
-                  btn.classList.remove("selected");
-              });
-              e.target.classList.add("selected");
-
-              if (step === 'type') {
-                  navigationHistory.push(type === 'major' ? 'major' : type === 'minor' ? 'minorSuit' : type === 'court' ? 'courtSuit' : 'type');
-                  showStep(type === 'major' ? 'major' : type === 'minor' ? 'minorSuit' : type === 'court' ? 'courtSuit' : 'type');
-                  backButton.disabled = false;
-                  if (type === 'random') {
-                      selector.dataset.selection = JSON.stringify({ type: "random" });
+                  if (step === 'type') {
+                      navigationHistory.push(type === 'major' ? 'major' : type === 'minor' ? 'minorSuit' : type === 'court' ? 'courtSuit' : 'type');
+                      showStep(type === 'major' ? 'major' : type === 'minor' ? 'minorSuit' : type === 'court' ? 'courtSuit' : 'type');
+                      backButton.disabled = false;
+                      if (type === 'random') {
+                          selector.dataset.selection = JSON.stringify({ type: "random" });
+                          addButton.disabled = false;
+                          addButton.classList.add("enabled");
+                      }
+                  } else if (step === 'major') {
+                      selector.dataset.selection = JSON.stringify({ type: "major", name: value });
+                      addButton.disabled = false;
+                      addButton.classList.add("enabled");
+                  } else if (step === 'minor-suit') {
+                      navigationHistory.push('minorNumber');
+                      selector.dataset.minorSuit = value;
+                      showStep('minorNumber');
+                  } else if (step === 'minor-number') {
+                      selector.dataset.selection = JSON.stringify({
+                          type: "minor",
+                          suit: selector.dataset.minorSuit,
+                          number: value
+                      });
+                      addButton.disabled = false;
+                      addButton.classList.add("enabled");
+                  } else if (step === 'court-suit') {
+                      navigationHistory.push('courtCharacter');
+                      selector.dataset.courtSuit = value;
+                      showStep('courtCharacter');
+                  } else if (step === 'court-character') {
+                      selector.dataset.selection = JSON.stringify({
+                          type: "court",
+                          suit: selector.dataset.courtSuit,
+                          character: value
+                      });
                       addButton.disabled = false;
                       addButton.classList.add("enabled");
                   }
-              } else if (step === 'major') {
-                  selector.dataset.selection = JSON.stringify({ type: "major", name: value });
-                  addButton.disabled = false;
-                  addButton.classList.add("enabled");
-              } else if (step === 'minor-suit') {
-                  navigationHistory.push('minorNumber');
-                  selector.dataset.minorSuit = value;
-                  showStep('minorNumber');
-              } else if (step === 'minor-number') {
-                  selector.dataset.selection = JSON.stringify({
-                      type: "minor",
-                      suit: selector.dataset.minorSuit,
-                      number: value
+              } else if (e.target.classList.contains('back-button') && !e.target.disabled) {
+                  navigationHistory.pop();
+                  const previousStep = navigationHistory[navigationHistory.length - 1];
+                  showStep(previousStep);
+                  addButton.disabled = true;
+                  addButton.classList.remove("enabled");
+                  if (previousStep === 'type') {
+                      backButton.disabled = true;
+                  }
+                  delete selector.dataset.selection;
+                  delete selector.dataset.minorSuit;
+                  delete selector.dataset.courtSuit;
+                  const previousStepContainer = selector.querySelector(`[data-step="${previousStep}"]`);
+                  previousStepContainer.querySelectorAll(".selector-button").forEach(btn => {
+                      btn.classList.remove("selected");
                   });
-                  addButton.disabled = false;
-                  addButton.classList.add("enabled");
-              } else if (step === 'court-suit') {
-                  navigationHistory.push('courtCharacter');
-                  selector.dataset.courtSuit = value;
-                  showStep('courtCharacter');
-              } else if (step === 'court-character') {
-                  selector.dataset.selection = JSON.stringify({
-                      type: "court",
-                      suit: selector.dataset.courtSuit,
-                      character: value
-                  });
-                  addButton.disabled = false;
-                  addButton.classList.add("enabled");
-              }
-          } else if (e.target.classList.contains('back-button') && !e.target.disabled) {
-              navigationHistory.pop();
-              const previousStep = navigationHistory[navigationHistory.length - 1];
-              showStep(previousStep);
-              addButton.disabled = true;
-              addButton.classList.remove("enabled");
-              if (previousStep === 'type') {
-                  backButton.disabled = true;
-              }
-              delete selector.dataset.selection;
-              delete selector.dataset.minorSuit;
-              delete selector.dataset.courtSuit;
-              const previousStepContainer = selector.querySelector(`[data-step="${previousStep}"]`);
-              previousStepContainer.querySelectorAll(".selector-button").forEach(btn => {
-                  btn.classList.remove("selected");
-              });
-          }
-      });
-
-      addButton.addEventListener('click', () => {
-          const position = selector.dataset.position;
-          const selection = JSON.parse(selector.dataset.selection || "{}");
-
-          selectedCards = selectedCards.filter((card) => card.position !== position);
-          selectedCards.push({ position, ...selection });
-
-          let cardName = "";
-          if (selection.type === "random") {
-              cardName = "random";
-          } else if (selection.type === "major") {
-              cardName = selection.name;
-          } else if (selection.type === "minor") {
-              cardName = `${selection.number} of ${selection.suit}`;
-          } else if (selection.type === "court") {
-              cardName = `${selection.character} of ${selection.suit}`;
-          }
-
-          selector.querySelector('h3').textContent = `${position}: ${cardName === "random" ? "Random Card" : cardName}`;
-
-          selector.querySelectorAll(".selector-step").forEach(step => step.remove());
-          addButton.remove();
-          actionsContainer.querySelector(".back-button").remove();
-
-          const loadingDiv = document.createElement("div");
-          loadingDiv.classList.add("card-loading");
-          const spinnerSpan = document.createElement("span");
-          spinnerSpan.classList.add("spinner");
-          spinnerSpan.innerText = " ";
-          loadingDiv.appendChild(spinnerSpan);
-          selector.appendChild(loadingDiv);
-
-          const spinnerFrames = ["|", "/", "-", "\\"];
-          let index = 0;
-          const spinnerId = setInterval(() => {
-              spinnerSpan.innerText = spinnerFrames[index];
-              index = (index + 1) % spinnerFrames.length;
-          }, 200);
-
-          fetch("/get_card_image", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ card_name: cardName })
-          })
-          .then(response => {
-              if (!response.ok) {
-                  throw new Error("Failed to fetch card image");
-              }
-              return response.json();
-          })
-          .then(data => {
-              clearInterval(spinnerId);
-              loadingDiv.remove();
-
-              const cardImageDiv = document.createElement("div");
-              cardImageDiv.classList.add("card-image");
-              cardImageDiv.setAttribute("data-position", position);
-              cardImageDiv.setAttribute("data-name", data.name);
-              const img = document.createElement("img");
-              img.src = data.image;
-              img.alt = data.name;
-              cardImageDiv.appendChild(img);
-              selector.appendChild(cardImageDiv);
-
-              selector.appendChild(actionsContainer);
-
-              const positions = spreadPositions[currentSpreadType.toLowerCase()] || ["MAIN ACTOR"];
-              if (selectedCards.length === positions.length) {
-                  // Show the bottom toolbar with slide-in animation
-                  bottomToolbar.classList.remove("hidden");
-                  // Show the inline-context-container
-                  inlineContextContainer.style.display = "flex";
-                  inlineContextContainer.classList.add("enabled");
-                  // Enable the input for the user to type their intention
-                  enableInput();
-                  intentionInput.focus();
-              }
-          })
-          .catch(error => {
-              console.error("Error fetching card image:", error);
-              clearInterval(spinnerId);
-              loadingDiv.remove();
-
-              const errorDiv = document.createElement("div");
-              errorDiv.classList.add("card-error");
-              errorDiv.textContent = "Unable to load card image.";
-              selector.appendChild(errorDiv);
-
-              selector.appendChild(actionsContainer);
-
-              const positions = spreadPositions[currentSpreadType.toLowerCase()] || ["MAIN ACTOR"];
-              if (selectedCards.length === positions.length) {
-                  // Show the bottom toolbar with slide-in animation
-                  bottomToolbar.classList.remove("hidden");
-                  // Show the inline-context-container
-                  inlineContextContainer.style.display = "flex";
-                  inlineContextContainer.classList.add("enabled");
-                  // Enable the input for the user to type their intention
-                  enableInput();
-                  intentionInput.focus();
               }
           });
+
+          addButton.addEventListener('click', () => {
+              const position = selector.dataset.position;
+              const selection = JSON.parse(selector.dataset.selection || "{}");
+
+              selectedCards = selectedCards.filter((card) => card.position !== position);
+              selectedCards.push({ position, ...selection });
+
+              let cardName = "";
+              if (selection.type === "random") {
+                  cardName = "random";
+              } else if (selection.type === "major") {
+                  cardName = selection.name;
+              } else if (selection.type === "minor") {
+                  cardName = `${selection.number} of ${selection.suit}`;
+              } else if (selection.type === "court") {
+                  cardName = `${selection.character} of ${selection.suit}`;
+              }
+
+              selector.querySelector('h3').textContent = `${position}: ${cardName === "random" ? "Random Card" : cardName}`;
+
+              selector.querySelectorAll(".selector-step").forEach(step => step.remove());
+              addButton.remove();
+              actionsContainer.querySelector(".back-button").remove();
+
+              const loadingDiv = document.createElement("div");
+              loadingDiv.classList.add("card-loading");
+              const spinnerSpan = document.createElement("span");
+              spinnerSpan.classList.add("spinner");
+              spinnerSpan.innerText = " ";
+              loadingDiv.appendChild(spinnerSpan);
+              selector.appendChild(loadingDiv);
+
+              const spinnerFrames = ["|", "/", "-", "\\"];
+              let index = 0;
+              const spinnerId = setInterval(() => {
+                  spinnerSpan.innerText = spinnerFrames[index];
+                  index = (index + 1) % spinnerFrames.length;
+              }, 200);
+
+              fetch("/get_card_image", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ card_name: cardName })
+              })
+              .then(response => {
+                  if (!response.ok) {
+                      throw new Error("Failed to fetch card image");
+                  }
+                  return response.json();
+              })
+              .then(data => {
+                  clearInterval(spinnerId);
+                  loadingDiv.remove();
+
+                  const cardImageDiv = document.createElement("div");
+                  cardImageDiv.classList.add("card-image");
+                  cardImageDiv.setAttribute("data-position", position);
+                  cardImageDiv.setAttribute("data-name", data.name);
+                  const img = document.createElement("img");
+                  img.src = data.image;
+                  img.alt = data.name;
+                  cardImageDiv.appendChild(img);
+                  selector.appendChild(cardImageDiv);
+
+                  selector.appendChild(actionsContainer);
+
+                  const positions = spreadPositions[currentSpreadType.toLowerCase()] || ["MAIN ACTOR"];
+                  if (selectedCards.length === positions.length) {
+                      // Show the bottom toolbar with slide-in animation
+                      bottomToolbar.classList.remove("hidden");
+                      // Show the inline-context-container
+                      inlineContextContainer.style.display = "flex";
+                      inlineContextContainer.classList.add("enabled");
+                      // Enable the input for the user to type their intention
+                      enableInput();
+                      intentionInput.focus();
+                  }
+              })
+              .catch(error => {
+                  console.error("Error fetching card image:", error);
+                  clearInterval(spinnerId);
+                  loadingDiv.remove();
+
+                  const errorDiv = document.createElement("div");
+                  errorDiv.classList.add("card-error");
+                  errorDiv.textContent = "Unable to load card image.";
+                  selector.appendChild(errorDiv);
+
+                  selector.appendChild(actionsContainer);
+
+                  const positions = spreadPositions[currentSpreadType.toLowerCase()] || ["MAIN ACTOR"];
+                  if (selectedCards.length === positions.length) {
+                      // Show the bottom toolbar with slide-in animation
+                      bottomToolbar.classList.remove("hidden");
+                      // Show the inline-context-container
+                      inlineContextContainer.style.display = "flex";
+                      inlineContextContainer.classList.add("enabled");
+                      // Enable the input for the user to type their intention
+                      enableInput();
+                      intentionInput.focus();
+                  }
+              });
+          });
       });
-  });
+  } catch (error) {
+      console.error("Error in showCardSelectors:", error);
+  }
 }
 
 function handleInputChange() {
