@@ -278,26 +278,38 @@ function fadeOutEffects() {
   let step = 0;
 
   const fadeTimer = setInterval(() => {
-    step++;
-    canvasOpacity = 1 - (step / fadeSteps);
-    vantaOpacity = 1 - (step / fadeSteps);
-    brandOpacity = 1 - (step / fadeSteps);
+      step++;
+      canvasOpacity = 1 - (step / fadeSteps);
+      vantaOpacity = 1 - (step / fadeSteps);
+      brandOpacity = 1 - (step / fadeSteps);
 
-    canvas.style.opacity = canvasOpacity;
-    vantaBackground.style.opacity = vantaOpacity;
-    codexBrand.style.opacity = brandOpacity;
+      canvas.style.opacity = canvasOpacity;
+      vantaBackground.style.opacity = vantaOpacity;
+      codexBrand.style.opacity = brandOpacity;
 
-    if (step >= fadeSteps) {
-      clearInterval(fadeTimer);
-      // Remove starry canvas & vanta background & codex brand
-      canvas.remove();
-      vantaBackground.remove();
-      codexBrand.remove();
-      if (vantaEffect) {
-        vantaEffect.destroy();
-        vantaEffect = null;
+      // Fade out cards in custom.html
+      if (isCustomReadingPage) {
+          const cardSelectors = document.querySelectorAll(".card-selector .card-image");
+          cardSelectors.forEach(card => {
+              card.style.opacity = 1 - (step / fadeSteps);
+          });
       }
-    }
+
+      if (step >= fadeSteps) {
+          clearInterval(fadeTimer);
+          // Remove starry canvas & vanta background & codex brand
+          canvas.remove();
+          vantaBackground.remove();
+          codexBrand.remove();
+          if (vantaEffect) {
+              vantaEffect.destroy();
+              vantaEffect = null;
+          }
+          // Clear cards in custom.html
+          if (isCustomReadingPage) {
+              cardSelectors.innerHTML = ""; // Clear the card selectors
+          }
+      }
   }, fadeInterval);
 }
 
@@ -462,10 +474,10 @@ function scaleCards() {
 /* Fetch Logic */
 function sendQuery(queryString, intention) {
   clearUI();
-  // Hide the bottom toolbar and card selector container
-  bottomToolbar.style.display = "none";
+  // Hide the bottom toolbar with slide animation
+  bottomToolbar.classList.add("hidden"); // Use the slide-out animation
   if (isCustomReadingPage) {
-    cardSelectorContainer.style.display = "none";
+      cardSelectorContainer.style.display = "none";
   }
 
   // Add "loading" user prompt
@@ -602,20 +614,22 @@ function addCardImages(cards, layout) {
 function showInlineContext(spreadType) {
   currentSpreadType = spreadType;
   if (isCustomReadingPage) {
-    // Show card selectors for Custom Reading
-    showCardSelectors(spreadType);
+      // Show card selectors for Custom Reading
+      showCardSelectors(spreadType);
+      // Hide the bottom toolbar with slide animation
+      bottomToolbar.classList.add("hidden");
   } else {
-    // Existing behavior for Spread Reading
-    intentionInput.value = "";
-    enableInput();
-    intentionInput.focus();
+      // Existing behavior for Spread Reading
+      intentionInput.value = "";
+      enableInput();
+      intentionInput.focus();
   }
 }
 
 /* UI Handlers */
 function showCardSelectors(spreadType) {
   // Hide the bottom toolbar initially (optional, based on UX preference)
-  bottomToolbar.classList.add("hidden");
+  // This is already handled in showInlineContext, so we can skip it here
 
   // Clear any previous selectors
   cardSelectors.innerHTML = "";
@@ -637,9 +651,6 @@ function showCardSelectors(spreadType) {
   cardSelectorContainer.style.display = "flex";
   cardSelectorContainer.classList.add("active");
 
-  // Show the bottom toolbar
-  bottomToolbar.classList.remove("hidden");
-
   // Add event listeners for each card selector
   document.querySelectorAll(".card-selector").forEach(selector => {
       const steps = {
@@ -652,7 +663,7 @@ function showCardSelectors(spreadType) {
       };
       const addButton = selector.querySelector('.add-card-button');
       const backButton = selector.querySelector('.selector-actions .back-button');
-      const actionsContainer = selector.querySelector(".selector-actions"); // Define here
+      const actionsContainer = selector.querySelector(".selector-actions");
       const navigationHistory = ['type'];
 
       const showStep = (stepName) => {
@@ -797,9 +808,14 @@ function showCardSelectors(spreadType) {
 
               const positions = spreadPositions[currentSpreadType.toLowerCase()] || ["MAIN ACTOR"];
               if (selectedCards.length === positions.length) {
+                  // Show the bottom toolbar with slide-in animation
+                  bottomToolbar.classList.remove("hidden");
+                  // Show the inline-context-container
+                  inlineContextContainer.style.display = "flex";
+                  inlineContextContainer.classList.add("enabled");
+                  // Enable the input for the user to type their intention
                   enableInput();
                   intentionInput.focus();
-                  inlineContextContainer.classList.add("enabled");
               }
           })
           .catch(error => {
@@ -807,12 +823,24 @@ function showCardSelectors(spreadType) {
               clearInterval(spinnerId);
               loadingDiv.remove();
 
-              const errorDiv = document.createElement("div"); // Define here
+              const errorDiv = document.createElement("div");
               errorDiv.classList.add("card-error");
               errorDiv.textContent = "Unable to load card image.";
               selector.appendChild(errorDiv);
 
               selector.appendChild(actionsContainer);
+
+              const positions = spreadPositions[currentSpreadType.toLowerCase()] || ["MAIN ACTOR"];
+              if (selectedCards.length === positions.length) {
+                  // Show the bottom toolbar with slide-in animation
+                  bottomToolbar.classList.remove("hidden");
+                  // Show the inline-context-container
+                  inlineContextContainer.style.display = "flex";
+                  inlineContextContainer.classList.add("enabled");
+                  // Enable the input for the user to type their intention
+                  enableInput();
+                  intentionInput.focus();
+              }
           });
       });
   });
@@ -862,28 +890,30 @@ function hideReadingPanel() {
 
 /* Reset to default UI state */
 function resetToDefault() {
-  clearUI();
-  clearCardImages();
-  hideReadingPanel();
-  
-  disableInput();
-  intentionInput.value = "";
-  currentSpreadType = "";
-  [btnRandomCard, btnThreeCard, btnFiveCard].forEach((b) => b.classList.remove("active-button"));
-  
-  // Reset card selectors
-  if (isCustomReadingPage) {
-      cardSelectorContainer.style.display = "none";
-      cardSelectorContainer.classList.remove("active");
-      cardSelectors.innerHTML = "";
-      selectedCards = [];
-      // Show codex-brand again
-      codexBrand.style.display = "block";
-  }
-  
-  bottomToolbar.classList.remove("hidden");
-  bottomToolbar.style.display = "flex";
-  infoToggle.classList.remove("hidden");
+    clearUI();
+    clearCardImages();
+    hideReadingPanel();
+
+    disableInput();
+    intentionInput.value = "";
+    currentSpreadType = "";
+    [btnRandomCard, btnThreeCard, btnFiveCard].forEach((b) => b.classList.remove("active-button"));
+
+    // Reset card selectors
+    if (isCustomReadingPage) {
+        cardSelectorContainer.style.display = "none";
+        cardSelectorContainer.classList.remove("active");
+        cardSelectors.innerHTML = "";
+        selectedCards = [];
+        // Show codex-brand again
+        codexBrand.style.display = "block";
+        // Hide the inline-context-container in custom.html
+        inlineContextContainer.style.display = "none";
+    }
+
+    bottomToolbar.classList.remove("hidden"); // Slide the toolbar back in
+    bottomToolbar.style.display = "flex";
+    infoToggle.classList.remove("hidden");
 }
 
 // CARDS
