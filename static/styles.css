@@ -82,9 +82,10 @@ h3 {
 /* CARD AREA */
 #card-area {
   flex: 1;
-  display: table-column;
-  justify-content: space-between;
-  align-items: center;
+  display: flex; /* Changed from table-column to flex */
+  flex-direction: column; /* Stack children vertically */
+  justify-content: center; /* Center vertically */
+  align-items: center; /* Center horizontally */
   position: relative;
   background-color: transparent;
   min-height: 0;
@@ -1083,27 +1084,30 @@ button:active:not(:disabled) {
 
 /* CARD SELECTOR CONTAINER */
 #card-selector-container {
-  display: none; /* Hidden by default, as in your original */
+  display: none; /* Hidden by default */
   flex-direction: column;
   align-items: center;
-  background-color: transparent; /* Ensure Vanta background shows through */
-  padding: 20px 0;
-  width: 100%;
-  z-index: 0; /* Above Vanta background but below toolbar */
+  background-color: transparent;
+  padding: 10px 0; /* Reduced padding to fit better in card-area */
+  z-index: 0;
 }
 
 #card-selector-container.active {
   display: flex;
 }
 
+#card-area:has(#card-selector-container.active) #codex-brand {
+  display: none;
+}
+
 /* Ensure #card-selectors takes up the right space */
 #card-selectors {
   display: flex;
-  flex-wrap: wrap; /* Allow selectors to wrap to the next line */
+  flex-wrap: wrap;
   justify-content: center;
   width: 100%;
-  max-width: 1200px; /* Match the app's max-width */
-  gap: 20px; /* Space between selectors */
+  max-width: 1200px;
+  gap: 20px;
 }
 
 .card-selector .selector-step {

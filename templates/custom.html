@@ -37,6 +37,7 @@
     <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.fog.min.js"></script>
   </head>
 <body>
+    <body class="custom-page"></body>
     <!-- Global Loader -->
     <div id="global-loader">
       <pre id="global-spinner">|</pre>
@@ -69,45 +70,40 @@
   
     <!-- CARD AREA -->
     <div id="card-area">
-      
-    <div id="codex-brand">
-        <h1>CUSTOM<br>READING</h1>
-      </div>
-      
-      <div id="card-images-container"></div>
+        <div id="codex-brand">
+            <h1>CUSTOM<br>READING</h1>
+        </div>
+        <div id="card-images-container"></div>
+        <!-- Move card-selector-container inside card-area -->
+        <div id="card-selector-container" style="display: none;">
+            <div id="card-selectors"></div>
+        </div>
     </div>
   
-    <!-- CARD SELECTOR CONTAINER -->
-    <div id="card-selector-container" style="display: none;">
-      <div id="card-selectors"></div>
-    </div>
-    
     <!-- BOTTOM TOOLBAR -->
-<div id="bottom-toolbar">
-    <div id="toolbar-container">
-      <div id="toolbar-buttons">
-        <button id="btn-random-card">Single Card Read</button>
-        <button id="btn-three-card">Three Cards Read</button>
-        <button id="btn-five-card">Five Cards Read</button>
-      </div>
-      <div id="inline-context-container">
-        <textarea id="intention-input" placeholder="Select your spread type and wich cards you seek to learn from." disabled></textarea>
-        <button id="inline-send-button" disabled></button>
-      </div>
+    <div id="bottom-toolbar">
+        <div id="toolbar-container">
+            <div id="toolbar-buttons">
+                <button id="btn-random-card">Single Card Read</button>
+                <button id="btn-three-card">Three Cards Read</button>
+                <button id="btn-five-card">Five Cards Read</button>
+            </div>
+            <div id="inline-context-container">
+                <textarea id="intention-input" placeholder="Select your spread type and wich cards you seek to learn from." disabled></textarea>
+                <button id="inline-send-button" disabled></button>
+            </div>
+        </div>
     </div>
-  </div>
   
     <!-- READING PANEL -->
     <div id="reading-panel">
-      <div id="user-prompt-wrapper"></div>
-      <div id="reading-text-container"></div>
-      <div id="shuffle-container">
-        <button id="shuffle-button" style="display: none;">SHUFFLE & START AGAIN</button>
-      </div>
+        <div id="user-prompt-wrapper"></div>
+        <div id="reading-text-container"></div>
+        <div id="shuffle-container">
+            <button id="shuffle-button" style="display: none;">SHUFFLE & START AGAIN</button>
+        </div>
     </div>
-  
-    <!-- Rest of the HTML remains unchanged -->
-  </div>
+</div>
 
     <!-- APPRENTICE MODE CONTAINER -->
     <div id="apprentice-mode-container">
