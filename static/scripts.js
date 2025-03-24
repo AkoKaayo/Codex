@@ -91,10 +91,12 @@ const cardSelectorTemplate = (position) => `
     <h3>${position}</h3>
     <div class="selector-step" data-step="type">
       <h4>Select the Card Type</h4>
-      <button class="selector-button" data-type="major">Major</button>
-      <button class="selector-button" data-type="minor">Minor</button>
-      <button class="selector-button" data-type="court">Court</button>
-      <button class="selector-button" data-type="random">Random</button>
+      <div class="selector-options">
+        <button class="selector-button" data-type="major">Major</button>
+        <button class="selector-button" data-type="minor">Minor</button>
+        <button class="selector-button" data-type="court">Court</button>
+        <button class="selector-button" data-type="random">Random</button>
+      </div>
     </div>
     <div class="selector-step" data-step="major" style="display: none;">
       <h4>Select a Card</h4>
@@ -125,37 +127,45 @@ const cardSelectorTemplate = (position) => `
     </div>
     <div class="selector-step" data-step="minor-suit" style="display: none;">
       <h4>Select the Suit</h4>
-      <button class="selector-button" data-value="Swords">Swords</button>
-      <button class="selector-button" data-value="Pentacles">Pentacles</button>
-      <button class="selector-button" data-value="Cups">Cups</button>
-      <button class="selector-button" data-value="Wands">Wands</button>
+      <div class="selector-options">
+        <button class="selector-button" data-value="Swords">Swords</button>
+        <button class="selector-button" data-value="Pentacles">Pentacles</button>
+        <button class="selector-button" data-value="Cups">Cups</button>
+        <button class="selector-button" data-value="Wands">Wands</button>
+      </div>
     </div>
     <div class="selector-step" data-step="minor-number" style="display: none;">
       <h4>Select the Card Number</h4>
-      <button class="selector-button" data-value="Ace">Ace</button>
-      <button class="selector-button" data-value="Two">Two</button>
-      <button class="selector-button" data-value="Three">Three</button>
-      <button class="selector-button" data-value="Four">Four</button>
-      <button class="selector-button" data-value="Five">Five</button>
-      <button class="selector-button" data-value="Six">Six</button>
-      <button class="selector-button" data-value="Seven">Seven</button>
-      <button class="selector-button" data-value="Eight">Eight</button>
-      <button class="selector-button" data-value="Nine">Nine</button>
-      <button class="selector-button" data-value="Ten">Ten</button>
+      <div class="selector-options">
+        <button class="selector-button" data-value="Ace">Ace</button>
+        <button class="selector-button" data-value="Two">Two</button>
+        <button class="selector-button" data-value="Three">Three</button>
+        <button class="selector-button" data-value="Four">Four</button>
+        <button class="selector-button" data-value="Five">Five</button>
+        <button class="selector-button" data-value="Six">Six</button>
+        <button class="selector-button" data-value="Seven">Seven</button>
+        <button class="selector-button" data-value="Eight">Eight</button>
+        <button class="selector-button" data-value="Nine">Nine</button>
+        <button class="selector-button" data-value="Ten">Ten</button>
+      </div>
     </div>
     <div class="selector-step" data-step="court-suit" style="display: none;">
       <h4>Select the Suit</h4>
-      <button class="selector-button" data-value="Swords">Swords</button>
-      <button class="selector-button" data-value="Pentacles">Pentacles</button>
-      <button class="selector-button" data-value="Cups">Cups</button>
-      <button class="selector-button" data-value="Wands">Wands</button>
+      <div class="selector-options">
+        <button class="selector-button" data-value="Swords">Swords</button>
+        <button class="selector-button" data-value="Pentacles">Pentacles</button>
+        <button class="selector-button" data-value="Cups">Cups</button>
+        <button class="selector-button" data-value="Wands">Wands</button>
+      </div>
     </div>
     <div class="selector-step" data-step="court-character" style="display: none;">
       <h4>Select the Character</h4>
-      <button class="selector-button" data-value="Page">Page</button>
-      <button class="selector-button" data-value="Queen">Queen</button>
-      <button class="selector-button" data-value="King">King</button>
-      <button class="selector-button" data-value="Knight">Knight</button>
+      <div class="selector-options">
+        <button class="selector-button" data-value="Page">Page</button>
+        <button class="selector-button" data-value="Queen">Queen</button>
+        <button class="selector-button" data-value="King">King</button>
+        <button class="selector-button" data-value="Knight">Knight</button>
+      </div>
     </div>
     <div class="selector-actions">
       <button class="back-button" disabled>Back</button>

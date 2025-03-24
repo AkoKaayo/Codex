@@ -923,9 +923,6 @@ button:active:not(:disabled) {
 }
 
 .card-selector .card-image img {
-  border: 1px solid var(--purple); /* #681D85 */
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
   transition: transform 0.3s ease;
   max-width: 150px;
   height: auto;
@@ -1112,11 +1109,11 @@ button:active:not(:disabled) {
 }
 
 .card-selector .selector-step {
-  flex: 1; /* Take up available space */
+  flex: 1;
   display: flex;
   flex-direction: column;
   width: 100%;
-  overflow-y: auto; /* Scrollable content */
+  overflow-y: auto;
   gap: 10px;
 }
 
@@ -1141,9 +1138,9 @@ button:active:not(:disabled) {
 
 /* Selector buttons (all categories) */
 .selector-step .selector-button {
-  height: 40px; /* Fixed height for uniformity */
-  margin: 0;
-  padding: 0.5rem;
+  height: 40px;
+  margin: 0; /* Remove any default margins */
+  padding: 0.5rem; /* Consistent padding */
   border: 1px solid var(--gray);
   border-radius: 8px;
   background-color: transparent;
@@ -1153,7 +1150,7 @@ button:active:not(:disabled) {
   text-align: center;
   cursor: pointer;
   transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
-  box-sizing: border-box;
+  box-sizing: border-box; /* Ensure padding doesn’t affect size */
 }
 
 .selector-step .selector-button:hover:not(.selected) {
