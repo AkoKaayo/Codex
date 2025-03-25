@@ -339,8 +339,11 @@ function animateParticles() {
 
 // Resize
 function resizeCanvas() {
+  const newHeight = document.body.scrollHeight;
   canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
+  canvas.height = newHeight;
+  canvas.style.width = window.innerWidth + "px";
+  canvas.style.height = newHeight + "px";
   initParticles();
 }
 
@@ -966,6 +969,13 @@ document.addEventListener("DOMContentLoaded", () => {
     backgroundAlpha: 0
   });
 
+  // Function to update Vanta.js dimensions
+  function updateVantaDimensions() {
+    if (vantaEffect) {
+      vantaEffect.resize();
+    }
+  }
+
   resizeCanvas();
   animateParticles();
 
@@ -1146,6 +1156,13 @@ document.addEventListener("DOMContentLoaded", () => {
       loader.remove();
     }, 500); // 500ms matches the CSS transition duration
   });
+
+  // Add resize and scroll listeners to update Vanta.js
+  window.addEventListener("resize", () => {
+    resizeCanvas();
+    updateVantaDimensions();
+  });
+  window.addEventListener("scroll", updateVantaDimensions);
 });
 
 window.addEventListener("resize", debouncedUpdateButtonText);
