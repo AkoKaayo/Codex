@@ -816,7 +816,20 @@ function showCardSelectors(spreadType) {
                   const img = document.createElement("img");
                   img.src = data.image;
                   img.alt = data.name;
+                  // Handle image load errors
+                  img.onerror = function() {
+                      console.error("Failed to load image for:", data.name);
+                      this.parentElement.style.maxWidth = "300px";
+                      this.parentElement.innerHTML = "Image failed to load";
+                  };
+                  // Reset styles on successful load
+                  img.onload = function() {
+                      this.parentElement.style.maxWidth = "";
+                  };
                   cardImageDiv.appendChild(img);
+                  // Ensure no inline styles interfere
+                  cardImageDiv.style.maxWidth = "";
+                  cardImageDiv.style.height = "";
                   selector.appendChild(cardImageDiv);
 
                   selector.appendChild(actionsContainer);
