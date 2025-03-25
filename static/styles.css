@@ -183,28 +183,30 @@ h3 {
   justify-content: center;
   z-index: 1;
   transition: transform 1s ease-in-out, opacity 1s ease;
-  position: relative;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  transform: translateY(0%);
+  opacity: 1;
 }
 
 #bottom-toolbar.hidden {
   transform: translateY(100%);
   opacity: 0;
-  position: absolute; 
-  bottom: 0;
-  width: 100%;
 }
 
 #toolbar-container {
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: 20px;
   background-color: #000;
   border-radius: 36px;
   padding: 20px;
   max-width: 600px;
   width: 100%;
   bottom: auto;
+  overflow: visible;
+  gap: 20px;
 }
 
 #toolbar-buttons {
@@ -258,14 +260,18 @@ button:active:not(:disabled) {
 #inline-context-container {
   display: flex;
   align-items: center;
-  min-height: 80px;
   border-radius: 16px;
   background-color: #111111;
-  transition: opacity 1s ease, display 1s ease; /* Add transition for smooth show/hide */
+  height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: height 1s ease, opacity 1s ease;
+  z-index: 2;
 }
-
-#inline-context-container.enabled {
-  animation: fadeIn 0.5s ease forwards;
+#inline-context-container.show {
+  height: 80px;
+  opacity: 1;
+  min-height: 80px;
 }
 
 #intention-input {
@@ -484,12 +490,6 @@ button:active:not(:disabled) {
   color: #fff;
   font-size: 20px;
   cursor: pointer;
-}
-
-/* FADE-IN ANIMATION */
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
 }
 
 /* RESPONSIVE ADJUSTMENTS */

@@ -630,11 +630,13 @@ function showInlineContext(spreadType) {
       bottomToolbar.classList.add("hidden");
       setTimeout(() => {
           showCardSelectors(spreadType);
-      }, 1000); // 50ms delay to allow transition to start
+      }, 1000);
   } else {
       intentionInput.value = "";
       enableInput();
       intentionInput.focus();
+      // Make the inline context container visible
+      inlineContextContainer.classList.add("show");
   }
 }
 
@@ -647,6 +649,9 @@ function showCardSelectors(spreadType) {
 
       // Hide codex-brand
       codexBrand.style.display = "none";
+
+      // Hide inline-context-container initially
+      inlineContextContainer.classList.remove("show");
 
       // Determine the number of selectors based on spread type
       const positions = spreadPositions[spreadType.toLowerCase()] || ["MAIN ACTOR"];
@@ -821,11 +826,14 @@ function showCardSelectors(spreadType) {
                       // Show the bottom toolbar with slide-in animation
                       bottomToolbar.classList.remove("hidden");
                       // Show the inline-context-container
-                      inlineContextContainer.style.display = "flex";
-                      inlineContextContainer.classList.add("enabled");
+                      inlineContextContainer.classList.add("show");
                       // Enable the input for the user to type their intention
-                      enableInput();
-                      intentionInput.focus();
+                      setTimeout(() => {
+                          enableInput();
+                          intentionInput.focus();
+                          console.log("Inline context container display:", inlineContextContainer.classList.contains("show"));
+                          console.log("Intention input enabled:", !intentionInput.disabled);
+                      }, 100);
                   }
               })
               .catch(error => {
@@ -845,11 +853,14 @@ function showCardSelectors(spreadType) {
                       // Show the bottom toolbar with slide-in animation
                       bottomToolbar.classList.remove("hidden");
                       // Show the inline-context-container
-                      inlineContextContainer.style.display = "flex";
-                      inlineContextContainer.classList.add("enabled");
+                      inlineContextContainer.classList.add("show");
                       // Enable the input for the user to type their intention
-                      enableInput();
-                      intentionInput.focus();
+                      setTimeout(() => {
+                          enableInput();
+                          intentionInput.focus();
+                          console.log("Inline context container display:", inlineContextContainer.classList.contains("show"));
+                          console.log("Intention input enabled:", !intentionInput.disabled);
+                      }, 100);
                   }
               });
           });
@@ -881,6 +892,16 @@ function handleContextSubmission() {
   infoToggle.classList.add("hidden");
 
   sendQuery(`${currentSpreadType.toLowerCase()} card spread about ${intentionText}`, intentionText);
+  showReadingPanel();
+  resizeCanvas();
+  updateVantaDimensions();
+}
+
+// Function to update Vanta.js dimensions
+function updateVantaDimensions() {
+  if (vantaEffect) {
+    vantaEffect.resize();
+  }
 }
 
 /* Panel Control */
@@ -899,34 +920,36 @@ function hideReadingPanel() {
   bottomToolbar.style.display = "flex";
   shuffleButton.style.display = "none";
   shuffleButton.disabled = true;
+  resizeCanvas();
+  updateVantaDimensions();
 }
 
 /* Reset to default UI state */
 function resetToDefault() {
-    clearUI();
-    clearCardImages();
-    hideReadingPanel();
+  clearUI();
+  clearCardImages();
+  hideReadingPanel();
 
-    disableInput();
-    intentionInput.value = "";
-    currentSpreadType = "";
-    [btnRandomCard, btnThreeCard, btnFiveCard].forEach((b) => b.classList.remove("active-button"));
+  disableInput();
+  intentionInput.value = "";
+  currentSpreadType = "";
+  [btnRandomCard, btnThreeCard, btnFiveCard].forEach((b) => b.classList.remove("active-button"));
 
-    // Reset card selectors
-    if (isCustomReadingPage) {
-        cardSelectorContainer.style.display = "none";
-        cardSelectorContainer.classList.remove("active");
-        cardSelectors.innerHTML = "";
-        selectedCards = [];
-        // Show codex-brand again
-        codexBrand.style.display = "block";
-        // Hide the inline-context-container in custom.html
-        inlineContextContainer.style.display = "none";
-    }
+  // Reset card selectors
+  if (isCustomReadingPage) {
+      cardSelectorContainer.style.display = "none";
+      cardSelectorContainer.classList.remove("active");
+      cardSelectors.innerHTML = "";
+      selectedCards = [];
+      // Show codex-brand again
+      codexBrand.style.display = "block";
+      // Hide the inline-context-container in custom.html
+      inlineContextContainer.classList.remove("show");
+  }
 
-    bottomToolbar.classList.remove("hidden"); // Slide the toolbar back in
-    bottomToolbar.style.display = "flex";
-    infoToggle.classList.remove("hidden");
+  bottomToolbar.classList.remove("hidden");
+  bottomToolbar.style.display = "flex";
+  infoToggle.classList.remove("hidden");
 }
 
 // CARDS
@@ -950,31 +973,25 @@ function fadeOutCards() {
 }
 
 /* Event Listeners (Combined into a single DOMContentLoaded block) */
+// Declare vantaEffect in global scope
 document.addEventListener("DOMContentLoaded", () => {
   // Vanta.js initialization
   vantaEffect = VANTA.FOG({
-    el: "#vanta-background",
-    mouseControls: true,
-    touchControls: true,
-    gyroControls: true,
-    minHeight: 200.00,
-    minWidth: 200.00,
-    highlightColor: 0x6e00b9,
-    midtoneColor: 0x370069,
-    lowlightColor: 0x240E37,
-    baseColor: 0x0,
-    blurFactor: 0.8,
-    speed: -1,
-    zoom: 0.4,
-    backgroundAlpha: 0
+      el: "#vanta-background",
+      mouseControls: true,
+      touchControls: true,
+      gyroControls: true,
+      minHeight: 200.00,
+      minWidth: 200.00,
+      highlightColor: 0x6e00b9,
+      midtoneColor: 0x370069,
+      lowlightColor: 0x240E37,
+      baseColor: 0x0,
+      blurFactor: 0.8,
+      speed: -1,
+      zoom: 0.4,
+      backgroundAlpha: 0
   });
-
-  // Function to update Vanta.js dimensions
-  function updateVantaDimensions() {
-    if (vantaEffect) {
-      vantaEffect.resize();
-    }
-  }
 
   resizeCanvas();
   animateParticles();
@@ -984,22 +1001,26 @@ document.addEventListener("DOMContentLoaded", () => {
   hideReadingPanel();
   updateButtonText();
   disableInput();
+  // Ensure inline-context-container is in the correct initial state
+  inlineContextContainer.classList.remove("show");
+  // Clear any inline display styles to let CSS handle visibility
+  inlineContextContainer.style.display = "";
 
   // Speed dial buttons enable the text area (only for Spread Reading)
   [btnRandomCard, btnThreeCard, btnFiveCard].forEach((button) => {
-    button.addEventListener("click", () => {
-      if (!isCustomReadingPage) {
-        enableInput();
-      }
-    });
+      button.addEventListener("click", () => {
+          if (!isCustomReadingPage) {
+              enableInput();
+          }
+      });
   });
 
   // Intention input events
   intentionInput.addEventListener("keydown", (e) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      handleContextSubmission();
-    }
+      if (e.key === "Enter") {
+          e.preventDefault();
+          handleContextSubmission();
+      }
   });
   intentionInput.addEventListener("input", handleInputChange);
   intentionInput.addEventListener("input", capitalizeFirstLetter);
@@ -1007,16 +1028,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Spread type buttons
   btnRandomCard.addEventListener("click", () => {
-    setActiveButton(btnRandomCard);
-    showInlineContext("Single");
+      setActiveButton(btnRandomCard);
+      showInlineContext("Single");
   });
   btnThreeCard.addEventListener("click", () => {
-    setActiveButton(btnThreeCard);
-    showInlineContext("Three");
+      setActiveButton(btnThreeCard);
+      showInlineContext("Three");
   });
   btnFiveCard.addEventListener("click", () => {
-    setActiveButton(btnFiveCard);
-    showInlineContext("Five");
+      setActiveButton(btnFiveCard);
+      showInlineContext("Five");
   });
 
   // Shuffle button
@@ -1024,119 +1045,119 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Card modal events
   closeModal.addEventListener("click", () => {
-    modal.classList.remove("active");
-    setTimeout(() => {
-      modal.style.display = "none";
-    }, 800); // Match this timeout with the CSS transition duration (0.8s)
+      modal.classList.remove("active");
+      setTimeout(() => {
+          modal.style.display = "none";
+      }, 800);
   });
 
   modalImage.addEventListener("click", () => {
-    modal.classList.remove("active");
-    setTimeout(() => {
-      modal.style.display = "none";
-    }, 800); // Match this timeout with the CSS transition duration (0.8s)
+      modal.classList.remove("active");
+      setTimeout(() => {
+          modal.style.display = "none";
+      }, 800);
   });
 
   document.addEventListener("click", (event) => {
-    if (
-      event.target.tagName === "IMG" &&
-      event.target.parentElement.classList.contains("card-image")
-    ) {
-      modal.style.display = "block"; // Make sure it's rendered
-      requestAnimationFrame(() => {
-        modal.classList.add("active");
-      });
-      modalImage.src = event.target.src;
-    }
+      if (
+          event.target.tagName === "IMG" &&
+          event.target.parentElement.classList.contains("card-image")
+      ) {
+          modal.style.display = "block";
+          requestAnimationFrame(() => {
+              modal.classList.add("active");
+          });
+          modalImage.src = event.target.src;
+      }
   });
 
   // Info modal events
   infoToggle.addEventListener('click', () => {
-    console.log('Info toggle clicked. Current display:', infoModal.style.display, 'Has active class:', infoModal.classList.contains('active'));
-    infoModal.style.display = 'block';
-    requestAnimationFrame(() => {
-      infoModal.classList.add('active');
-      console.log('After adding active class. Display:', infoModal.style.display, 'Has active class:', infoModal.classList.contains('active'));
-    });
+      console.log('Info toggle clicked. Current display:', infoModal.style.display, 'Has active class:', infoModal.classList.contains('active'));
+      infoModal.style.display = 'block';
+      requestAnimationFrame(() => {
+          infoModal.classList.add('active');
+          console.log('After adding active class. Display:', infoModal.style.display, 'Has active class:', infoModal.classList.contains('active'));
+      });
   });
 
   closeInfoModal.addEventListener('click', () => {
-    infoModal.classList.remove('active');
-    setTimeout(() => {
-      infoModal.style.display = 'none';
-    }, 600); // Match CSS transition duration
+      infoModal.classList.remove('active');
+      setTimeout(() => {
+          infoModal.style.display = 'none';
+      }, 600);
   });
 
   document.addEventListener('click', (event) => {
-    if (event.target === infoModal && infoModal.classList.contains('active')) {
-      infoModal.classList.remove('active');
-      setTimeout(() => {
-        infoModal.style.display = 'none';
-      }, 600); // Match CSS transition duration
-    }
+      if (event.target === infoModal && infoModal.classList.contains('active')) {
+          infoModal.classList.remove('active');
+          setTimeout(() => {
+              infoModal.style.display = 'none';
+          }, 600);
+      }
   });
 
   // Navigation events
   navSpreadReadingBtn.addEventListener("click", () => {
-    if (isCustomReadingPage) {
-      window.location.href = "/"; // Navigate to Spread Reading
-    } else {
-      navbar.classList.remove("active");
-      apprenticeModeContainer.classList.remove("active");
-      appContainer.classList.remove("blurred");
-      setTimeout(() => {
-        apprenticeModeContainer.style.display = "none";
-        cardArea.style.display = "block";
-        bottomToolbar.style.display = "flex";
-        fadeOutCards();
-      }, 800);
-    }
+      if (isCustomReadingPage) {
+          window.location.href = "/";
+      } else {
+          navbar.classList.remove("active");
+          apprenticeModeContainer.classList.remove("active");
+          appContainer.classList.remove("blurred");
+          setTimeout(() => {
+              apprenticeModeContainer.style.display = "none";
+              cardArea.style.display = "block";
+              bottomToolbar.style.display = "flex";
+              fadeOutCards();
+          }, 800);
+      }
   });
 
   navCustomReadingBtn.addEventListener("click", () => {
-    if (!isCustomReadingPage) {
-      window.location.href = "/custom"; // Navigate to Custom Reading
-    } else {
-      navbar.classList.remove("active");
-      apprenticeModeContainer.classList.remove("active");
-      appContainer.classList.remove("blurred");
-      setTimeout(() => {
-        apprenticeModeContainer.style.display = "none";
-        cardArea.style.display = "block";
-        bottomToolbar.style.display = "flex";
-        fadeOutCards();
-      }, 800);
-    }
+      if (!isCustomReadingPage) {
+          window.location.href = "/custom";
+      } else {
+          navbar.classList.remove("active");
+          apprenticeModeContainer.classList.remove("active");
+          appContainer.classList.remove("blurred");
+          setTimeout(() => {
+              apprenticeModeContainer.style.display = "none";
+              cardArea.style.display = "block";
+              bottomToolbar.style.display = "flex";
+              fadeOutCards();
+          }, 800);
+      }
   });
 
   navApprenticeBtn.addEventListener("click", () => {
-    navbar.classList.remove("active");
-    appContainer.classList.remove("blurred");
-    readingPanel.classList.remove("active");
-    cardArea.style.display = "none";
-    bottomToolbar.style.display = "none";
-    apprenticeModeContainer.style.display = "block";
-    requestAnimationFrame(() => {
-      apprenticeModeContainer.classList.add("active");
-    });
+      navbar.classList.remove("active");
+      appContainer.classList.remove("blurred");
+      readingPanel.classList.remove("active");
+      cardArea.style.display = "none";
+      bottomToolbar.style.display = "none";
+      apprenticeModeContainer.style.display = "block";
+      requestAnimationFrame(() => {
+          apprenticeModeContainer.classList.add("active");
+      });
   });
 
   document.addEventListener("click", (event) => {
-    if (navbar.classList.contains('active')) {
-      const clickedInsideNav = navbar.contains(event.target);
-      const clickedNavToggle = (event.target === navToggle);
-      if (!clickedInsideNav && !clickedNavToggle) {
-        navbar.classList.remove('active');
-        appContainer.classList.remove("blurred");
+      if (navbar.classList.contains('active')) {
+          const clickedInsideNav = navbar.contains(event.target);
+          const clickedNavToggle = (event.target === navToggle);
+          if (!clickedInsideNav && !clickedNavToggle) {
+              navbar.classList.remove('active');
+              appContainer.classList.remove("blurred");
+          }
       }
-    }
   });
 
   document.querySelectorAll('#nav-links button').forEach(button => {
-    button.addEventListener('click', () => {
-      navbar.classList.remove("active");
-      appContainer.classList.remove("blurred");
-    });
+      button.addEventListener('click', () => {
+          navbar.classList.remove("active");
+          appContainer.classList.remove("blurred");
+      });
   });
 
   // Global loader spinner
@@ -1144,23 +1165,25 @@ document.addEventListener("DOMContentLoaded", () => {
   const spinnerFrames = ["|", "/", "-", "\\"];
   let index = 0;
   const spinnerInterval = setInterval(() => {
-    spinnerElement.innerText = spinnerFrames[index];
-    index = (index + 1) % spinnerFrames.length;
+      spinnerElement.innerText = spinnerFrames[index];
+      index = (index + 1) % spinnerFrames.length;
   }, 200);
 
   window.addEventListener("load", () => {
-    clearInterval(spinnerInterval);
-    const loader = document.getElementById("global-loader");
-    loader.classList.add("hidden");
-    setTimeout(() => {
-      loader.remove();
-    }, 500); // 500ms matches the CSS transition duration
+      clearInterval(spinnerInterval);
+      const loader = document.getElementById("global-loader");
+      if (loader) {
+          loader.classList.add("hidden");
+          setTimeout(() => {
+              loader.remove();
+          }, 500);
+      }
   });
 
   // Add resize and scroll listeners to update Vanta.js
   window.addEventListener("resize", () => {
-    resizeCanvas();
-    updateVantaDimensions();
+      resizeCanvas();
+      updateVantaDimensions();
   });
   window.addEventListener("scroll", updateVantaDimensions);
 });
