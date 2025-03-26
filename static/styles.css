@@ -957,13 +957,8 @@ button:active:not(:disabled) {
 }
 
 .card-selector .card-image img {
-  transition: transform 0.3s ease;
-  max-width: 150px;
+  transition: transform 0.6s ease;
   height: auto;
-}
-
-.card-selector .card-image img:hover {
-  transform: scale(1.05);
 }
 
 .card-selector .card-image::before,
@@ -981,16 +976,27 @@ button:active:not(:disabled) {
 
 /* Reading Display Styling */
 .card-selector {
+  width: 100%;
+  max-width: 300px;
+  min-height: 566px;
   background-color: var(--dark-gray);
   border-radius: 36px;
   padding: 20px;
-  margin: 0;
+  margin: 0 auto;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
   display: flex;
+  align-items: center;
+  justify-content: center;
   flex-direction: column;
-  width: 333px;
-  height: 628px;
   box-sizing: border-box;
+}
+
+.card-selector img {
+  /* Let the image fill the container, while respecting aspect ratio */
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+  display: block;
 }
 
 .card-image {
@@ -999,14 +1005,7 @@ button:active:not(:disabled) {
 }
 
 .card-image img {
-  border: 2px solid #6200ea;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   transition: transform 0.3s ease;
-}
-
-.card-image img:hover {
-  transform: scale(1.05);
 }
 
 .card-image::before {
@@ -1083,7 +1082,7 @@ button:active:not(:disabled) {
   .card-selector {
     width: 100%; /* Full width on smaller screens */
     max-width: 300px; /* Prevent it from getting too wide */
-    height: 350px; /* Slightly shorter on mobile */
+    height: fit-content; /* Slightly shorter on mobile */
   }
 
   .selector-button {
@@ -1094,10 +1093,6 @@ button:active:not(:disabled) {
   .add-card-button {
     padding: 8px 16px;
     font-size: 12px;
-  }
-
-  .card-selector .card-image img {
-    max-width: 120px;
   }
 
   .card-images-container {
@@ -1122,6 +1117,8 @@ button:active:not(:disabled) {
   background-color: transparent;
   padding: 10px 0; /* Reduced padding to fit better in card-area */
   z-index: 0;
+  position: relative;
+  bottom: 40px;
 }
 
 #card-selector-container.active {
@@ -1168,6 +1165,7 @@ button:active:not(:disabled) {
   gap: 10px;
   justify-content: center;
   width: 100%;
+  max-height: 300px;
 }
 
 /* Selector buttons (all categories) */
@@ -1281,4 +1279,30 @@ button:active:not(:disabled) {
     flex: 1;
     height: 48px;
   }
+}
+
+/* --- Minimally invasive scroll fix for .card-selector --- */
+
+/* 1) Adjust the card-selector itself */
+.card-selector {
+  min-height: 0 !important;
+  max-height: 566x; /* adjust to your preference */
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* don't let children overflow container */
+}
+
+/* 2) Let each .selector-step flex */
+.card-selector .selector-step {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0; 
+}
+
+/* 3) Make .selector-options scroll if it’s tall */
+.selector-step .selector-options {
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
 }
