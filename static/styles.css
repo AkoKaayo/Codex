@@ -26,10 +26,10 @@ body {
 
 h3 {
   font-family: 'Sorts Mill Goudy', serif;
-  display: block;
+  font-size: 1.25rem;
+  color: #bbb; 
   font-size: 1.25em;
   margin: 1em 0;
-  font-weight: bold;
 }
 
 #nav-footer {
@@ -859,15 +859,17 @@ button:active:not(:disabled) {
 
 /* CARD SELECTOR CONTAINER */
 .card-selector h3 {
-    margin: 0 0 10px;
+    margin: 20px 0 0 0;
     text-align: center;
 }
 
 .selector-step h4 {
   font-family: 'IBM Plex Sans', sans-serif;
-  font-size: 1em;
-  color: var(--gray); /* #787878 */
-  margin-bottom: 10px;
+  font-size: 0.95rem;
+  color: #bbb;  /* or some accent color */
+  margin: 0 0 15px;
+  text-align: center;
+  font-weight: normal
 }
 
 .selector-options {
@@ -978,7 +980,7 @@ button:active:not(:disabled) {
 .card-selector {
   width: 100%;
   max-width: 300px;
-  min-height: 566px;
+  max-height: 566px; 
   background-color: var(--dark-gray);
   border-radius: 36px;
   padding: 20px;
@@ -989,6 +991,7 @@ button:active:not(:disabled) {
   justify-content: center;
   flex-direction: column;
   box-sizing: border-box;
+  overflow: hidden;
 }
 
 .card-selector img {
@@ -1046,10 +1049,20 @@ button:active:not(:disabled) {
 }
 
 .card-position {
-  font-size: 1em;
-  color: #6200ea;
-  margin-top: 15px;
-  margin-bottom: 5px;
+  font-family: 'Sorts Mill Goudy', serif;
+  font-size: 1.25rem;
+  color: #bbb; 
+  font-size: 1.25em;
+  margin: 1em 0;
+}
+
+.card-name {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 0.95rem;
+  color: #bbb;  /* or some accent color */
+  margin: 0 0 15px;
+  text-align: center;
+  font-weight: normal
 }
 
 .card-analysis {
@@ -1079,11 +1092,6 @@ button:active:not(:disabled) {
 
 /* Responsive Adjustments */
 @media (max-width: 768px) {
-  .card-selector {
-    width: 100%; /* Full width on smaller screens */
-    max-width: 300px; /* Prevent it from getting too wide */
-    height: fit-content; /* Slightly shorter on mobile */
-  }
 
   .selector-button {
     padding: 8px 16px;
@@ -1095,14 +1103,6 @@ button:active:not(:disabled) {
     font-size: 12px;
   }
 
-  .card-images-container {
-    flex-direction: column;
-    align-items: center;
-  }
-
-  .card-image img {
-    max-width: 200px;
-  }
 
   .reading-text-container {
     padding: 15px;
@@ -1111,6 +1111,7 @@ button:active:not(:disabled) {
 
 /* CARD SELECTOR CONTAINER */
 #card-selector-container {
+  width: 300px;
   display: none; /* Hidden by default */
   flex-direction: column;
   align-items: center;
@@ -1149,8 +1150,12 @@ button:active:not(:disabled) {
 }
 
 .card-selector .selector-step h4 {
-  margin: 0 0 10px;
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-size: 0.95rem;
+  color: #bbb;  /* or some accent color */
+  margin: 0 0 15px;
   text-align: center;
+  font-weight: normal
 }
 
 .card-selector .selector-step[data-step="type"] {
@@ -1260,11 +1265,6 @@ button:active:not(:disabled) {
 
 /* Responsive layout for smaller screens */
 @media (max-width: 768px) {
-  .card-selector {
-    width: 100%;
-    max-width: 333px;
-    height: 628px;
-  }
 
   .selector-step .selector-button {
     height: 48px;
@@ -1279,30 +1279,4 @@ button:active:not(:disabled) {
     flex: 1;
     height: 48px;
   }
-}
-
-/* --- Minimally invasive scroll fix for .card-selector --- */
-
-/* 1) Adjust the card-selector itself */
-.card-selector {
-  min-height: 0 !important;
-  max-height: 566x; /* adjust to your preference */
-  display: flex;
-  flex-direction: column;
-  overflow: hidden; /* don't let children overflow container */
-}
-
-/* 2) Let each .selector-step flex */
-.card-selector .selector-step {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  min-height: 0; 
-}
-
-/* 3) Make .selector-options scroll if it’s tall */
-.selector-step .selector-options {
-  flex: 1;
-  overflow-y: auto;
-  min-height: 0;
 }

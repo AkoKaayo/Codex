@@ -773,7 +773,24 @@ function showCardSelectors(spreadType) {
                   cardName = `${selection.character} of ${selection.suit}`;
               }
 
-              selector.querySelector('h3').textContent = `${position}: ${cardName === "random" ? "Random Card" : cardName}`;
+              // Remove the existing <h3> entirely, 
+// because we’ll insert two separate elements in its place
+const oldHeading = selector.querySelector("h3");
+if (oldHeading) oldHeading.remove();
+
+// Create the new DOM elements
+const positionH3 = document.createElement("h3");
+positionH3.classList.add("card-position");
+positionH3.textContent = position; // e.g. "PAST & GENESIS"
+
+const namePara = document.createElement("p");
+namePara.classList.add("card-name");
+namePara.textContent = cardName === "random" ? "Random Card" : cardName;
+
+// Insert them at the top of the selector
+selector.prepend(namePara);
+selector.prepend(positionH3);
+
 
               selector.querySelectorAll(".selector-step").forEach(step => step.remove());
               addButton.remove();
