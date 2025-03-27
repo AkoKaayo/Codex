@@ -455,7 +455,7 @@ button:active:not(:disabled) {
 .modal {
   display: none;
   position: fixed;
-  z-index: 100;
+  z-index: 10000;
   left: 0;
   top: 0;
   width: 100%;
@@ -488,8 +488,8 @@ button:active:not(:disabled) {
 
 .close {
   position: absolute;
-  top: 10px;
-  right: 10px;
+  top: 2cap;
+  left: 30px;
   color: #fff;
   font-size: 20px;
   cursor: pointer;
@@ -983,7 +983,7 @@ button:active:not(:disabled) {
 .card-selector {
   width: 300px;
   margin: 0;
-  max-height: 566px; 
+  height: 566px; 
   background-color: var(--dark-gray);
   border-radius: 36px;
   padding: 20px;
@@ -1146,12 +1146,12 @@ button:active:not(:disabled) {
 }
 
 .card-selector .selector-step h4 {
-  font-family: 'IBM Plex Sans', sans-serif;
+  font-family: 'IBM Plex Mono', monospace;
   font-size: 0.95rem;
-  color: #bbb;  /* or some accent color */
+  color: #2d2d2d;  /* or some accent color */
   margin: 0 0 15px;
   text-align: center;
-  font-weight: normal
+  font-weight: normal;
 }
 
 .card-selector .selector-step[data-step="type"] {
@@ -1166,7 +1166,6 @@ button:active:not(:disabled) {
   gap: 10px;
   justify-content: center;
   width: 100%;
-  max-height: 300px;
 }
 
 /* Selector buttons (all categories) */
