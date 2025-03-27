@@ -2,9 +2,10 @@ from flask import Flask, request, jsonify, render_template, url_for
 import logging
 import random  # Add this import
 import tarot_reading  # Our new tarot_reading module
+import os
 
 app = Flask(__name__)
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.INFO)
 
 @app.route("/")
 def index():
@@ -96,5 +97,5 @@ def get_card_image():
         return jsonify({"error": "An error occurred while fetching the card image."}), 500
 
 if __name__ == "__main__":
-    # Run the Flask server in debug mode
-    app.run()
+    if os.environ.get("FLASK_ENV") != "production":
+        app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)), debug=True)
