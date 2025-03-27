@@ -103,7 +103,7 @@ h3 {
   background-color: transparent;
   min-height: 0;
   z-index: 0;
-  transition: margin-right 0.3s ease;
+  transition: margin-right 0.6s ease;
 }
 
 #card-area.panel-open {
@@ -153,7 +153,7 @@ h3 {
   cursor: pointer;
   height: auto;
   transform: translateY(-20px);
-  transition: transform 0.6s ease-in-out, opacity 0.6s ease, box-shadow 0.3s ease;
+  transition: transform 0.6s ease-in-out, opacity 0.6s ease, box-shadow 0.6s ease;
 }
 
 .card-image.show {
@@ -238,7 +238,7 @@ button {
   border-radius: 16px;
   font-size: 1rem;
   cursor: pointer;
-  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+  transition: background-color 0.6s ease, color 0.6s ease, border-color 0.6s ease;
 }
 
 button:hover:not(:disabled) {
@@ -306,7 +306,7 @@ button:active:not(:disabled) {
   font-size: 2rem;
   cursor: pointer;
   padding: 0 20px;
-  transition: color 0.3s ease;
+  transition: color 0.6s ease;
 }
 
 #inline-send-button::before {
@@ -389,7 +389,7 @@ button:active:not(:disabled) {
   border: 1px solid #787878;
   border-radius: 16px;
   color: #787878;
-  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+  transition: background-color 0.6s ease, color 0.6s ease, border-color 0.6s ease;
 }
 
 #shuffle-button:disabled {
@@ -576,7 +576,7 @@ button:active:not(:disabled) {
   background-color: #000;
   border-color: #000;
   z-index: 5000;
-  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, opacity 1s ease; /* Added opacity transition */
+  transition: background-color 0.6s ease, color 0.6s ease, border-color 0.6s ease, opacity 1s ease; /* Added opacity transition */
 }
 
 #nav-toggle:hover {
@@ -658,7 +658,7 @@ button:active:not(:disabled) {
   font-family: 'IBM Plex Mono', monospace;
   font-size: 0.8rem;
   cursor: pointer;
-  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+  transition: background-color 0.6s ease, color 0.6s ease, border-color 0.6s ease;
   white-space: nowrap;
   width: 100%;
 }
@@ -761,7 +761,7 @@ button:active:not(:disabled) {
   line-height: 1.4;
   cursor: pointer;
   z-index: 5000;
-  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, opacity 1s ease; /* Added opacity transition */
+  transition: background-color 0.6s ease, color 0.6s ease, border-color 0.6s ease, opacity 1s ease; /* Added opacity transition */
 }
 
 #info-toggle.hidden {
@@ -893,7 +893,7 @@ button:active:not(:disabled) {
   cursor: pointer;
   font-family: 'IBM Plex Mono', monospace;
   font-size: 0.8rem;
-  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+  transition: background-color 0.6s ease, color 0.6s ease, border-color 0.6s ease;
   width: 100%;
 }
 
@@ -919,7 +919,7 @@ button:active:not(:disabled) {
   cursor: pointer;
   font-family: 'IBM Plex Mono', monospace;
   font-size: 0.8rem;
-  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+  transition: background-color 0.6s ease, color 0.6s ease, border-color 0.6s ease;
 }
 
 .add-card-button:disabled {
@@ -1010,7 +1010,7 @@ button:active:not(:disabled) {
 }
 
 .card-image img {
-  transition: transform 0.3s ease;
+  transition: transform 0.6s ease;
 }
 
 .card-image::before {
@@ -1181,7 +1181,7 @@ button:active:not(:disabled) {
   font-size: 0.8rem;
   text-align: center;
   cursor: pointer;
-  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+  transition: background-color 0.6s ease, color 0.6s ease, border-color 0.6s ease;
   box-sizing: border-box; /* Ensure padding doesn’t affect size */
 }
 
@@ -1223,7 +1223,7 @@ button:active:not(:disabled) {
   font-size: 0.8rem;
   text-align: center;
   cursor: pointer;
-  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+  transition: background-color 0.6s ease, color 0.6s ease, border-color 0.6s ease;
   box-sizing: border-box;
   line-height: 1; /* Ensure text alignment */
 }
@@ -1240,7 +1240,7 @@ button:active:not(:disabled) {
   font-size: 0.8rem;
   text-align: center;
   cursor: pointer;
-  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+  transition: background-color 0.6s ease, color 0.6s ease, border-color 0.6s ease;
   box-sizing: border-box;
   line-height: 1; /* Ensure text alignment */
 }
