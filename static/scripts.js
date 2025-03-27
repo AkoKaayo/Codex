@@ -33,13 +33,13 @@ const cardSelectors = document.getElementById("card-selectors");
 let selectedCards = [];
 const spreadPositions = {
   single: ["MAIN ACTOR"],
-  three: ["PAST & GENESIS", "PRESENT & ACTUALITY", "FUTURE & CONSEQUENCE"],
+  three: ["PAST / GENESIS", "PRESENT / ACTUALITY", "FUTURE / REACTION"],
   five: [
-    "WHAT PREVENTS YOU FROM BEING YOURSELF?",
-    "WITH WHAT MEANS CAN YOU FREE YOURSELF?",
-    "WHAT ACTION SHOULD YOU UNDERTAKE?",
-    "INTO WHAT TRANSFORMATION ARE YOU BEING LED?",
-    "WHAT IS YOUR ULTIMATE PURPOSE OR DESTINY?"
+    "OBSTACLE OR BLOCKAGE",
+    "MEANS OF RESOLUTION",
+    "ACTION TO UNDERTAKE",
+    "TRANSFORMATIVE PATWHAY",
+    "PURPOSE OR DESTINATION"
   ]
 };
 
@@ -781,7 +781,7 @@ if (oldHeading) oldHeading.remove();
 // Create the new DOM elements
 const positionH3 = document.createElement("h3");
 positionH3.classList.add("card-position");
-positionH3.textContent = position; // e.g. "PAST & GENESIS"
+positionH3.textContent = position; // e.g. "PAST / GENESIS"
 
 const namePara = document.createElement("p");
 namePara.classList.add("card-name");
