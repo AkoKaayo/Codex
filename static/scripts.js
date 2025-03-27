@@ -563,7 +563,7 @@ if (spreadType === "single") {
     }
 }
 if (data.oracle_message) {
-    synergyContent += `<h3 id="tarot-message-titile">THE TAROT'S MESSAGE</h3><p class="tarot-message">${data.oracle_message}</p>`;
+    synergyContent += `<p class="tarot-message">${data.oracle_message}</p>`;
 }
 else if (data.error) synergyContent += `<p class="assistant-message">${data.error}</p>`;
 else synergyContent += `<p class="assistant-message">No results found. Try rephrasing your question.</p>`;
