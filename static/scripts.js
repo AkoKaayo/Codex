@@ -1,4 +1,5 @@
 /* DOM References */
+const isCustomReadingPage = window.location.pathname.includes("/custom");
 const cardArea = document.getElementById("card-area");
 const navToggle = document.getElementById('nav-toggle');
 const navbar = document.getElementById('top-navbar');
@@ -24,6 +25,39 @@ const closeModal = document.querySelector("#card-modal .close");
 const infoToggle = document.getElementById('info-toggle');
 const infoModal = document.getElementById('info-modal');
 const closeInfoModal = document.querySelector('#info-modal .close');
+// DOM References (add these to the existing list)
+const cardSelectorContainer = document.getElementById("card-selector-container");
+const cardSelectors = document.getElementById("card-selectors");
+
+// Track selected cards for Custom Reading
+let selectedCards = [];
+const spreadPositions = {
+  single: ["MAIN ACTOR"],
+  three: ["PAST / GENESIS", "PRESENT / ACTUALITY", "FUTURE / REACTION"],
+  five: [
+    "OBSTACLE OR BLOCKAGE",
+    "MEANS OF RESOLUTION",
+    "ACTION TO UNDERTAKE",
+    "TRANSFORMATIVE PATWHAY",
+    "PURPOSE OR DESTINATION"
+  ]
+};
+
+// Format selected cards into a list of card names
+function formatSelectedCards(cards) {
+  return cards.map((card) => {
+    if (card.type === "random") {
+      return "random"; // Backend will handle random selection
+    } else if (card.type === "major") {
+      return card.name; // e.g., "The Fool"
+    } else if (card.type === "minor") {
+      return `${card.number} of ${card.suit}`; // e.g., "Ace of Wands"
+    } else if (card.type === "court") {
+      return `${card.character} of ${card.suit}`; // e.g., "Queen of Swords"
+    }
+    return "random"; // Fallback
+  });
+}
 
 /* Toggling the sidebar nav on button click */
 navToggle.addEventListener("click", () => {
@@ -45,10 +79,100 @@ navClose.addEventListener("click", () => {
 /* NEW: Top nav references */
 const topNavbar = document.getElementById("top-navbar");
 const navSpreadReadingBtn = document.getElementById("nav-spread-reading-btn");
+const navCustomReadingBtn = document.getElementById("nav-custom-reading-btn");
 const navApprenticeBtn = document.getElementById("nav-apprentice-btn");
 const apprenticeModeContainer = document.getElementById("apprentice-mode-container");
 
 let currentSpreadType = "";
+
+// Card Selector
+const cardSelectorTemplate = (position) => `
+  <div class="card-selector" data-position="${position}">
+    <h3>${position}</h3>
+    <div class="selector-step" data-step="type">
+      <h4>Select the Card Type</h4>
+      <div class="selector-options">
+        <button class="selector-button" data-type="major">Major</button>
+        <button class="selector-button" data-type="minor">Minor</button>
+        <button class="selector-button" data-type="court">Court</button>
+        <button class="selector-button" data-type="random">Random</button>
+      </div>
+    </div>
+    <div class="selector-step" data-step="major" style="display: none;">
+      <h4>Select a Card</h4>
+      <div class="selector-options">
+        <button class="selector-button" data-value="The Fool">The Fool</button>
+        <button class="selector-button" data-value="The Magician">The Magician</button>
+        <button class="selector-button long-name" data-value="The High Priestess">The High Priestess</button>
+        <button class="selector-button" data-value="The Empress">The Empress</button>
+        <button class="selector-button" data-value="The Emperor">The Emperor</button>
+        <button class="selector-button" data-value="The Pope">The Pope</button>
+        <button class="selector-button" data-value="The Lover">The Lover</button>
+        <button class="selector-button" data-value="The Chariot">The Chariot</button>
+        <button class="selector-button" data-value="Strength">Strength</button>
+        <button class="selector-button" data-value="The Hermit">The Hermit</button>
+        <button class="selector-button long-name" data-value="The Wheel of Fortune">The Wheel of Fortune</button>
+        <button class="selector-button" data-value="Justice">Justice</button>
+        <button class="selector-button" data-value="The Hanged Man">The Hanged Man</button>
+        <button class="selector-button long-name" data-value="The Nameless Arcanum">The Nameless Arcanum</button>
+        <button class="selector-button" data-value="Temperance">Temperance</button>
+        <button class="selector-button" data-value="The Devil">The Devil</button>
+        <button class="selector-button" data-value="The Tower">The Tower</button>
+        <button class="selector-button" data-value="The Star">The Star</button>
+        <button class="selector-button" data-value="The Moon">The Moon</button>
+        <button class="selector-button" data-value="The Sun">The Sun</button>
+        <button class="selector-button" data-value="Judgment">Judgment</button>
+        <button class="selector-button" data-value="The World">The World</button>
+      </div>
+    </div>
+    <div class="selector-step" data-step="minor-suit" style="display: none;">
+      <h4>Select the Suit</h4>
+      <div class="selector-options">
+        <button class="selector-button" data-value="Swords">Swords</button>
+        <button class="selector-button" data-value="Pentacles">Pentacles</button>
+        <button class="selector-button" data-value="Cups">Cups</button>
+        <button class="selector-button" data-value="Wands">Wands</button>
+      </div>
+    </div>
+    <div class="selector-step" data-step="minor-number" style="display: none;">
+      <h4>Select the Card Number</h4>
+      <div class="selector-options">
+        <button class="selector-button" data-value="Ace">Ace</button>
+        <button class="selector-button" data-value="Two">Two</button>
+        <button class="selector-button" data-value="Three">Three</button>
+        <button class="selector-button" data-value="Four">Four</button>
+        <button class="selector-button" data-value="Five">Five</button>
+        <button class="selector-button" data-value="Six">Six</button>
+        <button class="selector-button" data-value="Seven">Seven</button>
+        <button class="selector-button" data-value="Eight">Eight</button>
+        <button class="selector-button" data-value="Nine">Nine</button>
+        <button class="selector-button" data-value="Ten">Ten</button>
+      </div>
+    </div>
+    <div class="selector-step" data-step="court-suit" style="display: none;">
+      <h4>Select the Suit</h4>
+      <div class="selector-options">
+        <button class="selector-button" data-value="Swords">Swords</button>
+        <button class="selector-button" data-value="Pentacles">Pentacles</button>
+        <button class="selector-button" data-value="Cups">Cups</button>
+        <button class="selector-button" data-value="Wands">Wands</button>
+      </div>
+    </div>
+    <div class="selector-step" data-step="court-character" style="display: none;">
+      <h4>Select the Character</h4>
+      <div class="selector-options">
+        <button class="selector-button" data-value="Page">Page</button>
+        <button class="selector-button" data-value="Queen">Queen</button>
+        <button class="selector-button" data-value="King">King</button>
+        <button class="selector-button" data-value="Knight">Knight</button>
+      </div>
+    </div>
+    <div class="selector-actions">
+      <button class="back-button" disabled>Back</button>
+      <button class="add-card-button" disabled>Add Selected Card</button>
+    </div>
+  </div>
+`;
 
 // Button text states
 const buttonTextStates = {
@@ -164,26 +288,38 @@ function fadeOutEffects() {
   let step = 0;
 
   const fadeTimer = setInterval(() => {
-    step++;
-    canvasOpacity = 1 - (step / fadeSteps);
-    vantaOpacity = 1 - (step / fadeSteps);
-    brandOpacity = 1 - (step / fadeSteps);
+      step++;
+      canvasOpacity = 1 - (step / fadeSteps);
+      vantaOpacity = 1 - (step / fadeSteps);
+      brandOpacity = 1 - (step / fadeSteps);
 
-    canvas.style.opacity = canvasOpacity;
-    vantaBackground.style.opacity = vantaOpacity;
-    codexBrand.style.opacity = brandOpacity;
+      canvas.style.opacity = canvasOpacity;
+      vantaBackground.style.opacity = vantaOpacity;
+      codexBrand.style.opacity = brandOpacity;
 
-    if (step >= fadeSteps) {
-      clearInterval(fadeTimer);
-      // Remove starry canvas & vanta background & codex brand
-      canvas.remove();
-      vantaBackground.remove();
-      codexBrand.remove();
-      if (vantaEffect) {
-        vantaEffect.destroy();
-        vantaEffect = null;
+      // Fade out cards in custom.html
+      if (isCustomReadingPage) {
+          const cardSelectors = document.querySelectorAll(".card-selector .card-image");
+          cardSelectors.forEach(card => {
+              card.style.opacity = 1 - (step / fadeSteps);
+          });
       }
-    }
+
+      if (step >= fadeSteps) {
+          clearInterval(fadeTimer);
+          // Remove starry canvas & vanta background & codex brand
+          canvas.remove();
+          vantaBackground.remove();
+          codexBrand.remove();
+          if (vantaEffect) {
+              vantaEffect.destroy();
+              vantaEffect = null;
+          }
+          // Clear cards in custom.html
+          if (isCustomReadingPage) {
+              cardSelectors.innerHTML = ""; // Clear the card selectors
+          }
+      }
   }, fadeInterval);
 }
 
@@ -203,8 +339,11 @@ function animateParticles() {
 
 // Resize
 function resizeCanvas() {
+  const newHeight = document.body.scrollHeight;
   canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
+  canvas.height = newHeight;
+  canvas.style.width = window.innerWidth + "px";
+  canvas.style.height = newHeight + "px";
   initParticles();
 }
 
@@ -348,8 +487,11 @@ function scaleCards() {
 /* Fetch Logic */
 function sendQuery(queryString, intention) {
   clearUI();
-  // Hide the bottom toolbar
-  bottomToolbar.style.display = "none";
+  // Hide the bottom toolbar with slide animation
+  bottomToolbar.classList.add("hidden"); // Use the slide-out animation
+  if (isCustomReadingPage) {
+      cardSelectorContainer.style.display = "none";
+  }
 
   // Add "loading" user prompt
   const userPromptObj = addUserPrompt(intention);
@@ -374,11 +516,14 @@ function sendQuery(queryString, intention) {
   const finalQuery = `${cardCount} card spread about ${intention}`;
   console.log("Sending query:", finalQuery); // Debug
 
+  // Format selected cards for Custom Reading
+  const cardsToSend = isCustomReadingPage ? formatSelectedCards(selectedCards) : [];
+
   Promise.race([
       fetch("/query", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ query: finalQuery, intention })
+          body: JSON.stringify({ query: finalQuery, intention, selectedCards: cardsToSend })
       }),
       timeoutPromise
   ])
@@ -405,11 +550,23 @@ function sendQuery(queryString, intention) {
 
           // Build synergyContent
           let synergyContent = "";
-          if (data.introduction) synergyContent += `<p class="assistant-message">${data.introduction}</p>`;
-          if (data.synthesis) synergyContent += data.synthesis;
-          else if (data.error) synergyContent += `<p class="assistant-message">${data.error}</p>`;
-          else synergyContent += `<p class="assistant-message">No results found. Try rephrasing your question.</p>`;
-          if (data.oracle_message) synergyContent += `<p class="tarot-message">${data.oracle_message}</p>`;
+if (data.introduction) {
+    synergyContent += `<p class="assistant-message">${data.introduction}</p><hr>`;
+}
+if (spreadType === "single") {
+    if (data.synthesis) {
+        synergyContent += `<p class="card-analysis">${data.synthesis}</p>`;
+    }
+} else {
+    if (data.synthesis) {
+        synergyContent += data.synthesis;
+    }
+}
+if (data.oracle_message) {
+    synergyContent += `<p class="tarot-message">${data.oracle_message}</p>`;
+}
+else if (data.error) synergyContent += `<p class="assistant-message">${data.error}</p>`;
+else synergyContent += `<p class="assistant-message">No results found. Try rephrasing your question.</p>`;
 
           addReadingText(synergyContent);
 
@@ -444,11 +601,10 @@ function sendQuery(queryString, intention) {
 function clearCardImages() {
   cardImagesContainer.innerHTML = "";
   cardImagesContainer.classList.remove("plus-layout", "three-card-layout");
-  setTimeout(() => {
-    if (cardImagesContainer.children.length === 0) {
-      codexBrand.style.display = "block";
-    }
-  }, 100);
+  // Show codex-brand if no card selectors are active, but only if cardSelectorContainer exists
+  if (cardSelectorContainer && !cardSelectorContainer.classList.contains("active")) {
+    codexBrand.style.display = "block";
+  }
 }
 
 function addCardImages(cards, layout) {
@@ -464,7 +620,8 @@ function addCardImages(cards, layout) {
   cards.forEach((card, index) => {
     const cardDiv = document.createElement("div");
     cardDiv.classList.add("card-image");
-    // Initially, do not add the .show class
+    cardDiv.setAttribute("data-position", card.position);
+    cardDiv.setAttribute("data-name", card.name);
 
     const img = document.createElement("img");
     img.src = card.image;
@@ -472,18 +629,287 @@ function addCardImages(cards, layout) {
     cardDiv.appendChild(img);
     cardImagesContainer.appendChild(cardDiv);
 
-    // Use a slight delay for the animation to trigger:
     setTimeout(() => {
       cardDiv.classList.add("show");
-    }, 888 * index); // Stagger each card's animation by 50ms (adjust as needed)
+    }, 888 * index);
   });
 }
 
 /* UI Handlers */
 function showInlineContext(spreadType) {
   currentSpreadType = spreadType;
-  intentionInput.value = "";
-  intentionInput.focus();
+  if (isCustomReadingPage) {
+      bottomToolbar.classList.add("hidden");
+      setTimeout(() => {
+          showCardSelectors(spreadType);
+      }, 1000);
+  } else {
+      intentionInput.value = "";
+      enableInput();
+      intentionInput.focus();
+      // Make the inline context container visible
+      inlineContextContainer.classList.add("show");
+  }
+}
+
+/* UI Handlers */
+function showCardSelectors(spreadType) {
+  try {
+      // Clear any previous selectors
+      cardSelectors.innerHTML = "";
+      selectedCards = [];
+
+      // Hide codex-brand
+      codexBrand.style.display = "none";
+
+      // Hide inline-context-container initially
+      inlineContextContainer.classList.remove("show");
+
+      // Determine the number of selectors based on spread type
+      const positions = spreadPositions[spreadType.toLowerCase()] || ["MAIN ACTOR"];
+
+      // Generate a selector for each position
+      positions.forEach((position) => {
+          const selectorHtml = cardSelectorTemplate(position);
+          cardSelectors.insertAdjacentHTML("beforeend", selectorHtml);
+      });
+
+      // Show the card selector container
+      cardSelectorContainer.style.display = "flex";
+      cardSelectorContainer.classList.add("active");
+
+      // Add event listeners for each card selector
+      document.querySelectorAll(".card-selector").forEach(selector => {
+          const steps = {
+              type: selector.querySelector('[data-step="type"]'),
+              major: selector.querySelector('[data-step="major"]'),
+              minorSuit: selector.querySelector('[data-step="minor-suit"]'),
+              minorNumber: selector.querySelector('[data-step="minor-number"]'),
+              courtSuit: selector.querySelector('[data-step="court-suit"]'),
+              courtCharacter: selector.querySelector('[data-step="court-character"]')
+          };
+          const addButton = selector.querySelector('.add-card-button');
+          const backButton = selector.querySelector('.selector-actions .back-button');
+          const actionsContainer = selector.querySelector(".selector-actions");
+          const navigationHistory = ['type'];
+
+          const showStep = (stepName) => {
+              Object.values(steps).forEach(step => step.style.display = 'none');
+              steps[stepName].style.display = 'block';
+          };
+
+          selector.addEventListener('click', (e) => {
+              if (e.target.classList.contains('selector-button')) {
+                  const step = e.target.closest('.selector-step').dataset.step;
+                  const type = e.target.dataset.type;
+                  const value = e.target.dataset.value;
+
+                  const stepContainer = e.target.closest(".selector-step");
+                  stepContainer.querySelectorAll(".selector-button").forEach((btn) => {
+                      btn.classList.remove("selected");
+                  });
+                  e.target.classList.add("selected");
+
+                  if (step === 'type') {
+                      navigationHistory.push(type === 'major' ? 'major' : type === 'minor' ? 'minorSuit' : type === 'court' ? 'courtSuit' : 'type');
+                      showStep(type === 'major' ? 'major' : type === 'minor' ? 'minorSuit' : type === 'court' ? 'courtSuit' : 'type');
+                      backButton.disabled = false;
+                      if (type === 'random') {
+                          selector.dataset.selection = JSON.stringify({ type: "random" });
+                          addButton.disabled = false;
+                          addButton.classList.add("enabled");
+                      }
+                  } else if (step === 'major') {
+                      selector.dataset.selection = JSON.stringify({ type: "major", name: value });
+                      addButton.disabled = false;
+                      addButton.classList.add("enabled");
+                  } else if (step === 'minor-suit') {
+                      navigationHistory.push('minorNumber');
+                      selector.dataset.minorSuit = value;
+                      showStep('minorNumber');
+                  } else if (step === 'minor-number') {
+                      selector.dataset.selection = JSON.stringify({
+                          type: "minor",
+                          suit: selector.dataset.minorSuit,
+                          number: value
+                      });
+                      addButton.disabled = false;
+                      addButton.classList.add("enabled");
+                  } else if (step === 'court-suit') {
+                      navigationHistory.push('courtCharacter');
+                      selector.dataset.courtSuit = value;
+                      showStep('courtCharacter');
+                  } else if (step === 'court-character') {
+                      selector.dataset.selection = JSON.stringify({
+                          type: "court",
+                          suit: selector.dataset.courtSuit,
+                          character: value
+                      });
+                      addButton.disabled = false;
+                      addButton.classList.add("enabled");
+                  }
+              } else if (e.target.classList.contains('back-button') && !e.target.disabled) {
+                  navigationHistory.pop();
+                  const previousStep = navigationHistory[navigationHistory.length - 1];
+                  showStep(previousStep);
+                  addButton.disabled = true;
+                  addButton.classList.remove("enabled");
+                  if (previousStep === 'type') {
+                      backButton.disabled = true;
+                  }
+                  delete selector.dataset.selection;
+                  delete selector.dataset.minorSuit;
+                  delete selector.dataset.courtSuit;
+                  const previousStepContainer = selector.querySelector(`[data-step="${previousStep}"]`);
+                  previousStepContainer.querySelectorAll(".selector-button").forEach(btn => {
+                      btn.classList.remove("selected");
+                  });
+              }
+          });
+
+          addButton.addEventListener('click', () => {
+              const position = selector.dataset.position;
+              const selection = JSON.parse(selector.dataset.selection || "{}");
+
+              selectedCards = selectedCards.filter((card) => card.position !== position);
+              selectedCards.push({ position, ...selection });
+
+              let cardName = "";
+              if (selection.type === "random") {
+                  cardName = "random";
+              } else if (selection.type === "major") {
+                  cardName = selection.name;
+              } else if (selection.type === "minor") {
+                  cardName = `${selection.number} of ${selection.suit}`;
+              } else if (selection.type === "court") {
+                  cardName = `${selection.character} of ${selection.suit}`;
+              }
+
+              // Remove the existing <h3> entirely, 
+// because we’ll insert two separate elements in its place
+const oldHeading = selector.querySelector("h3");
+if (oldHeading) oldHeading.remove();
+
+// Create the new DOM elements
+const positionH3 = document.createElement("h3");
+positionH3.classList.add("card-position");
+positionH3.textContent = position; // e.g. "PAST / GENESIS"
+
+const namePara = document.createElement("p");
+namePara.classList.add("card-name");
+namePara.textContent = cardName === "random" ? "Random Card" : cardName;
+
+// Insert them at the top of the selector
+selector.prepend(namePara);
+selector.prepend(positionH3);
+
+
+              selector.querySelectorAll(".selector-step").forEach(step => step.remove());
+              addButton.remove();
+              actionsContainer.querySelector(".back-button").remove();
+
+              const loadingDiv = document.createElement("div");
+              loadingDiv.classList.add("card-loading");
+              const spinnerSpan = document.createElement("span");
+              spinnerSpan.classList.add("spinner");
+              spinnerSpan.innerText = " ";
+              loadingDiv.appendChild(spinnerSpan);
+              selector.appendChild(loadingDiv);
+
+              const spinnerFrames = ["|", "/", "-", "\\"];
+              let index = 0;
+              const spinnerId = setInterval(() => {
+                  spinnerSpan.innerText = spinnerFrames[index];
+                  index = (index + 1) % spinnerFrames.length;
+              }, 200);
+
+              fetch("/get_card_image", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({ card_name: cardName })
+              })
+              .then(response => {
+                  if (!response.ok) {
+                      throw new Error("Failed to fetch card image");
+                  }
+                  return response.json();
+              })
+              .then(data => {
+                  clearInterval(spinnerId);
+                  loadingDiv.remove();
+
+                  const cardImageDiv = document.createElement("div");
+                  cardImageDiv.classList.add("card-image");
+                  cardImageDiv.setAttribute("data-position", position);
+                  cardImageDiv.setAttribute("data-name", data.name);
+                  const img = document.createElement("img");
+                  img.src = data.image;
+                  img.alt = data.name;
+                  // Handle image load errors
+                  img.onerror = function() {
+                      console.error("Failed to load image for:", data.name);
+                      this.parentElement.style.maxWidth = "300px";
+                      this.parentElement.innerHTML = "Image failed to load";
+                  };
+                  // Reset styles on successful load
+                  img.onload = function() {
+                      this.parentElement.style.maxWidth = "";
+                  };
+                  cardImageDiv.appendChild(img);
+                  // Ensure no inline styles interfere
+                  cardImageDiv.style.maxWidth = "";
+                  cardImageDiv.style.height = "";
+                  selector.appendChild(cardImageDiv);
+
+                  selector.appendChild(actionsContainer);
+
+                  const positions = spreadPositions[currentSpreadType.toLowerCase()] || ["MAIN ACTOR"];
+                  if (selectedCards.length === positions.length) {
+                      // Show the bottom toolbar with slide-in animation
+                      bottomToolbar.classList.remove("hidden");
+                      // Show the inline-context-container
+                      inlineContextContainer.classList.add("show");
+                      // Enable the input for the user to type their intention
+                      setTimeout(() => {
+                          enableInput();
+                          intentionInput.focus();
+                          console.log("Inline context container display:", inlineContextContainer.classList.contains("show"));
+                          console.log("Intention input enabled:", !intentionInput.disabled);
+                      }, 100);
+                  }
+              })
+              .catch(error => {
+                  console.error("Error fetching card image:", error);
+                  clearInterval(spinnerId);
+                  loadingDiv.remove();
+
+                  const errorDiv = document.createElement("div");
+                  errorDiv.classList.add("card-error");
+                  errorDiv.textContent = "Unable to load card image.";
+                  selector.appendChild(errorDiv);
+
+                  selector.appendChild(actionsContainer);
+
+                  const positions = spreadPositions[currentSpreadType.toLowerCase()] || ["MAIN ACTOR"];
+                  if (selectedCards.length === positions.length) {
+                      // Show the bottom toolbar with slide-in animation
+                      bottomToolbar.classList.remove("hidden");
+                      // Show the inline-context-container
+                      inlineContextContainer.classList.add("show");
+                      // Enable the input for the user to type their intention
+                      setTimeout(() => {
+                          enableInput();
+                          intentionInput.focus();
+                          console.log("Inline context container display:", inlineContextContainer.classList.contains("show"));
+                          console.log("Intention input enabled:", !intentionInput.disabled);
+                      }, 100);
+                  }
+              });
+          });
+      });
+  } catch (error) {
+      console.error("Error in showCardSelectors:", error);
+  }
 }
 
 function handleInputChange() {
@@ -508,6 +934,16 @@ function handleContextSubmission() {
   infoToggle.classList.add("hidden");
 
   sendQuery(`${currentSpreadType.toLowerCase()} card spread about ${intentionText}`, intentionText);
+  showReadingPanel();
+  resizeCanvas();
+  updateVantaDimensions();
+}
+
+// Function to update Vanta.js dimensions
+function updateVantaDimensions() {
+  if (vantaEffect) {
+    vantaEffect.resize();
+  }
 }
 
 /* Panel Control */
@@ -526,6 +962,8 @@ function hideReadingPanel() {
   bottomToolbar.style.display = "flex";
   shuffleButton.style.display = "none";
   shuffleButton.disabled = true;
+  resizeCanvas();
+  updateVantaDimensions();
 }
 
 /* Reset to default UI state */
@@ -533,14 +971,26 @@ function resetToDefault() {
   clearUI();
   clearCardImages();
   hideReadingPanel();
-  
+
   disableInput();
   intentionInput.value = "";
   currentSpreadType = "";
   [btnRandomCard, btnThreeCard, btnFiveCard].forEach((b) => b.classList.remove("active-button"));
-  
-  // Bring the toolbar and info toggle back into view
+
+  // Reset card selectors
+  if (isCustomReadingPage) {
+      cardSelectorContainer.style.display = "none";
+      cardSelectorContainer.classList.remove("active");
+      cardSelectors.innerHTML = "";
+      selectedCards = [];
+      // Show codex-brand again
+      codexBrand.style.display = "block";
+      // Hide the inline-context-container in custom.html
+      inlineContextContainer.classList.remove("show");
+  }
+
   bottomToolbar.classList.remove("hidden");
+  bottomToolbar.style.display = "flex";
   infoToggle.classList.remove("hidden");
 }
 
@@ -565,23 +1015,24 @@ function fadeOutCards() {
 }
 
 /* Event Listeners (Combined into a single DOMContentLoaded block) */
+// Declare vantaEffect in global scope
 document.addEventListener("DOMContentLoaded", () => {
   // Vanta.js initialization
   vantaEffect = VANTA.FOG({
-    el: "#vanta-background",
-    mouseControls: true,
-    touchControls: true,
-    gyroControls: true,
-    minHeight: 200.00,
-    minWidth: 200.00,
-    highlightColor: 0x6e00b9,
-    midtoneColor: 0x370069,
-    lowlightColor: 0x240E37,
-    baseColor: 0x0,
-    blurFactor: 0.8,
-    speed: -1,
-    zoom: 0.4,
-    backgroundAlpha: 0
+      el: "#vanta-background",
+      mouseControls: true,
+      touchControls: true,
+      gyroControls: true,
+      minHeight: 200.00,
+      minWidth: 200.00,
+      highlightColor: 0x6e00b9,
+      midtoneColor: 0x370069,
+      lowlightColor: 0x240E37,
+      baseColor: 0x0,
+      blurFactor: 0.8,
+      speed: -1,
+      zoom: 0.4,
+      backgroundAlpha: 0
   });
 
   resizeCanvas();
@@ -592,18 +1043,26 @@ document.addEventListener("DOMContentLoaded", () => {
   hideReadingPanel();
   updateButtonText();
   disableInput();
+  // Ensure inline-context-container is in the correct initial state
+  inlineContextContainer.classList.remove("show");
+  // Clear any inline display styles to let CSS handle visibility
+  inlineContextContainer.style.display = "";
 
-  // Speed dial buttons enable the text area
+  // Speed dial buttons enable the text area (only for Spread Reading)
   [btnRandomCard, btnThreeCard, btnFiveCard].forEach((button) => {
-    button.addEventListener("click", enableInput);
+      button.addEventListener("click", () => {
+          if (!isCustomReadingPage) {
+              enableInput();
+          }
+      });
   });
 
   // Intention input events
   intentionInput.addEventListener("keydown", (e) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      handleContextSubmission();
-    }
+      if (e.key === "Enter") {
+          e.preventDefault();
+          handleContextSubmission();
+      }
   });
   intentionInput.addEventListener("input", handleInputChange);
   intentionInput.addEventListener("input", capitalizeFirstLetter);
@@ -611,16 +1070,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Spread type buttons
   btnRandomCard.addEventListener("click", () => {
-    setActiveButton(btnRandomCard);
-    showInlineContext("Single");
+      setActiveButton(btnRandomCard);
+      showInlineContext("Single");
   });
   btnThreeCard.addEventListener("click", () => {
-    setActiveButton(btnThreeCard);
-    showInlineContext("Three");
+      setActiveButton(btnThreeCard);
+      showInlineContext("Three");
   });
   btnFiveCard.addEventListener("click", () => {
-    setActiveButton(btnFiveCard);
-    showInlineContext("Five");
+      setActiveButton(btnFiveCard);
+      showInlineContext("Five");
   });
 
   // Shuffle button
@@ -628,99 +1087,119 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Card modal events
   closeModal.addEventListener("click", () => {
-    modal.classList.remove("active");
-    setTimeout(() => {
-      modal.style.display = "none";
-    }, 800); // Match this timeout with the CSS transition duration (0.8s)
+      modal.classList.remove("active");
+      setTimeout(() => {
+          modal.style.display = "none";
+      }, 800);
   });
 
   modalImage.addEventListener("click", () => {
-    modal.classList.remove("active");
-    setTimeout(() => {
-      modal.style.display = "none";
-    }, 800); // Match this timeout with the CSS transition duration (0.8s)
+      modal.classList.remove("active");
+      setTimeout(() => {
+          modal.style.display = "none";
+      }, 800);
   });
 
   document.addEventListener("click", (event) => {
-    if (
-      event.target.tagName === "IMG" &&
-      event.target.parentElement.classList.contains("card-image")
-    ) {
-      modal.style.display = "block"; // Make sure it's rendered
-      requestAnimationFrame(() => {
-        modal.classList.add("active");
-      });
-      modalImage.src = event.target.src;
-    }
+      if (
+          event.target.tagName === "IMG" &&
+          event.target.parentElement.classList.contains("card-image")
+      ) {
+          modal.style.display = "block";
+          requestAnimationFrame(() => {
+              modal.classList.add("active");
+          });
+          modalImage.src = event.target.src;
+      }
   });
 
   // Info modal events
   infoToggle.addEventListener('click', () => {
-    console.log('Info toggle clicked. Current display:', infoModal.style.display, 'Has active class:', infoModal.classList.contains('active'));
-    infoModal.style.display = 'block';
-    requestAnimationFrame(() => {
-      infoModal.classList.add('active');
-      console.log('After adding active class. Display:', infoModal.style.display, 'Has active class:', infoModal.classList.contains('active'));
-    });
+      console.log('Info toggle clicked. Current display:', infoModal.style.display, 'Has active class:', infoModal.classList.contains('active'));
+      infoModal.style.display = 'block';
+      requestAnimationFrame(() => {
+          infoModal.classList.add('active');
+          console.log('After adding active class. Display:', infoModal.style.display, 'Has active class:', infoModal.classList.contains('active'));
+      });
   });
 
   closeInfoModal.addEventListener('click', () => {
-    infoModal.classList.remove('active');
-    setTimeout(() => {
-      infoModal.style.display = 'none';
-    }, 600); // Match CSS transition duration
+      infoModal.classList.remove('active');
+      setTimeout(() => {
+          infoModal.style.display = 'none';
+      }, 600);
   });
 
   document.addEventListener('click', (event) => {
-    if (event.target === infoModal && infoModal.classList.contains('active')) {
-      infoModal.classList.remove('active');
-      setTimeout(() => {
-        infoModal.style.display = 'none';
-      }, 600); // Match CSS transition duration
-    }
+      if (event.target === infoModal && infoModal.classList.contains('active')) {
+          infoModal.classList.remove('active');
+          setTimeout(() => {
+              infoModal.style.display = 'none';
+          }, 600);
+      }
   });
 
   // Navigation events
   navSpreadReadingBtn.addEventListener("click", () => {
-    navbar.classList.remove("active");
-    apprenticeModeContainer.classList.remove("active");
-    appContainer.classList.remove("blurred");
-    setTimeout(() => {
-      apprenticeModeContainer.style.display = "none";
-      cardArea.style.display = "block";
-      bottomToolbar.style.display = "flex";
-      fadeOutCards();
-    }, 800);
+      if (isCustomReadingPage) {
+          window.location.href = "/";
+      } else {
+          navbar.classList.remove("active");
+          apprenticeModeContainer.classList.remove("active");
+          appContainer.classList.remove("blurred");
+          setTimeout(() => {
+              apprenticeModeContainer.style.display = "none";
+              cardArea.style.display = "block";
+              bottomToolbar.style.display = "flex";
+              fadeOutCards();
+          }, 800);
+      }
+  });
+
+  navCustomReadingBtn.addEventListener("click", () => {
+      if (!isCustomReadingPage) {
+          window.location.href = "/custom";
+      } else {
+          navbar.classList.remove("active");
+          apprenticeModeContainer.classList.remove("active");
+          appContainer.classList.remove("blurred");
+          setTimeout(() => {
+              apprenticeModeContainer.style.display = "none";
+              cardArea.style.display = "block";
+              bottomToolbar.style.display = "flex";
+              fadeOutCards();
+          }, 800);
+      }
   });
 
   navApprenticeBtn.addEventListener("click", () => {
-    navbar.classList.remove("active");
-    appContainer.classList.remove("blurred");
-    readingPanel.classList.remove("active");
-    cardArea.style.display = "none";
-    bottomToolbar.style.display = "none";
-    apprenticeModeContainer.style.display = "block";
-    requestAnimationFrame(() => {
-      apprenticeModeContainer.classList.add("active");
-    });
+      navbar.classList.remove("active");
+      appContainer.classList.remove("blurred");
+      readingPanel.classList.remove("active");
+      cardArea.style.display = "none";
+      bottomToolbar.style.display = "none";
+      apprenticeModeContainer.style.display = "block";
+      requestAnimationFrame(() => {
+          apprenticeModeContainer.classList.add("active");
+      });
   });
 
   document.addEventListener("click", (event) => {
-    if (navbar.classList.contains('active')) {
-      const clickedInsideNav = navbar.contains(event.target);
-      const clickedNavToggle = (event.target === navToggle);
-      if (!clickedInsideNav && !clickedNavToggle) {
-        navbar.classList.remove('active');
-        appContainer.classList.remove("blurred");
+      if (navbar.classList.contains('active')) {
+          const clickedInsideNav = navbar.contains(event.target);
+          const clickedNavToggle = (event.target === navToggle);
+          if (!clickedInsideNav && !clickedNavToggle) {
+              navbar.classList.remove('active');
+              appContainer.classList.remove("blurred");
+          }
       }
-    }
   });
 
   document.querySelectorAll('#nav-links button').forEach(button => {
-    button.addEventListener('click', () => {
-      navbar.classList.remove("active");
-      appContainer.classList.remove("blurred");
-    });
+      button.addEventListener('click', () => {
+          navbar.classList.remove("active");
+          appContainer.classList.remove("blurred");
+      });
   });
 
   // Global loader spinner
@@ -728,18 +1207,27 @@ document.addEventListener("DOMContentLoaded", () => {
   const spinnerFrames = ["|", "/", "-", "\\"];
   let index = 0;
   const spinnerInterval = setInterval(() => {
-    spinnerElement.innerText = spinnerFrames[index];
-    index = (index + 1) % spinnerFrames.length;
+      spinnerElement.innerText = spinnerFrames[index];
+      index = (index + 1) % spinnerFrames.length;
   }, 200);
 
   window.addEventListener("load", () => {
-    clearInterval(spinnerInterval);
-    const loader = document.getElementById("global-loader");
-    loader.classList.add("hidden");
-    setTimeout(() => {
-      loader.remove();
-    }, 500); // 500ms matches the CSS transition duration
+      clearInterval(spinnerInterval);
+      const loader = document.getElementById("global-loader");
+      if (loader) {
+          loader.classList.add("hidden");
+          setTimeout(() => {
+              loader.remove();
+          }, 500);
+      }
   });
+
+  // Add resize and scroll listeners to update Vanta.js
+  window.addEventListener("resize", () => {
+      resizeCanvas();
+      updateVantaDimensions();
+  });
+  window.addEventListener("scroll", updateVantaDimensions);
 });
 
 window.addEventListener("resize", debouncedUpdateButtonText);

@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-04QR4JQ0ZR"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-04QR4JQ0ZR');
+    </script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Codex Tarot - Custom Marseilles Tarot Readings</title>
+    <!-- Meta Tags for SEO -->
+    <meta name="description" content="Create custom Marseilles Tarot readings with Codex Tarot using the Jodorowsky-Camoin deck. Choose your cards for personalized spreads and insights.">
+    <meta name="keywords" content="Custom Marseilles Tarot, Jodorowsky-Camoin deck, personalized tarot readings, custom tarot spreads, tarot card selection">
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="AkoKaayo">
+    <!-- Open Graph Tags for Social Sharing -->
+    <meta property="og:title" content="Codex Tarot - Custom Marseilles Tarot Readings">
+    <meta property="og:description" content="Create personalized Marseilles Tarot readings with Codex Tarot. Select your cards and explore custom spreads with the Jodorowsky-Camoin deck.">
+    <meta property="og:image" content="/static/images/codextarotlogo.svg">
+    <meta property="og:url" content="https://codextarot.com/custom">
+    <meta property="og:type" content="website">
+
+    <link rel="alternate" hreflang="en" href="https://codextarot.com/custom" />
+    <link rel="alternate" hreflang="x-default" href="https://codextarot.com/custom" />
+
+    <!-- Fonts and Favicons -->
+    <link href="https://fonts.googleapis.com/css2?family=Sorts+Mill+Goudy:wght@400;700&family=IBM+Plex+Sans:wght@200;400;600&family=IBM+Plex+Mono:wght@400;700&display=swap" rel="stylesheet" />
+    <link rel="icon" href="/static/images/favicon.svg" type="image/favicon" sizes="32x32">
+    <!-- Your CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+    <!-- Vanta.js and Three.js CDNs -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.fog.min.js"></script>
+  </head>
+<body>
+    <body class="custom-page"></body>
+    <!-- Global Loader -->
+    <div id="global-loader">
+      <pre id="global-spinner">|</pre>
+    </div>
+  <!-- TOP NAV BAR -->
+  <div id="top-navbar">
+    <div id="nav-logo">
+      <img src="/static/images/codextarotlogo.svg" alt="Codex Tarot Logo - Free Marseilles Tarot Reading App" />
+      <button id="nav-close" aria-label="Close navigation">←</button>
+    </div>
+    <div id="nav-links">
+      <button id="nav-spread-reading-btn">SPREAD READING</button>
+      <button id="nav-custom-reading-btn">CUSTOM READING</button>
+      <button id="nav-apprentice-btn" disabled>APPRENTICE MODE (COMING SOON)</button>
+      <p class="nav-description">Learn Marseilles Tarot and explore card meanings with our upcoming learning mode.</p>
+    </div>
+    <div id="nav-footer">
+      <small>Version 1.1 &mdash; Created by AkoKaayo &mdash; © 2025</small>
+    </div>
+  </div>
+
+  <!-- Main Content Container -->
+<div id="app-container">
+    <!-- Menu toggle button -->
+    <button id="nav-toggle">☰</button>
+  
+    <!-- Background Layers -->
+    <div id="vanta-background"></div>
+    <canvas id="starry-canvas"></canvas>
+  
+    <!-- CARD AREA -->
+    <div id="card-area">
+        <div id="codex-brand">
+            <h1>CUSTOM<br>READING</h1>
+        </div>
+        <div id="card-images-container"></div>
+        <!-- Move card-selector-container inside card-area -->
+        <div id="card-selector-container" style="display: none;">
+            <div id="card-selectors"></div>
+        </div>
+    </div>
+  
+    <!-- BOTTOM TOOLBAR -->
+    <div id="bottom-toolbar">
+        <div id="toolbar-container">
+            <div id="toolbar-buttons">
+                <button id="btn-random-card">Single Card Read</button>
+                <button id="btn-three-card">Three Cards Read</button>
+                <button id="btn-five-card">Five Cards Read</button>
+            </div>
+            <div id="inline-context-container">
+              <textarea id="intention-input" placeholder="Select your spread type and which cards you seek to learn from."></textarea>
+              <button id="inline-send-button" disabled></button>
+          </div>
+        </div>
+    </div>
+  
+    <!-- READING PANEL -->
+    <div id="reading-panel">
+        <div id="user-prompt-wrapper"></div>
+        <div id="reading-text-container"></div>
+        <div id="shuffle-container">
+            <button id="shuffle-button" style="display: none;">SHUFFLE & START AGAIN</button>
+        </div>
+    </div>
+</div>
+
+    <!-- APPRENTICE MODE CONTAINER -->
+    <div id="apprentice-mode-container">
+      <h2>Apprentice Mode</h2>
+      <p>Welcome to your personalized learning and customization area!</p>
+    </div>
+
+    <!-- CARD ZOOM MODAL -->
+    <div id="card-modal" class="modal">
+      <span class="close">×</span>
+      <img class="modal-content" id="modal-image">
+    </div>
+
+    <!-- INFO BUTTON -->
+    <button id="info-toggle">?</button>
+
+    <!-- INFO MODAL -->
+    <div id="info-modal" class="modal">
+      <span class="close">×</span>
+      <div class="modal-content" id="info-content">
+        <h2>Welcome to Custom Reading in Codex Tarot</h2>
+<p>Welcome to the Custom Reading section of Codex Tarot. Here, you can create personalized tarot readings by selecting your own cards from the Jodorowsky-Camoin deck. This feature allows for a tailored exploration of the tarot's wisdom, perfect for those who want to focus on specific aspects or cards.</p>
+
+<h3>How to Use Custom Reading</h3>
+<p>Follow these steps to create your custom tarot reading:</p>
+<ol>
+  <li><strong>Choose Your Spread:</strong> Select the type of spread you want using the buttons at the bottom of the page: Single Card, Three Cards, or Five Cards. Each button corresponds to a different layout for your reading.</li>
+  <li><strong>Select Your Cards:</strong>
+    <ul>
+      <li>Once you've chosen a spread type, the card selection interface will appear, showing selectors for each position in the spread (e.g., "PAST / GENESIS" for a three-card spread).</li>
+      <li>For each position, choose the type of card you want:
+        <ul>
+          <li><strong>Major Arcana:</strong> Select from a list including The Fool, The Magician, The High Priestess, etc., up to The World.</li>
+          <li><strong>Minor Arcana:</strong> First, choose the suit (Swords, Pentacles, Cups, Wands), then select the number (Ace to Ten).</li>
+          <li><strong>Court Cards:</strong> Choose the suit, then select the character (Page, Queen, King, Knight).</li>
+          <li><strong>Random:</strong> Opt for a random card, and the system will select one for you during the reading.</li>
+        </ul>
+      </li>
+      <li>After selecting the card type, follow the prompts to choose the specific card. Once selected, the card name and position will be displayed, and you can move to the next position.</li>
+      <li>Continue until all positions in your spread are filled. The interface will guide you through each step, with back buttons to revise selections if needed.</li>
+    </ul>
+  </li>
+  <li><strong>Set Your Intention:</strong> After selecting all cards, a text box will appear. Enter a question or focus for your reading, such as "What should I focus on this week?" or "Guidance for my career path." This helps tailor the reading to your needs.</li>
+  <li><strong>Generate Your Reading:</strong> Click the submit button to send your selections and intention to the server. The reading panel will display, showing a loading spinner while the reading is generated.</li>
+  <li><strong>View Your Reading:</strong> Once generated, the reading panel will show the interpretation, including an introduction, synthesis of the cards, and a tarot message. The selected cards will be displayed above, and you can click on any card image to view it in a larger modal for detailed examination.</li>
+  <li><strong>Start Again:</strong> If you wish to create a new reading, use the "Shuffle & Start Again" button. This will clear all selections, reset the interface, and allow you to begin the process anew.</li>
+</ol>
+
+<h3>Tips for a Meaningful Reading</h3>
+<ul>
+  <li>Take your time to select cards that resonate with your current situation or question. Consider the symbolism of each card type for deeper insights.</li>
+  <li>Be specific with your intention to get more precise and relevant readings. Vague questions may lead to broader, less focused interpretations.</li>
+  <li>Explore different spread types to see which one provides the most clarity for your query. Single cards are great for quick insights, while five-card spreads offer comprehensive guidance.</li>
+  <li>Use the card zoom modal to get a closer look at the card details, especially if you're unfamiliar with the Jodorowsky-Camoin deck's imagery.</li>
+  <li>If you're new to tarot, consider reading more about the deck at [Jodorowsky-Camoin Deck](https://en.camoin.com/tarot/-Home-en-.html) to enhance your understanding.</li>
+</ul>
+
+<h3>Resources & Credits</h3>
+<p>Enhance your understanding with the restored [Jodorowsky-Camoin Deck](https://en.camoin.com/tarot/-Home-en-.html). For deeper insights, refer to [The Way of the Tarot Book](https://www.amazon.com/Way-Tarot-Spiritual-Teacher-Cards/dp/1594772630/ref=sr_1_1?crid=3UF1P9GMUKHE8&dib=eyJ2IjoiMSJ9.Fh9T3cXAA-DuFmxhJSwcp5IK53kFsGiW1_aD13NqrvInOeShnpExtblUo00tagy10MiX-EmgXwP9mqD_nAGTxwBqoImGk9QNJYMHhTRGDpKDQnEkw7EMEoYY0MJgXOcwmdpEIfM3nb94Ve5ZyciGvGYXIZ6YWCWc6S_y2lbrA3AnGn2DaVowIkyButytLvDLg0tKNAyPs0SE0eYn0CcYbtlzVOO2E2644ZFEB5L9ytM.-pIAmdoWZ7bGLCo7R1nAZcRbxioIWTzKZMxivcLI5H8&dib_tag=se&keywords=the+way+of+the+tarot&qid=1742402940&s=books&sprefix=ther+way+of+the+tarot%2Cstripbooks-intl-ship%2C228&sr=1-1) by Alejandro Jodorowsky.</p>
+      </div>
+    </div>
+      
+    <!-- Footer for SEO 
+    <footer id="seo-footer">
+      <p>Custom Marseilles Tarot readings with the Jodorowsky-Camoin deck at Codex Tarot.</p>
+    </footer> -->
+
+  <!-- Main Script -->
+  <script src="{{ url_for('static', filename='scripts.js') }}"></script>
+  <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'922aa5b74c484552',t:'MTc0MjM2Mjk1NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Codex Tarot - Custom Reading",
+      "url": "https://codextarot.com/custom",
+      "description": "Create custom Marseilles Tarot readings with Codex Tarot using the Jodorowsky-Camoin deck. Choose your cards for personalized spreads and insights.",
+      "applicationCategory": "Lifestyle",
+      "operatingSystem": "All",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "creator": {
+        "@type": "Person",
+        "name": "AkoKaayo"
+      },
+      "inLanguage": "en-US",
+      "keywords": "Custom Marseilles Tarot, Jodorowsky-Camoin deck, personalized tarot readings, custom tarot spreads"
+    }
+    </script>
+</body>
+</html>
