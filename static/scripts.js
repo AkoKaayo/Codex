@@ -469,8 +469,8 @@ function scaleCards() {
     let maxCardWidth;
 
     if (window.innerWidth <= 900) {
-      const totalMarginPerCard = 20;
-      maxCardWidth = Math.min((containerWidth - (numCards * totalMarginPerCard)) / numCards, 200);
+      // Set a fixed maxCardWidth for small screens
+      maxCardWidth = 200;
     } else {
       const totalMarginPerCard = 20;
       maxCardWidth = Math.min((containerWidth - (numCards * totalMarginPerCard)) / numCards, 300);
