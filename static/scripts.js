@@ -533,17 +533,21 @@ let currentSpreadType = "";
 
 function showInlineContext(spreadType) {
   currentSpreadType = spreadType;
-  intentionInput.value = "";
-  enableInput();
-  intentionInput.focus();
-  inlineContextContainer.classList.add("show");
+
   if (codexBrand.innerHTML === "CUSTOM<br>READING") {
     bottomToolbar.classList.add("hidden");
     setTimeout(() => {
       showCardSelectors(spreadType);
     }, 1000);
+    return; // ⛔ prevent input from showing
   }
+
+  intentionInput.value = "";
+  enableInput();
+  intentionInput.focus();
+  inlineContextContainer.classList.add("show");
 }
+
 
 // Card Selector
 const cardSelectorTemplate = (position) => `
@@ -933,12 +937,42 @@ function resetToDefault() {
   currentSpreadType = "";
   [btnRandomCard, btnThreeCard, btnFiveCard].forEach((b) => b.classList.remove("active-button"));
 
+  resetToolbarState();
   loadContent("/static/default_spread.html", "CODEX<br>TAROT");
+
   selectedCards = [];
 
   bottomToolbar.classList.remove("hidden");
   bottomToolbar.style.display = "flex";
   infoToggle.classList.remove("hidden");
+}
+
+/**
+ * Resets ONLY the toolbar and UI to a default state 
+ * (without forcing a particular spread to load).
+ */
+function resetToolbarState() {
+  // 1) Make sure the bottom toolbar is visible
+  bottomToolbar.classList.remove("hidden");
+  bottomToolbar.style.display = "flex";
+
+  // 2) Hide/clear the inline context container
+  inlineContextContainer.classList.remove("show");
+  intentionInput.value = "";
+  disableInput();
+
+  // 3) Remove any active-button classes from spread buttons
+  [btnRandomCard, btnThreeCard, btnFiveCard].forEach((b) => b.classList.remove("active-button"));
+
+  // 4) Show the info toggle if it was hidden
+  infoToggle.classList.remove("hidden");
+
+  // 5) Clear selectedCards and currentSpreadType
+  selectedCards = [];
+  currentSpreadType = "";
+
+  // 6) Optionally hide the reading panel if it’s open
+  hideReadingPanel();
 }
 
 // CARDS
@@ -1064,10 +1098,13 @@ document.addEventListener("DOMContentLoaded", () => {
   [btnRandomCard, btnThreeCard, btnFiveCard].forEach((button) => {
     if (button) {
       button.addEventListener("click", () => {
-        enableInput();
+        if (codexBrand.innerHTML !== "CUSTOM<br>READING") {
+          enableInput();
+        }
       });
     }
   });
+  
 
   if (inlineSendButton) {
     inlineSendButton.addEventListener("click", handleContextSubmission);
@@ -1159,15 +1196,19 @@ document.addEventListener("DOMContentLoaded", () => {
     navSpreadReadingBtn.addEventListener("click", () => {
       navbar.classList.remove("active");
       appContainer.classList.remove("blurred");
+      resetToolbarState();
       loadContent("/static/default_spread.html", "CODEX<br>TAROT");
     });
   }
+  
 
   if (navCustomReadingBtn) {
     navCustomReadingBtn.addEventListener("click", () => {
       navbar.classList.remove("active");
       appContainer.classList.remove("blurred");
+      resetToolbarState();
       loadContent("/custom_partial", "CUSTOM<br>READING");
+
     });
   }
 
@@ -1175,7 +1216,9 @@ document.addEventListener("DOMContentLoaded", () => {
     navApprenticeBtn.addEventListener("click", () => {
       navbar.classList.remove("active");
       appContainer.classList.remove("blurred");
+      resetToolbarState();
       loadContent("/apprentice_partial", "APPRENTICE<br>MODE");
+
     });
   }
 
