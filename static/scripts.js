@@ -90,6 +90,7 @@ function loadContent(url, brandText) {
           codexBrand.classList.remove("initial-load"); // Remove initial-load class
           codexBrand.classList.add("navigated"); // Add navigated class for top positioning
         }
+        updateButtonText();
         setTimeout(() => {
           globalLoader.classList.add("hidden"); // Hide loader
           contentArea.style.opacity = "1"; // Fade in new content
@@ -277,16 +278,31 @@ function debounce(func, delay) {
 // Button text logic
 function updateButtonText() {
   const breakpoint = 768;
-  if (window.innerWidth <= breakpoint) {
-    btnRandomCard.textContent = buttonTextStates.random.short;
-    btnThreeCard.textContent = buttonTextStates.three.short;
-    btnFiveCard.textContent = buttonTextStates.five.short;
+  if (codexBrand && codexBrand.innerHTML === "CUSTOM<br>SPREAD") {
+    // Custom Spread mode: change full texts to new labels
+    if (window.innerWidth <= breakpoint) {
+      btnRandomCard.textContent = "SINGLE";
+      btnThreeCard.textContent = "3 CARDS";
+      btnFiveCard.textContent = "5 CARDS";
+    } else {
+      btnRandomCard.textContent = "SINGLE SPREAD";
+      btnThreeCard.textContent = "THREE CARDS SPREAD";
+      btnFiveCard.textContent = "FIVE CARDS SPREAD";
+    }
   } else {
-    btnRandomCard.textContent = buttonTextStates.random.full;
-    btnThreeCard.textContent = buttonTextStates.three.full;
-    btnFiveCard.textContent = buttonTextStates.five.full;
+    // Otherwise, use the default buttonTextStates values
+    if (window.innerWidth <= breakpoint) {
+      btnRandomCard.textContent = buttonTextStates.random.short;
+      btnThreeCard.textContent = buttonTextStates.three.short;
+      btnFiveCard.textContent = buttonTextStates.five.short;
+    } else {
+      btnRandomCard.textContent = buttonTextStates.random.full;
+      btnThreeCard.textContent = buttonTextStates.three.full;
+      btnFiveCard.textContent = buttonTextStates.five.full;
+    }
   }
 }
+
 const debouncedUpdateButtonText = debounce(updateButtonText, 200);
 
 /* Input Handling */
@@ -397,7 +413,7 @@ function scaleCards() {
 function sendQuery(queryString, intention) {
   clearUI();
   bottomToolbar.classList.add("hidden");
-  if (codexBrand.innerHTML === "CUSTOM<br>READING") {
+  if (codexBrand.innerHTML === "CUSTOM<br>SPREAD") {
     cardSelectorContainer.style.display = "none";
   }
 
@@ -416,7 +432,7 @@ function sendQuery(queryString, intention) {
   const finalQuery = `${cardCount} card spread about ${intention}`;
   console.log("Sending query:", finalQuery);
 
-  const cardsToSend = codexBrand.innerHTML === "CUSTOM<br>READING" ? formatSelectedCards(selectedCards) : [];
+  const cardsToSend = codexBrand.innerHTML === "CUSTOM<br>SPREAD" ? formatSelectedCards(selectedCards) : [];
 
   Promise.race([
     fetch("/query", {
@@ -534,7 +550,7 @@ let currentSpreadType = "";
 function showInlineContext(spreadType) {
   currentSpreadType = spreadType;
 
-  if (codexBrand.innerHTML === "CUSTOM<br>READING") {
+  if (codexBrand.innerHTML === "CUSTOM<br>SPREAD") {
     bottomToolbar.classList.add("hidden");
     setTimeout(() => {
       showCardSelectors(spreadType);
@@ -1098,7 +1114,7 @@ document.addEventListener("DOMContentLoaded", () => {
   [btnRandomCard, btnThreeCard, btnFiveCard].forEach((button) => {
     if (button) {
       button.addEventListener("click", () => {
-        if (codexBrand.innerHTML !== "CUSTOM<br>READING") {
+        if (codexBrand.innerHTML !== "CUSTOM<br>SPREAD") {
           enableInput();
         }
       });
@@ -1207,10 +1223,10 @@ document.addEventListener("DOMContentLoaded", () => {
       navbar.classList.remove("active");
       appContainer.classList.remove("blurred");
       resetToolbarState();
-      loadContent("/custom_partial", "CUSTOM<br>READING");
-
+      loadContent("/custom_partial", "CUSTOM<br>SPREAD");
     });
   }
+  
 
   if (navApprenticeBtn) {
     navApprenticeBtn.addEventListener("click", () => {
