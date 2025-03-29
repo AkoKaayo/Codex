@@ -337,7 +337,14 @@ function addUserPrompt(promptText) {
 
   const titleDiv = document.createElement("div");
   titleDiv.classList.add("user-prompt-title");
-  titleDiv.textContent = `${currentSpreadType} Cards Reading`;
+  const isCustom = codexBrand && codexBrand.innerHTML === "CUSTOM<br>SPREAD";
+const labelMap = {
+  "Single": isCustom ? "Custom Single Card" : "Single Spread",
+  "Three": isCustom ? "Custom Three Cards" : "Three Cards Spread",
+  "Five": isCustom ? "Custom Five Cards" : "Five Cards Spread"
+};
+titleDiv.textContent = (labelMap[currentSpreadType] || `${currentSpreadType} Spread`).toUpperCase();
+
 
   const subtitleDiv = document.createElement("div");
   subtitleDiv.classList.add("user-prompt-subtitle");
