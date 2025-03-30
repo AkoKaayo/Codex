@@ -1109,6 +1109,12 @@ button:active:not(:disabled) {
   z-index: 0;
   position: relative;
   bottom: 40px;
+  opacity: 0;
+  transition: opacity 0.6s ease-in-out;
+}
+
+#card-selector-container.active {
+  opacity: 1;
 }
 
 #card-selector-container.active {

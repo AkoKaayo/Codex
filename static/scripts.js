@@ -723,7 +723,7 @@ const cardSelectorTemplate = (position) => `
       </div>
     </div>
     <div class="selector-actions">
-      <button class="back-button" disabled>Back</button>
+      <button class="back-button">Back</button>
       <button class="add-card-button" disabled>Add Selected Card</button>
     </div>
   </div>
@@ -825,58 +825,73 @@ function showCardSelectors(spreadType) {
             addButton.classList.add("enabled");
           }
         } else if (e.target.classList.contains('back-button') && !e.target.disabled) {
-          navigationHistory.pop();
-          const previousStep = navigationHistory[navigationHistory.length - 1];
-          showStep(previousStep);
-          addButton.disabled = true;
-          addButton.classList.remove("enabled");
-          if (previousStep === 'type') {
-            backButton.disabled = true;
+          const currentStep = navigationHistory[navigationHistory.length - 1];
+          if (currentStep === 'type') {
+            // No category selected, go back to spread type selection
+            cardSelectorContainer.classList.remove("active");
+            setTimeout(() => {
+              cardSelectorContainer.style.display = "none";
+              codexBrand.style.display = "block";
+              resetToolbarState();
+              // Clear any selected cards and reset spread type
+              selectedCards = [];
+              currentSpreadType = "";
+            }, 300); // Match the duration of the CSS transition
+          } else {
+            // Existing logic for navigating back through selection steps
+            navigationHistory.pop();
+            const previousStep = navigationHistory[navigationHistory.length - 1];
+            showStep(previousStep);
+            addButton.disabled = true;
+            addButton.classList.remove("enabled");
+            if (previousStep === 'type') {
+              backButton.disabled = true;
+            }
+            delete selector.dataset.selection;
+            delete selector.dataset.minorSuit;
+            delete selector.dataset.courtSuit;
+            const previousStepContainer = selector.querySelector(`[data-step="${previousStep}"]`);
+            previousStepContainer.querySelectorAll(".selector-button").forEach(btn => {
+              btn.classList.remove("selected");
+            });
           }
-          delete selector.dataset.selection;
-          delete selector.dataset.minorSuit;
-          delete selector.dataset.courtSuit;
-          const previousStepContainer = selector.querySelector(`[data-step="${previousStep}"]`);
-          previousStepContainer.querySelectorAll(".selector-button").forEach(btn => {
-            btn.classList.remove("selected");
-          });
         }
       };
 
       const handleAddButtonClick = () => {
         const position = selector.dataset.position;
         let selection = JSON.parse(selector.dataset.selection || "{}");
-      
+
         // If random is selected, generate a specific card
         if (selection.type === "random") {
           selection = getRandomCard(); // Generate specific random card
           selector.dataset.selection = JSON.stringify(selection); // Update dataset
         }
-      
+
         selectedCards = selectedCards.filter((card) => card.position !== position);
         selectedCards.push({ position, ...selection });
-      
+
         const cardName = formatCardName(selection); // Use helper function to format name
-      
+
         // Update UI
         const oldHeading = selector.querySelector("h3");
         if (oldHeading) oldHeading.remove();
-      
+
         const positionH3 = document.createElement("h3");
         positionH3.classList.add("card-position");
         positionH3.textContent = position;
-      
+
         const namePara = document.createElement("p");
         namePara.classList.add("card-name");
         namePara.textContent = cardName; // Show actual card name, not "Random Card"
-      
+
         selector.prepend(namePara);
         selector.prepend(positionH3);
-      
+
         selector.querySelectorAll(".selector-step").forEach(step => step.remove());
         addButton.remove();
         actionsContainer.querySelector(".back-button").remove();
-      
+
         const loadingDiv = document.createElement("div");
         loadingDiv.classList.add("card-loading");
         const spinnerSpan = document.createElement("span");
@@ -884,14 +899,14 @@ function showCardSelectors(spreadType) {
         spinnerSpan.innerText = " ";
         loadingDiv.appendChild(spinnerSpan);
         selector.appendChild(loadingDiv);
-      
+
         const spinnerFrames = ["|", "/", "-", "\\"];
         let index = 0;
         const spinnerId = setInterval(() => {
           spinnerSpan.innerText = spinnerFrames[index];
           index = (index + 1) % spinnerFrames.length;
         }, 200);
-      
+
         // Fetch image with specific card name
         fetch("/get_card_image", {
           method: "POST",
@@ -907,8 +922,7 @@ function showCardSelectors(spreadType) {
           .then(data => {
             clearInterval(spinnerId);
             loadingDiv.remove();
-      
-            // Removed erroneous 'castr'
+
             const cardImageDiv = document.createElement("div");
             cardImageDiv.classList.add("card-image");
             cardImageDiv.setAttribute("data-position", position);
@@ -928,9 +942,9 @@ function showCardSelectors(spreadType) {
             cardImageDiv.style.maxWidth = "";
             cardImageDiv.style.height = "";
             selector.appendChild(cardImageDiv);
-      
+
             selector.appendChild(actionsContainer);
-      
+
             const positions = spreadPositions[currentSpreadType.toLowerCase()] || ["MAIN ACTOR"];
             if (selectedCards.length === positions.length) {
               bottomToolbar.classList.remove("hidden");
@@ -945,14 +959,14 @@ function showCardSelectors(spreadType) {
             console.error("Error fetching card image:", error);
             clearInterval(spinnerId);
             loadingDiv.remove();
-      
+
             const errorDiv = document.createElement("div");
             errorDiv.classList.add("card-error");
             errorDiv.textContent = "Unable to load card image.";
             selector.appendChild(errorDiv);
-      
+
             selector.appendChild(actionsContainer);
-      
+
             const positions = spreadPositions[currentSpreadType.toLowerCase()] || ["MAIN ACTOR"];
             if (selectedCards.length === positions.length) {
               bottomToolbar.classList.remove("hidden");
@@ -971,11 +985,6 @@ function showCardSelectors(spreadType) {
   } catch (error) {
     console.error("Error in showCardSelectors:", error);
   }
-}
-// *** MODIFIED CODE END ***
-
-function handleInputChange() {
-  handleSendButtonState();
 }
 
 function capitalizeFirstLetter() {
@@ -1180,19 +1189,18 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Input and UI initialization
-  if (intentionInput) {
-    intentionInput.addEventListener("input", handleSendButtonState);
-    intentionInput.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") {
-        e.preventDefault();
-        handleContextSubmission();
-      }
-    });
-    // *** MODIFIED CODE START: Fix typo ***
-    intentionInput.addEventListener("input", handleInputChange);
-    intentionInput.addEventListener("input", capitalizeFirstLetter);
-    // *** MODIFIED CODE END ***
-  }
+if (intentionInput) {
+  intentionInput.addEventListener("input", handleSendButtonState);
+  intentionInput.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      handleContextSubmission();
+    }
+  });
+  // *** MODIFIED CODE START: Fix typo ***
+  intentionInput.addEventListener("input", capitalizeFirstLetter);
+  // *** MODIFIED CODE END ***
+}
 
   hideReadingPanel();
   updateButtonText();
