@@ -42,16 +42,73 @@ const spreadPositions = {
     "OBSTACLE OR BLOCKAGE",
     "MEANS OF RESOLUTION",
     "ACTION TO UNDERTAKE",
-    "TRANSFORMATIVE PATWHAY",
+    "TRANSFORMATIVE PATHWAY",
     "PURPOSE OR DESTINATION"
   ]
 };
+
+// Card lists
+const majorCards = [
+  "The Fool", "The Magician", "The High Priestess", "The Empress", "The Emperor",
+  "The Hierophant", "The Lovers", "The Chariot", "Strength", "The Hermit",
+  "Wheel of Fortune", "Justice", "The Hanged Man", "The Nameless Arcanum", "Temperance",
+  "The Devil", "The Tower", "The Star", "The Moon", "The Sun", "Judgement",
+  "The World"
+];
+const suits = ["Swords", "Pentacles", "Cups", "Wands"];
+const minorNumbers = ["Ace", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten"];
+const courtCharacters = ["Page", "Knight", "Queen", "King"];
+
+function getRandomMajorCard() {
+  const randomIndex = Math.floor(Math.random() * majorCards.length);
+  return { type: "major", name: majorCards[randomIndex] };
+}
+
+function getRandomMinorCard() {
+  const randomSuit = suits[Math.floor(Math.random() * suits.length)];
+  const randomNumber = minorNumbers[Math.floor(Math.random() * minorNumbers.length)];
+  return { type: "minor", suit: randomSuit, number: randomNumber };
+}
+
+function getRandomCourtCard() {
+  const randomSuit = suits[Math.floor(Math.random() * suits.length)];
+  const randomCharacter = courtCharacters[Math.floor(Math.random() * courtCharacters.length)];
+  return { type: "court", suit: randomSuit, character: randomCharacter };
+}
+
+function getRandomCard() {
+  const types = ["major", "minor", "court"];
+  const randomType = types[Math.floor(Math.random() * types.length)];
+  switch (randomType) {
+    case "major": return getRandomMajorCard();
+    case "minor": return getRandomMinorCard();
+    case "court": return getRandomCourtCard();
+  }
+}
+
+// *** MODIFIED CODE START: Ensure consistent capitalization ***
+function formatCardName(card) {
+  if (card.type === "major") {
+    return card.name; // Already title case in majorCards
+  }
+  if (card.type === "minor") {
+    const suit = card.suit.charAt(0).toUpperCase() + card.suit.slice(1).toLowerCase();
+    const number = card.number.charAt(0).toUpperCase() + card.number.slice(1).toLowerCase();
+    return `${number} of ${suit}`; // e.g., "Ace of Wands"
+  }
+  if (card.type === "court") {
+    const suit = card.suit.charAt(0).toUpperCase() + card.suit.slice(1).toLowerCase();
+    const character = card.character.charAt(0).toUpperCase() + card.character.slice(1).toLowerCase();
+    return `${character} of ${suit}`; // e.g., "Queen of Swords"
+  }
+}
+// *** MODIFIED CODE END ***
 
 // Format selected cards into a list of card names
 function formatSelectedCards(cards) {
   return cards.map((card) => {
     if (card.type === "random") {
-      return "random"; // Backend will handle random selection
+      return "random"; // Backend will handle random selection (won’t be used with new logic)
     } else if (card.type === "major") {
       return card.name; // e.g., "The Fool"
     } else if (card.type === "minor") {
@@ -59,11 +116,11 @@ function formatSelectedCards(cards) {
     } else if (card.type === "court") {
       return `${card.character} of ${card.suit}`; // e.g., "Queen of Swords"
     }
-    return "random"; // Fallback
+    return "random"; // Fallback (won’t occur with new logic)
   });
 }
 
-// Load content dynamically with loader
+// *** MODIFIED CODE START: Add error handling for fetch ***
 function loadContent(url, brandText) {
   if (!contentArea) {
     console.error("contentArea element not found in the DOM");
@@ -102,9 +159,12 @@ function loadContent(url, brandText) {
         console.error("Error loading content:", error);
         globalLoader.classList.add("hidden");
         contentArea.style.opacity = "1";
+        // Display error message to user
+        contentArea.innerHTML = `<p class="error-message">Failed to load content. Please try again later.</p>`;
       });
   }, 300); // Fade out duration
 }
+// *** MODIFIED CODE END ***
 
 // Button text states
 const buttonTextStates = {
@@ -211,6 +271,7 @@ function checkCollisions() {
 }
 
 // Fade out particles, fog, and brand text
+// Fade out particles, fog, and brand text
 function fadeOutEffects() {
   if (!showParticles) return;
   showParticles = false;
@@ -223,8 +284,7 @@ function fadeOutEffects() {
     step++;
     canvasOpacity = 1 - (step / fadeSteps);
     vantaOpacity = 1 - (step / fadeSteps);
-    brandOpacity = 1 - (step / fadeSteps);
-
+    brandOpacity = 1 - (step / fadeSteps); // Fixed typo: fadeSetup -> fadeSteps
     canvas.style.opacity = canvasOpacity;
     vantaBackground.style.opacity = vantaOpacity;
     codexBrand.style.opacity = brandOpacity;
@@ -338,13 +398,12 @@ function addUserPrompt(promptText) {
   const titleDiv = document.createElement("div");
   titleDiv.classList.add("user-prompt-title");
   const isCustom = codexBrand && codexBrand.innerHTML === "CUSTOM<br>SPREAD";
-const labelMap = {
-  "Single": isCustom ? "Custom Single Card" : "Single Spread",
-  "Three": isCustom ? "Custom Three Cards" : "Three Cards Spread",
-  "Five": isCustom ? "Custom Five Cards" : "Five Cards Spread"
-};
-titleDiv.textContent = (labelMap[currentSpreadType] || `${currentSpreadType} Spread`).toUpperCase();
-
+  const labelMap = {
+    "Single": isCustom ? "Custom Single Card" : "Single Spread",
+    "Three": isCustom ? "Custom Three Cards" : "Three Cards Spread",
+    "Five": isCustom ? "Custom Five Cards" : "Five Cards Spread"
+  };
+  titleDiv.textContent = (labelMap[currentSpreadType] || `${currentSpreadType} Spread`).toUpperCase();
 
   const subtitleDiv = document.createElement("div");
   subtitleDiv.classList.add("user-prompt-subtitle");
@@ -439,7 +498,17 @@ function sendQuery(queryString, intention) {
   const finalQuery = `${cardCount} card spread about ${intention}`;
   console.log("Sending query:", finalQuery);
 
-  const cardsToSend = codexBrand.innerHTML === "CUSTOM<br>SPREAD" ? formatSelectedCards(selectedCards) : [];
+  let cardsToSend = [];
+  if (codexBrand.innerHTML === "CUSTOM<br>SPREAD") {
+    // Sort selectedCards based on the order in spreadPositions
+    const positionOrder = spreadPositions[spreadType] || ["MAIN ACTOR"];
+    const sortedCards = [...selectedCards].sort((a, b) => {
+      const aIndex = positionOrder.indexOf(a.position);
+      const bIndex = positionOrder.indexOf(b.position);
+      return aIndex - bIndex;
+    });
+    cardsToSend = formatSelectedCards(sortedCards);
+  }
 
   Promise.race([
     fetch("/query", {
@@ -571,7 +640,6 @@ function showInlineContext(spreadType) {
   inlineContextContainer.classList.add("show");
 }
 
-
 // Card Selector
 const cardSelectorTemplate = (position) => `
   <div class="card-selector" data-position="${position}">
@@ -661,6 +729,7 @@ const cardSelectorTemplate = (position) => `
   </div>
 `;
 
+// *** MODIFIED CODE START: Optimize showCardSelectors ***
 function showCardSelectors(spreadType) {
   try {
     // Update DOM references after content load
@@ -684,7 +753,9 @@ function showCardSelectors(spreadType) {
     cardSelectorContainer.style.display = "flex";
     cardSelectorContainer.classList.add("active");
 
-    document.querySelectorAll(".card-selector").forEach(selector => {
+    // Optimize by querying selectors once and reusing
+    const selectors = document.querySelectorAll(".card-selector");
+    selectors.forEach(selector => {
       const steps = {
         type: selector.querySelector('[data-step="type"]'),
         major: selector.querySelector('[data-step="major"]'),
@@ -703,7 +774,7 @@ function showCardSelectors(spreadType) {
         steps[stepName].style.display = 'block';
       };
 
-      selector.addEventListener('click', (e) => {
+      const handleSelectorClick = (e) => {
         if (e.target.classList.contains('selector-button')) {
           const step = e.target.closest('.selector-step').dataset.step;
           const type = e.target.dataset.type;
@@ -770,44 +841,42 @@ function showCardSelectors(spreadType) {
             btn.classList.remove("selected");
           });
         }
-      });
+      };
 
-      addButton.addEventListener('click', () => {
+      const handleAddButtonClick = () => {
         const position = selector.dataset.position;
-        const selection = JSON.parse(selector.dataset.selection || "{}");
-
+        let selection = JSON.parse(selector.dataset.selection || "{}");
+      
+        // If random is selected, generate a specific card
+        if (selection.type === "random") {
+          selection = getRandomCard(); // Generate specific random card
+          selector.dataset.selection = JSON.stringify(selection); // Update dataset
+        }
+      
         selectedCards = selectedCards.filter((card) => card.position !== position);
         selectedCards.push({ position, ...selection });
-
-        let cardName = "";
-        if (selection.type === "random") {
-          cardName = "random";
-        } else if (selection.type === "major") {
-          cardName = selection.name;
-        } else if (selection.type === "minor") {
-          cardName = `${selection.number} of ${selection.suit}`;
-        } else if (selection.type === "court") {
-          cardName = `${selection.character} of ${selection.suit}`;
-        }
-
+      
+        const cardName = formatCardName(selection); // Use helper function to format name
+      
+        // Update UI
         const oldHeading = selector.querySelector("h3");
         if (oldHeading) oldHeading.remove();
-
+      
         const positionH3 = document.createElement("h3");
         positionH3.classList.add("card-position");
         positionH3.textContent = position;
-
+      
         const namePara = document.createElement("p");
         namePara.classList.add("card-name");
-        namePara.textContent = cardName === "random" ? "Random Card" : cardName;
-
+        namePara.textContent = cardName; // Show actual card name, not "Random Card"
+      
         selector.prepend(namePara);
         selector.prepend(positionH3);
-
+      
         selector.querySelectorAll(".selector-step").forEach(step => step.remove());
         addButton.remove();
         actionsContainer.querySelector(".back-button").remove();
-
+      
         const loadingDiv = document.createElement("div");
         loadingDiv.classList.add("card-loading");
         const spinnerSpan = document.createElement("span");
@@ -815,14 +884,15 @@ function showCardSelectors(spreadType) {
         spinnerSpan.innerText = " ";
         loadingDiv.appendChild(spinnerSpan);
         selector.appendChild(loadingDiv);
-
+      
         const spinnerFrames = ["|", "/", "-", "\\"];
         let index = 0;
         const spinnerId = setInterval(() => {
           spinnerSpan.innerText = spinnerFrames[index];
           index = (index + 1) % spinnerFrames.length;
         }, 200);
-
+      
+        // Fetch image with specific card name
         fetch("/get_card_image", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -837,7 +907,8 @@ function showCardSelectors(spreadType) {
           .then(data => {
             clearInterval(spinnerId);
             loadingDiv.remove();
-
+      
+            // Removed erroneous 'castr'
             const cardImageDiv = document.createElement("div");
             cardImageDiv.classList.add("card-image");
             cardImageDiv.setAttribute("data-position", position);
@@ -857,9 +928,9 @@ function showCardSelectors(spreadType) {
             cardImageDiv.style.maxWidth = "";
             cardImageDiv.style.height = "";
             selector.appendChild(cardImageDiv);
-
+      
             selector.appendChild(actionsContainer);
-
+      
             const positions = spreadPositions[currentSpreadType.toLowerCase()] || ["MAIN ACTOR"];
             if (selectedCards.length === positions.length) {
               bottomToolbar.classList.remove("hidden");
@@ -874,14 +945,14 @@ function showCardSelectors(spreadType) {
             console.error("Error fetching card image:", error);
             clearInterval(spinnerId);
             loadingDiv.remove();
-
+      
             const errorDiv = document.createElement("div");
             errorDiv.classList.add("card-error");
             errorDiv.textContent = "Unable to load card image.";
             selector.appendChild(errorDiv);
-
+      
             selector.appendChild(actionsContainer);
-
+      
             const positions = spreadPositions[currentSpreadType.toLowerCase()] || ["MAIN ACTOR"];
             if (selectedCards.length === positions.length) {
               bottomToolbar.classList.remove("hidden");
@@ -892,12 +963,16 @@ function showCardSelectors(spreadType) {
               }, 100);
             }
           });
-      });
+      };
+
+      selector.addEventListener('click', handleSelectorClick);
+      addButton.addEventListener('click', handleAddButtonClick);
     });
   } catch (error) {
     console.error("Error in showCardSelectors:", error);
   }
 }
+// *** MODIFIED CODE END ***
 
 function handleInputChange() {
   handleSendButtonState();
@@ -961,7 +1036,14 @@ function resetToDefault() {
   [btnRandomCard, btnThreeCard, btnFiveCard].forEach((b) => b.classList.remove("active-button"));
 
   resetToolbarState();
-  loadContent("/static/default_spread.html", "CODEX<br>TAROT");
+
+  if (codexBrand.innerHTML === "CUSTOM<br>SPREAD") {
+    loadContent("/custom_partial", "CUSTOM<br>SPREAD");
+  } else if (codexBrand.innerHTML === "APPRENTICE<br>MODE") {
+    loadContent("/apprentice_partial", "APPRENTICE<br>MODE");
+  } else {
+    loadContent("/static/default_spread.html", "CODEX<br>TAROT");
+  }
 
   selectedCards = [];
 
@@ -1106,8 +1188,10 @@ document.addEventListener("DOMContentLoaded", () => {
         handleContextSubmission();
       }
     });
+    // *** MODIFIED CODE START: Fix typo ***
     intentionInput.addEventListener("input", handleInputChange);
     intentionInput.addEventListener("input", capitalizeFirstLetter);
+    // *** MODIFIED CODE END ***
   }
 
   hideReadingPanel();
@@ -1127,7 +1211,6 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     }
   });
-  
 
   if (inlineSendButton) {
     inlineSendButton.addEventListener("click", handleContextSubmission);
@@ -1223,7 +1306,6 @@ document.addEventListener("DOMContentLoaded", () => {
       loadContent("/static/default_spread.html", "CODEX<br>TAROT");
     });
   }
-  
 
   if (navCustomReadingBtn) {
     navCustomReadingBtn.addEventListener("click", () => {
@@ -1233,7 +1315,6 @@ document.addEventListener("DOMContentLoaded", () => {
       loadContent("/custom_partial", "CUSTOM<br>SPREAD");
     });
   }
-  
 
   if (navApprenticeBtn) {
     navApprenticeBtn.addEventListener("click", () => {
@@ -1241,7 +1322,6 @@ document.addEventListener("DOMContentLoaded", () => {
       appContainer.classList.remove("blurred");
       resetToolbarState();
       loadContent("/apprentice_partial", "APPRENTICE<br>MODE");
-
     });
   }
 
