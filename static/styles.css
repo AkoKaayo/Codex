@@ -94,6 +94,7 @@ h3 {
 }
 
 #content-area {
+  height: 100vh;
   transition: opacity 0.3s ease;
 }
 
@@ -111,7 +112,7 @@ h3 {
 }
 
 #card-area.panel-open {
-  margin-right: 400px;
+  z-index: 0;
 }
 
 /* Brand */
@@ -340,23 +341,23 @@ button:active:not(:disabled) {
   border-top-left-radius: 36px;
   border-top-right-radius: 0;
   position: fixed;
-  top: 0;
   right: -441px;
   width: 400px;
   height: 100vh;
   background-color: var(--dark-gray);
-  transition: right 0.8s ease-in-out, opacity 0.8s ease;
+  transition: right 0.8s ease-in-out, opacity 0.8s ease, bottom 0.6s ease;
   z-index: 1;
-  display: flex;
+  display: none; /* Changed from flex */
   flex-direction: column;
   padding: 0 20px;
   opacity: 0;
+  z-index: 555;
 }
-
 #reading-panel.active {
   right: 0;
   opacity: 1;
   padding-bottom: 20px;
+  display: flex; /* Show when active */
 }
 
 #close-panel {
@@ -516,15 +517,20 @@ button:active:not(:disabled) {
 /* RESPONSIVE ADJUSTMENTS */
 @media (max-width: 768px) {
   #card-area {
-    align-items: flex-start;
-    height: auto;
-    min-height: 200px;
-    overflow: hidden;
-    position: sticky;
-    top: 0;
-    margin-right: 0;
-    align-items: center; /* Center horizontally */
+    align-items: center; /* Adjusted to center for consistency */
+    height: auto; /* Keep as is */
+    min-height: 200px; /* Keep as is */
+    overflow: visible; /* Ensure cards aren’t clipped */
+    position: relative; /* Change from sticky to relative for better flow */
+    top: unset; /* Remove sticky top positioning */
+    margin-right: 0; /* Keep as is */
   }
+
+  #app-container.panel-active #content-area {
+    min-height: calc(100vh - 50vh);
+    overflow-y: auto;
+  }
+
   .selector-step .selector-button {
     height: 48px;
   }
@@ -538,53 +544,60 @@ button:active:not(:disabled) {
     border: 1px solid var(--gray);
     color: var(--gray);
     opacity: 0.5;
-}
-.selector-actions .back-button:disabled:hover,
-.selector-actions .add-card-button:disabled:hover {
+  }
+  .selector-actions .back-button:disabled:hover,
+  .selector-actions .add-card-button:disabled:hover {
     cursor: not-allowed;
-}
+  }
+  
   #card-images-container {
-    flex-wrap: nowrap;
-    justify-content: center;
-    overflow-x: auto;
+  flex-wrap: nowrap;
+  justify-content: center;
+  max-width: 100%; /* Prevent overflow */
   }
   .card-image {
-    max-width: 200px;
-    max-height: 300px;
+  max-width: 150px !important;
+  max-height: 250px;
+  margin: 5px; /* Reduced margin for better fit */
   }
+  
   #reading-panel {
-    top: auto;
-    bottom: -100%;
-    width: auto;
-    height: auto;
-    border-top-left-radius: 36px;
-    border-top-right-radius: 36px;
-    margin-top: 20px;
-    transition: bottom 0.6s ease;
+  left: 0;
+  bottom: -50vh;
+  width: auto;
+  height: auto;
+  max-height: 50vh;
+  border-top-left-radius: 36px;
+  border-top-right-radius: 36px;
+  transition: bottom 0.6s ease, opacity 0.6s ease;
+  overflow-y: auto;
+  opacity: 0;
   }
+  
   #reading-panel.active {
-    position: relative;
-    bottom: 0;
-    display: flex;
+  bottom: 0;
+  opacity: 1;
+  display: flex;
   }
+
   #card-area.panel-open {
-    margin-right: 0;
+    margin-bottom: 50vh;
   }
   #bottom-toolbar {
     bottom: 40px;
-}
-#toolbar-container {
+  }
+  #toolbar-container {
     width: 85%; /* Ensure it fits the screen */
     padding: 20px;
-}
-#toolbar-buttons {
+  }
+  #toolbar-buttons {
     flex-wrap: wrap; /* Allow buttons to wrap if needed */
     gap: 10px; /* Reduce gap for smaller screens */
-}
-#toolbar-buttons button {
+  }
+  #toolbar-buttons button {
     font-size: 0.7rem; /* Smaller font size */
     padding: 0.3rem 0.6rem; /* Smaller padding */
-}
+  }
 }
 
 #nav-toggle {

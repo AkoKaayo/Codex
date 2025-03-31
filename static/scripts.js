@@ -459,9 +459,9 @@ function scaleCards() {
     const numCards = cardImages.length;
     let maxCardWidth;
 
-    if (window.innerWidth <= 900) {
-      const totalMarginPerCard = 20;
-      maxCardWidth = Math.min((containerWidth - (numCards * totalMarginPerCard)) / numCards, 200);
+    if (window.innerWidth <= 768) { // Adjusted breakpoint
+      const totalMarginPerCard = 10; // Reduced from 20
+      maxCardWidth = Math.min((containerWidth - (numCards * totalMarginPerCard)) / numCards, 150); // Cap at 150px
     } else {
       const totalMarginPerCard = 20;
       maxCardWidth = Math.min((containerWidth - (numCards * totalMarginPerCard)) / numCards, 300);
@@ -532,7 +532,8 @@ function sendQuery(queryString, intention) {
 
       if (data.cards && data.cards.length > 0) {
         addCardImages(data.cards, spreadType);
-        scaleCards();
+        setTimeout(scaleCards, 100);
+
       } else {
         console.warn("No cards in response:", data);
       }
@@ -1020,6 +1021,7 @@ function showReadingPanel() {
   bottomToolbar.classList.add("hidden");
   shuffleButton.style.display = "none";
   shuffleButton.disabled = true;
+  appContainer.classList.add("panel-active");
 }
 
 function hideReadingPanel() {
@@ -1031,6 +1033,7 @@ function hideReadingPanel() {
   shuffleButton.disabled = true;
   resizeCanvas();
   updateVantaDimensions();
+  appContainer.classList.remove("panel-active");
 }
 
 /* Reset to default UI state */
