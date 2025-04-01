@@ -328,7 +328,7 @@ button:active:not(:disabled) {
   height: 100vh;
   background-color: var(--dark-gray);
   transition: right 0.8s ease-in-out, opacity 0.8s ease;
-  z-index: 1;
+  z-index: 555;
   display: flex;
   flex-direction: column;
   padding: 0 20px;
@@ -533,20 +533,29 @@ button:active:not(:disabled) {
   }
   
   #reading-panel {
-    top: auto;
-    bottom: -100%;
-    width: auto;
-    height: auto;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
     border-top-left-radius: 36px;
     border-top-right-radius: 36px;
-    margin-top: 20px;
-    transition: bottom 0.6s ease;
+    transform: translateY(100%); /* hides offscreen */
+    transition: transform 0.6s ease;
   }
+  
   #reading-panel.active {
-    position: relative;
-    bottom: 0;
-    display: flex;
+    transform: translateY(0); /* slides up into view */
+    top: 45%;
+    width: auto;
   }
+  
+  #reading-text-container.visible {
+    opacity: 1;
+    height: auto;
+    max-height: none;
+    overflow: auto;
+  }
+
   #card-area.panel-open {
     margin-right: 0;
   }
