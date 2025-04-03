@@ -49,8 +49,8 @@
       <button id="nav-close" aria-label="Close navigation">←</button>
     </div>
     <div id="nav-links">
-      <button id="nav-spread-reading-btn">SPREAD READING</button>
-      <button id="nav-custom-reading-btn">CUSTOM READING</button>
+      <button id="nav-spread-reading-btn">QUICK READ</button>
+      <button id="nav-custom-reading-btn">CUSTOM SPREAD</button>
       <button id="nav-apprentice-btn" disabled>APPRENTICE MODE (COMING SOON)</button>
       <p class="nav-description">Learn Marseilles Tarot and explore card meanings with our upcoming learning mode.</p>
     </div>
@@ -175,5 +175,23 @@
       "keywords": "Marseilles Tarot, Jodorowsky-Camoin deck, free tarot readings, learn tarot, custom tarot spreads"
     }
     </script>
+    <script>
+      function setSpreadContent() {
+          const appContainer = document.getElementById('app-container');
+          if (appContainer) {
+              window.spreadContent = appContainer.innerHTML;
+          }
+      }
+      setSpreadContent();
+      document.addEventListener('DOMContentLoaded', () => {
+          if (!window.spreadContent) setSpreadContent();
+      });
+      window.addEventListener('load', () => {
+          if (!window.spreadContent) setSpreadContent();
+      });
+      setTimeout(() => {
+          if (!window.spreadContent) setSpreadContent();
+      }, 2000);
+  </script>
 </body>
 </html>
