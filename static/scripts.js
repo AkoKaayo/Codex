@@ -436,24 +436,27 @@ function bindEventListeners(attempts = 5, delay = 200) {
                     const backButton = selector.querySelector('.selector-actions .back-button');
                     const actionsContainer = selector.querySelector(".selector-actions");
                     const navigationHistory = ['type'];
-
+                
+                    // Enable the back button by default
+                    backButton.disabled = false;
+                
                     const showStep = (stepName) => {
                         Object.values(steps).forEach(step => step.style.display = 'none');
                         steps[stepName].style.display = 'block';
                     };
-
+                
                     const handleSelectorClick = (e) => {
                         if (e.target.classList.contains('selector-button')) {
                             const step = e.target.closest('.selector-step').dataset.step;
                             const type = e.target.dataset.type;
                             const value = e.target.dataset.value;
-
+                
                             const stepContainer = e.target.closest(".selector-step");
                             stepContainer.querySelectorAll(".selector-button").forEach((btn) => {
                                 btn.classList.remove("selected");
                             });
                             e.target.classList.add("selected");
-
+                
                             if (step === 'type') {
                                 navigationHistory.push(
                                     type === 'major' ? 'major'
@@ -467,7 +470,6 @@ function bindEventListeners(attempts = 5, delay = 200) {
                                     : type === 'court' ? 'courtSuit'
                                     : 'type'
                                 );
-                                backButton.disabled = false;
                                 if (type === 'random') {
                                     selector.dataset.selection = JSON.stringify({ type: "random" });
                                     addButton.disabled = false;
@@ -503,170 +505,162 @@ function bindEventListeners(attempts = 5, delay = 200) {
                                 addButton.classList.add("enabled");
                             }
                         } else if (e.target.classList.contains('back-button') && !e.target.disabled) {
-                            navigationHistory.pop();
-                            const previousStep = navigationHistory[navigationHistory.length - 1];
-                            showStep(previousStep);
-                            addButton.disabled = true;
-                            addButton.classList.remove("enabled");
-                            if (previousStep === 'type') {
-                                backButton.disabled = true;
+                            if (navigationHistory.length === 1) {
+                                const cardSelectorContainer = document.getElementById("card-selector-container");
+                                const bottomToolbar = document.getElementById("bottom-toolbar");
+                                const inlineContextContainer = document.getElementById("inline-context-container");
+                
+                                if (cardSelectorContainer) {
+                                    cardSelectorContainer.classList.remove("active");
+                                    cardSelectorContainer.style.opacity = "0";
+                                    setTimeout(() => {
+                                        cardSelectorContainer.style.display = "none";
+                                    }, 500);
+                                }
+                
+                                if (bottomToolbar) {
+                                    bottomToolbar.classList.remove("hidden");
+                                }
+                
+                                if (inlineContextContainer) {
+                                    inlineContextContainer.classList.remove("show");
+                                }
+                            } else {
+                                navigationHistory.pop();
+                                const previousStep = navigationHistory[navigationHistory.length - 1];
+                                showStep(previousStep);
+                                addButton.disabled = true;
+                                addButton.classList.remove("enabled");
+                                delete selector.dataset.selection;
+                                delete selector.dataset.minorSuit;
+                                delete selector.dataset.courtSuit;
+                                const previousStepContainer = selector.querySelector(`[data-step="${previousStep}"]`);
+                                previousStepContainer.querySelectorAll(".selector-button").forEach(btn => {
+                                    btn.classList.remove("selected");
+                                });
                             }
-                            delete selector.dataset.selection;
-                            delete selector.dataset.minorSuit;
-                            delete selector.dataset.courtSuit;
-                            const previousStepContainer = selector.querySelector(`[data-step="${previousStep}"]`);
-                            previousStepContainer.querySelectorAll(".selector-button").forEach(btn => {
-                                btn.classList.remove("selected");
-                            });
                         }
                     };
-
+                
                     const handleAddButtonClick = () => {
-                      const position = selector.dataset.position;
-                      let selection = JSON.parse(selector.dataset.selection || "{}");
-                  
-                      // If it wasn't random, add to selectedCards immediately
-                      if (selection.type !== "random") {
-                          selectedCards = selectedCards.filter((card) => card.position !== position);
-                          selectedCards.push({ position, ...selection });
-                      }
-                  
-                      // Figure out the "friendly" name to display
-                      let cardName = "";
-                      if (selection.type === "random") {
-                          cardName = "random";
-                      } else if (selection.type === "major") {
-                          cardName = selection.name;
-                      } else if (selection.type === "minor") {
-                          cardName = `${selection.number} of ${selection.suit}`;
-                      } else if (selection.type === "court") {
-                          cardName = `${selection.character} of ${selection.suit}`;
-                      }
-                  
-                      // UI updates
-                      const oldHeading = selector.querySelector("h3");
-                      if (oldHeading) oldHeading.remove();
-                  
-                      const positionH3 = document.createElement("h3");
-                      positionH3.classList.add("card-position");
-                      positionH3.textContent = position;
-                  
-                      const namePara = document.createElement("p");
-                      namePara.classList.add("card-name");
-                      namePara.textContent = cardName === "random" ? "Random Card" : cardName;
-                  
-                      selector.prepend(namePara);
-                      selector.prepend(positionH3);
-                  
-                      selector.querySelectorAll(".selector-step").forEach(step => step.remove());
-                      addButton.remove();
-                      actionsContainer.querySelector(".back-button").remove();
-                  
-                      const loadingDiv = document.createElement("div");
-                      loadingDiv.classList.add("card-loading");
-                      const spinnerSpan = document.createElement("span");
-                      spinnerSpan.classList.add("spinner");
-                      spinnerSpan.innerText = " ";
-                      loadingDiv.appendChild(spinnerSpan);
-                      selector.appendChild(loadingDiv);
-                  
-                      const spinnerFrames = ["|", "/", "-", "\\"];
-                      let index = 0;
-                      const spinnerId = setInterval(() => {
-                          spinnerSpan.innerText = spinnerFrames[index];
-                          index = (index + 1) % spinnerFrames.length;
-                      }, 400);
-                  
-                      // Fetch the card image
-                      fetch("/get_card_image", {
-                          method: "POST",
-                          headers: { "Content-Type": "application/json" },
-                          body: JSON.stringify({ card_name: cardName })
-                      })
-                      .then(response => {
-                          if (!response.ok) {
-                              throw new Error("Failed to fetch card image");
-                          }
-                          return response.json();
-                      })
-                      .then(data => {
-                          clearInterval(spinnerId);
-                          loadingDiv.remove();
-                  
-                          // If this was a random selection, update selectedCards with the real card
-                          if (selection.type === "random") {
-                              selectedCards = selectedCards.filter((card) => card.position !== position);
-                              selectedCards.push({ position, type: "major", name: data.name });
-                              namePara.textContent = data.name; // Update the displayed name
-                          }
-                  
-                          const cardImageDiv = document.createElement("div");
-                          cardImageDiv.classList.add("card-image");
-                          cardImageDiv.setAttribute("data-position", position);
-                          cardImageDiv.setAttribute("data-name", data.name);
-                  
-                          const img = document.createElement("img");
-                          img.src = data.image;
-                          img.alt = data.name;
-                          img.onerror = function() {
-                              console.error("Failed to load image for:", data.name);
-                              this.parentElement.style.maxWidth = "300px";
-                              this.parentElement.innerHTML = "Image failed to load";
-                          };
-                          img.onload = function() {
-                              this.parentElement.style.maxWidth = "";
-                          };
-                          cardImageDiv.appendChild(img);
-                          cardImageDiv.style.maxWidth = "";
-                          cardImageDiv.style.height = "";
-                          selector.appendChild(cardImageDiv);
-                  
-                          selector.appendChild(actionsContainer);
-                  
-                          const positions = spreadPositions[currentSpreadType.toLowerCase()] || ["MAIN ACTOR"];
-                          if (selectedCards.length === positions.length) {
-                              bottomToolbar.classList.remove("hidden");
-                              inlineContextContainer.classList.add("show");
-                              setTimeout(() => {
-                                  enableInput();
-                                  intentionInput.focus();
-                              }, 100);
-                          }
-                      })
-                      .catch(error => {
-                          console.error("Error fetching card image:", error);
-                          clearInterval(spinnerId);
-                          loadingDiv.remove();
-                  
-                          const errorDiv = document.createElement("div");
-                          errorDiv.classList.add("card-error");
-                          errorDiv.textContent = "Unable to load card image.";
-                          selector.appendChild(errorDiv);
-                  
-                          selector.appendChild(actionsContainer);
-                  
-                          const positions = spreadPositions[currentSpreadType.toLowerCase()] || ["MAIN ACTOR"];
-                          if (selectedCards.length === positions.length) {
-                              bottomToolbar.classList.remove("hidden");
-                              inlineContextContainer.classList.add("show");
-                              setTimeout(() => {
-                                  enableInput();
-                                  intentionInput.focus();
-                              }, 100);
+                        const position = selector.dataset.position;
+                        let selection = JSON.parse(selector.dataset.selection || "{}");
+                
+                        if (selection.type !== "random") {
+                            selectedCards = selectedCards.filter((card) => card.position !== position);
+                            selectedCards.push({ position, ...selection });
+                        }
+                
+                        let cardName = "";
+                        if (selection.type === "random") {
+                            cardName = "random";
+                        } else if (selection.type === "major") {
+                            cardName = selection.name;
+                        } else if (selection.type === "minor") {
+                            cardName = `${selection.number} of ${selection.suit}`;
+                        } else if (selection.type === "court") {
+                            cardName = `${selection.character} of ${selection.suit}`;
+                        }
+                
+                        const oldHeading = selector.querySelector("h3");
+                        if (oldHeading) oldHeading.remove();
+                
+                        const positionH3 = document.createElement("h3");
+                        positionH3.classList.add("card-position");
+                        positionH3.textContent = position;
+                
+                        const namePara = document.createElement("p");
+                        namePara.classList.add("card-name");
+                        namePara.textContent = cardName === "random" ? "Random Card" : cardName;
+                
+                        selector.prepend(namePara);
+                        selector.prepend(positionH3);
+                
+                        selector.querySelectorAll(".selector-step").forEach(step => step.remove());
+                        addButton.remove();
+                        actionsContainer.querySelector(".back-button").remove();
+                
+                        const loadingDiv = document.createElement("div");
+                        loadingDiv.classList.add("card-loading");
+                        const spinnerSpan = document.createElement("span");
+                        spinnerSpan.classList.add("spinner");
+                        spinnerSpan.innerText = " ";
+                        loadingDiv.appendChild(spinnerSpan);
+                        selector.appendChild(loadingDiv);
+                
+                        const spinnerFrames = ["|", "/", "-", "\\"];
+                        let index = 0;
+                        const spinnerId = setInterval(() => {
+                            spinnerSpan.innerText = spinnerFrames[index];
+                            index = (index + 1) % spinnerFrames.length;
+                        }, 400);
+                
+                        fetch("/get_card_image", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ card_name: cardName })
+                        })
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error("Failed to fetch card image");
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            clearInterval(spinnerId);
+                            loadingDiv.remove();
+                
+                            if (selection.type === "random") {
+                                selectedCards = selectedCards.filter((card) => card.position !== position);
+                                selectedCards.push({ position, type: "major", name: data.name });
+                                namePara.textContent = data.name;
+                            }
+                
+                            const cardImageDiv = document.createElement("div");
+                            cardImageDiv.classList.add("card-image");
+                            cardImageDiv.setAttribute("data-position", position);
+                            cardImageDiv.setAttribute("data-name", data.name);
+                
+                            const img = document.createElement("img");
+                            img.src = data.image;
+                            img.alt = data.name;
+                            img.onerror = function() {
+                                console.error("Failed to load image for:", data.name);
+                                this.parentElement.style.maxWidth = "300px";
+                                this.parentElement.innerHTML = "Image failed to load";
+                            };
+                            img.onload = function() {
+                                this.parentElement.style.maxWidth = "";
+                            };
+                            cardImageDiv.appendChild(img);
+                            cardImageDiv.style.maxWidth = "";
+                            cardImageDiv.style.height = "";
+                            selector.appendChild(cardImageDiv);
+                
+                            selector.appendChild(actionsContainer);
+                
+                            const positions = spreadPositions[currentSpreadType.toLowerCase()] || ["MAIN ACTOR"];
+                            if (selectedCards.length === positions.length) {
+                                bottomToolbar.classList.remove("hidden");
+                                inlineContextContainer.classList.add("show");
+                                setTimeout(() => {
+                                    enableInput();
+                                    intentionInput.focus();
+                                }, 100);
                             }
                         })
                         .catch(error => {
                             console.error("Error fetching card image:", error);
                             clearInterval(spinnerId);
                             loadingDiv.remove();
-
+                
                             const errorDiv = document.createElement("div");
                             errorDiv.classList.add("card-error");
                             errorDiv.textContent = "Unable to load card image.";
                             selector.appendChild(errorDiv);
-
+                
                             selector.appendChild(actionsContainer);
-
+                
                             const positions = spreadPositions[currentSpreadType.toLowerCase()] || ["MAIN ACTOR"];
                             if (selectedCards.length === positions.length) {
                                 bottomToolbar.classList.remove("hidden");
@@ -678,10 +672,10 @@ function bindEventListeners(attempts = 5, delay = 200) {
                             }
                         });
                     };
-
+                
                     selector.removeEventListener('click', handleSelectorClick);
                     addButton.removeEventListener('click', handleAddButtonClick);
-
+                
                     selector.addEventListener('click', handleSelectorClick);
                     addButton.addEventListener('click', handleAddButtonClick);
                 };
@@ -1308,29 +1302,50 @@ function showInlineContext(spreadType) {
 }
 
 function showCardSelectors(spreadType) {
+    console.log('showCardSelectors called with spreadType:', spreadType);
+
     const cardSelectors = document.getElementById("card-selectors");
     const cardSelectorContainer = document.getElementById("card-selector-container");
     const codexBrand = document.getElementById("codex-brand");
     const inlineContextContainer = document.getElementById("inline-context-container");
 
-    if (!cardSelectors || !cardSelectorContainer) return;
+    console.log('cardSelectors:', cardSelectors);
+    console.log('cardSelectorContainer:', cardSelectorContainer);
+
+    if (!cardSelectors || !cardSelectorContainer) {
+        console.log('Missing cardSelectors or cardSelectorContainer, exiting');
+        return;
+    }
 
     cardSelectors.innerHTML = "";
     selectedCards = [];
 
-    if (codexBrand) codexBrand.style.display = "none";
-    if (inlineContextContainer) inlineContextContainer.classList.remove("show");
+    if (codexBrand) {
+        console.log('Hiding codex-brand');
+        codexBrand.style.display = "none";
+    }
+    if (inlineContextContainer) {
+        console.log('Hiding inline-context-container');
+        inlineContextContainer.classList.remove("show");
+    }
 
     const positions = spreadPositions[spreadType.toLowerCase()] || ["MAIN ACTOR"];
+    console.log('Positions for spread:', positions);
+
     positions.forEach((position) => {
         const selectorHtml = cardSelectorTemplate(position);
         cardSelectors.insertAdjacentHTML("beforeend", selectorHtml);
     });
 
-    cardSelectorContainer.style.display = "flex";
+    console.log("Removing inline style from cardSelectorContainer");
+    cardSelectorContainer.removeAttribute("style");
+    
+    console.log("Adding .active class to cardSelectorContainer");
     cardSelectorContainer.classList.add("active");
+    
+    console.log("cardSelectorContainer after changes:", cardSelectorContainer);    
 
-    bindEventListeners(); // Rebind listeners to ensure new selectors have events
+    bindEventListeners();
 }
 
 function handleInputChange() {

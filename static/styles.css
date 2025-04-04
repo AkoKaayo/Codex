@@ -333,6 +333,7 @@ button:active:not(:disabled) {
   flex-direction: column;
   padding: 0 20px;
   opacity: 0;
+  z-index: 555;
 }
 
 #reading-panel.active {
@@ -1111,10 +1112,13 @@ button:active:not(:disabled) {
   z-index: 0;
   position: relative;
   bottom: 40px;
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
 }
 
 #card-selector-container.active {
   display: flex;
+  opacity: 1;
 }
 
 #card-area:has(#card-selector-container.active) #codex-brand {
