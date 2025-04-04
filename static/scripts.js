@@ -5,16 +5,18 @@ let selectedCards = [];
 let vantaEffect = null;
 let isBinding = false; // Prevent concurrent binding calls
 
+const SPINNER_DELAY = 400; // <-- define your spinner speed here
+
 // Spread positions for Custom Spread page
 const spreadPositions = {
     single: ["MAIN ACTOR"],
     three: ["PAST / GENESIS", "PRESENT / ACTUALITY", "FUTURE / REACTION"],
     five: [
-        "OBSTACLE OR BLOCKAGE",
+        "OBSTACLE TO CONQUER",
         "MEANS OF RESOLUTION",
         "ACTION TO UNDERTAKE",
-        "TRANSFORMATIVE PATHWAY",
-        "PURPOSE OR DESTINATION"
+        "PATHWAY OF CHANGE",
+        "PURPOSE AND GOAL"
     ]
 };
 
@@ -27,12 +29,13 @@ const buttonTextStates = {
 
 // --- Loader and Spinner Functions ---
 function showLoader() {
+    stopSpinner();       // Ensure no old spinner is running
     const loader = document.getElementById('global-loader');
     const spinner = document.getElementById('global-spinner');
     spinner.style.fontSize = '8rem';
     loader.style.opacity = '1';
     loader.classList.remove('hidden');
-    startSpinner();
+    startSpinner();      // Begin updating frames
 }
 
 function hideLoader() {
@@ -54,7 +57,7 @@ function startSpinner() {
     spinnerInterval = setInterval(() => {
         spinnerElement.innerText = spinnerFrames[index];
         index = (index + 1) % spinnerFrames.length;
-    }, 400); // Slowed down the spinner as requested
+    }, 400);
 }
 
 function stopSpinner() {
@@ -1489,6 +1492,10 @@ function fadeOutCards() {
 
 // --- Initialization ---
 document.addEventListener("DOMContentLoaded", () => {
+    // 1) Immediately show and spin the main loader
+    showLoader();
+
+    // 2) Initialize VANTA
     vantaEffect = VANTA.FOG({
         el: "#vanta-background",
         mouseControls: true,
@@ -1506,26 +1513,34 @@ document.addEventListener("DOMContentLoaded", () => {
         backgroundAlpha: 0
     });
 
+    // 3) Prepare canvas and particles
     resizeCanvas();
     animateParticles();
 
+    // 4) Inline context container adjustments
     const inlineContextContainer = document.getElementById("inline-context-container");
     if (inlineContextContainer) {
         inlineContextContainer.classList.remove("show");
         inlineContextContainer.style.display = "";
     }
 
+    // 5) Hide reading panel, update button text, disable input, bind events
     hideReadingPanel();
     updateButtonText();
     disableInput();
     bindEventListeners();
 
+    // 6) When the window finishes loading everything
     window.addEventListener("load", () => {
-        stopSpinner();
-        const loader = document.getElementById("global-loader");
-        if (loader) loader.classList.add("hidden");
+        // Give a brief delay so the user can see the spinner,
+        // then stop and hide the loader.
+        setTimeout(() => {
+            stopSpinner();
+            hideLoader();
+        }, 500);
     });
 
+    // 7) Resize / scroll listeners
     window.addEventListener("resize", () => {
         resizeCanvas();
         updateVantaDimensions();

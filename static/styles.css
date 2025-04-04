@@ -124,8 +124,8 @@ h3 {
 }
 
 #codex-brand h1 {
-  font-size: 5rem;
-  line-height: 66px;
+  font-size: 4rem;
+  line-height: 55px;
   color: #000000;
   margin: 0 0 10px 0;
 }
@@ -860,9 +860,9 @@ button:active:not(:disabled) {
 
 /* CARD SELECTOR CONTAINER */
 .card-selector h3 {
-    margin: 20px 0 0 0;
+    margin: 10px 0 0 0;
     text-align: center;
-}
+}   
 
 .selector-step h4 {
   font-family: 'IBM Plex Sans', sans-serif;
