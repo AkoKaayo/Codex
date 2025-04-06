@@ -682,31 +682,6 @@ button:active:not(:disabled) {
   margin: 10px 0 0;
   opacity: 0.7; /* Subtle transparency */
 }
-
-#apprentice-mode-container {
-  display: none;
-  padding: 20px;
-  color: #fff;
-}
-
-#apprentice-mode-container h2 {
-  margin-top: 0;
-}
-
-/* Apprentice Mode Container Transition */
-#apprentice-mode-container {
-  display: none;            /* Hidden by default */
-  opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.8s ease, transform 0.8s ease-in-out;
-}
-
-#apprentice-mode-container.active {
-  display: block;           /* Ensure it's rendered */
-  opacity: 1;
-  transform: translateY(0);
-}
-
  /* Global Loader Styles */
 #global-loader {
   position: fixed;
@@ -1277,4 +1252,425 @@ button:active:not(:disabled) {
     flex: 1;
     height: 48px;
   }
+}
+
+/* Study the Tarot Styles */
+#study-tarot-container {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 60px 20px;
+    position: relative;
+    z-index: 1;
+}
+
+#study-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+#study-header h1 {
+    font-family: 'Sorts Mill Goudy', serif;
+    font-size: 3rem;
+    color: #FFFFFF;
+    line-height: 1.2;
+    margin: 0;
+}
+
+#study-navigation {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 40px;
+    flex-wrap: wrap;
+}
+
+.study-nav-btn {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.9rem;
+    padding: 12px 20px;
+    border-radius: 16px;
+    background-color: transparent;
+    border: 1px solid #787878;
+    color: #787878;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.study-nav-btn.active, .study-nav-btn:hover {
+    background-color: #681D85;
+    border-color: #681D85;
+    color: #FFFFFF;
+}
+
+#study-content {
+    background-color: rgba(21, 21, 21, 0.7);
+    border-radius: 24px;
+    padding: 30px;
+    min-height: 500px;
+}
+
+.study-section {
+    display: none;
+}
+
+.study-section.active {
+    display: block;
+}
+
+.study-section h2 {
+    font-family: 'Sorts Mill Goudy', serif;
+    font-size: 2rem;
+    color: #FFFFFF;
+    margin-top: 0;
+    margin-bottom: 30px;
+    text-align: center;
+}
+
+/* Visual Guide Styles */
+.card-browser {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.filter-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.search-bar {
+    flex: 1;
+    min-width: 200px;
+}
+
+.search-bar input {
+    width: 100%;
+    padding: 10px 15px;
+    border-radius: 16px;
+    border: 1px solid #686868;
+    background-color: rgba(0, 0, 0, 0.3);
+    color: #FFFFFF;
+    font-family: 'IBM Plex Sans', sans-serif;
+}
+
+.filter-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.filter-btn {
+    padding: 8px 15px;
+    border-radius: 12px;
+    font-size: 0.8rem;
+    background-color: transparent;
+    border: 1px solid #686868;
+    color: #787878;
+}
+
+.filter-btn.active {
+    background-color: #681D85;
+    border-color: #681D85;
+    color: #FFFFFF;
+}
+
+.symbol-filters select {
+    padding: 8px 15px;
+    border-radius: 12px;
+    background-color: rgba(0, 0, 0, 0.3);
+    border: 1px solid #686868;
+    color: #FFFFFF;
+    font-family: 'IBM Plex Sans', sans-serif;
+}
+
+.cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.card-item {
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.card-item:hover {
+    transform: translateY(-5px);
+}
+
+.card-item img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+
+.card-item .card-name {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 0.9rem;
+    color: #FFFFFF;
+    margin-top: 8px;
+}
+
+/* Interactive Lessons Styles */
+.modules-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 25px;
+}
+
+.module-card {
+    background-color: rgba(0, 0, 0, 0.3);
+    border-radius: 16px;
+    padding: 20px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.module-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.module-card h3 {
+    font-family: 'Sorts Mill Goudy', serif;
+    font-size: 1.3rem;
+    color: #FFFFFF;
+    margin-top: 0;
+}
+
+.module-card p {
+    font-family: 'IBM Plex Sans', sans-serif;
+    color: #BBBBBB;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.progress-bar {
+    height: 8px;
+    background-color: rgba(104, 29, 133, 0.2);
+    border-radius: 4px;
+    margin: 15px 0;
+    overflow: hidden;
+}
+
+.progress-bar > div {
+    height: 100%;
+    background-color: #681D85;
+    transition: width 0.5s ease;
+}
+
+.start-module-btn {
+    width: 100%;
+    padding: 10px;
+    border-radius: 12px;
+    background-color: #681D85;
+    border: none;
+    color: #FFFFFF;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.start-module-btn:hover {
+    background-color: #8d31b1;
+}
+
+/* Quiz Styles */
+.quiz-difficulty-selector {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.quiz-difficulty-btn {
+    padding: 10px 20px;
+    border-radius: 12px;
+    background-color: transparent;
+    border: 1px solid #686868;
+    color: #787878;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.quiz-difficulty-btn.active {
+    background-color: #681D85;
+    border-color: #681D85;
+    color: #FFFFFF;
+}
+
+.quiz-description {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.quiz-description h3 {
+    font-family: 'Sorts Mill Goudy', serif;
+    font-size: 1.5rem;
+    color: #FFFFFF;
+    margin-bottom: 10px;
+}
+
+.quiz-description p {
+    font-family: 'IBM Plex Sans', sans-serif;
+    color: #BBBBBB;
+    font-size: 1rem;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+#start-quiz-btn {
+    display: block;
+    margin: 0 auto;
+    padding: 12px 30px;
+    border-radius: 16px;
+    background-color: #681D85;
+    border: none;
+    color: #FFFFFF;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#start-quiz-btn:disabled {
+    background-color: #686868;
+    cursor: not-allowed;
+}
+
+#start-quiz-btn:not(:disabled):hover {
+    background-color: #8d31b1;
+}
+
+/* Encyclopedia Styles */
+.encyclopedia-tabs {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 30px;
+    flex-wrap: wrap;
+}
+
+.encyclopedia-tab {
+    padding: 10px 20px;
+    border-radius: 12px;
+    background-color: transparent;
+    border: 1px solid #686868;
+    color: #787878;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.encyclopedia-tab.active {
+    background-color: #681D85;
+    border-color: #681D85;
+    color: #FFFFFF;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+.encyclopedia-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 20px;
+}
+
+.timeline {
+    max-width: 800px;
+    margin: 0 auto;
+    position: relative;
+}
+
+.timeline:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 120px;
+    width: 2px;
+    background-color: #686868;
+}
+
+.timeline-entry {
+    position: relative;
+    margin-bottom: 30px;
+    padding-left: 150px;
+}
+
+.timeline-entry h4 {
+    position: absolute;
+    left: 0;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 1rem;
+    color: #FFFFFF;
+    margin: 0;
+}
+
+.timeline-entry p {
+    font-family: 'IBM Plex Sans', sans-serif;
+    color: #BBBBBB;
+    font-size: 0.9rem;
+    line-height: 1.6;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    #study-navigation {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .filter-controls {
+        flex-direction: column;
+    }
+    
+    .cards-grid {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    }
+    
+    .modules-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .quiz-difficulty-selector {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .encyclopedia-tabs {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .timeline:before {
+        left: 60px;
+    }
+    
+    .timeline-entry {
+        padding-left: 80px;
+    }
+}
+
+/* Card Placeholder for Loading States */
+.card-placeholder {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 50px 0;
+    color: #787878;
+    font-family: 'IBM Plex Sans', sans-serif;
 }

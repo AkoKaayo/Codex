@@ -1,7 +1,7 @@
-from flask import Flask, request, jsonify, render_template, url_for
+from flask import Flask, request, jsonify, render_template, url_for, redirect
 import logging
-import random  # Add this import
-import tarot_reading  # Our new tarot_reading module
+import random
+import tarot_reading
 import os
 
 app = Flask(__name__)
@@ -14,6 +14,11 @@ def index():
 @app.route("/custom")
 def custom():
     return render_template("custom.html")
+
+@app.route("/study")
+def study():
+    """Render the study the tarot page."""
+    return render_template("study.html")
 
 @app.route("/query", methods=["POST"])
 def query():

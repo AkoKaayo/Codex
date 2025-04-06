@@ -1,5 +1,6 @@
 /* DOM References (Global) */
 let isCustomReadingPage = window.location.pathname.includes("/custom");
+let isStudyPage = window.location.pathname.includes("/study");
 let currentSpreadType = "";
 let selectedCards = [];
 let vantaEffect = null;
@@ -134,7 +135,31 @@ function swapContent(target) {
                     }, 1000);
                 })
                 .catch(err => {
+                    console.error('Error loading custom page:', err);
                     appContainer.innerHTML = '<p>Error loading custom reading page. Please try again.</p>';
+                    setTimeout(() => {
+                        appContainer.classList.remove('blurred');
+                        hideLoader();
+                        bindEventListeners();
+                    }, 1000);
+                });
+        } else if (target === 'study') {
+            fetch('/study')
+                .then(response => response.text())
+                .then(html => {
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(html, 'text/html');
+                    appContainer.innerHTML = doc.getElementById('app-container').innerHTML;
+                    isCustomReadingPage = false;
+                    setTimeout(() => {
+                        appContainer.classList.remove('blurred');
+                        hideLoader();
+                        bindEventListeners();
+                    }, 1000);
+                })
+                .catch(err => {
+                    console.error('Error loading study page:', err);
+                    appContainer.innerHTML = '<p>Error loading study page. Please try again.</p>';
                     setTimeout(() => {
                         appContainer.classList.remove('blurred');
                         hideLoader();
@@ -158,7 +183,7 @@ function bindEventListeners(attempts = 5, delay = 200) {
         const navClose = document.getElementById('nav-close');
         const navSpreadReadingBtn = document.getElementById("nav-spread-reading-btn");
         const navCustomReadingBtn = document.getElementById("nav-custom-reading-btn");
-        const navApprenticeBtn = document.getElementById("nav-apprentice-btn");
+        const navStudyTarotBtn = document.getElementById("nav-study-tarot-btn");
         const appContainer = document.getElementById("app-container");
         const apprenticeModeContainer = document.getElementById("apprentice-mode-container");
         const cardArea = document.getElementById("card-area");
@@ -185,7 +210,10 @@ function bindEventListeners(attempts = 5, delay = 200) {
         const readingTextContainer = document.getElementById("reading-text-container");
 
         // Check if required navbar elements are found
-        if (navToggle && navbar && navClose && navSpreadReadingBtn && navCustomReadingBtn && navApprenticeBtn) {
+        if (navToggle && navbar && navClose && navSpreadReadingBtn && navCustomReadingBtn && navStudyTarotBtn
+
+
+) {
             // Clone navToggle to remove existing listeners
             const newNavToggle = navToggle.cloneNode(true);
             navToggle.parentNode.replaceChild(newNavToggle, navToggle);
@@ -223,17 +251,11 @@ function bindEventListeners(attempts = 5, delay = 200) {
                 appContainer.classList.remove("blurred");
             };
 
-            const handleNavApprentice = () => {
-                navbar.classList.remove("active");
-                appContainer.classList.remove("blurred");
-                readingPanel.classList.remove("active");
-                cardArea.style.display = "none";
-                bottomToolbar.style.display = "none";
-                apprenticeModeContainer.style.display = "block";
-                requestAnimationFrame(() => {
-                    apprenticeModeContainer.classList.add("active");
-                });
-            };
+            const handleNavStudyTarot = () => {
+    swapContent('study');
+    navbar.classList.remove("active");
+    appContainer.classList.remove("blurred");
+};
 
             const handleClickOutside = (event) => {
                 if (navbar.classList.contains('active')) {
@@ -255,7 +277,7 @@ function bindEventListeners(attempts = 5, delay = 200) {
             navClose.removeEventListener("click", handleNavClose);
             navSpreadReadingBtn.removeEventListener("click", handleNavSpreadReading);
             navCustomReadingBtn.removeEventListener("click", handleNavCustomReading);
-            navApprenticeBtn.removeEventListener("click", handleNavApprentice);
+            navStudyTarotBtn.removeEventListener("click", handleNavStudyTarot);
             document.removeEventListener("click", handleClickOutside);
             document.querySelectorAll('#nav-links button').forEach(button => {
                 button.removeEventListener("click", handleNavLinkClick);
@@ -266,7 +288,7 @@ function bindEventListeners(attempts = 5, delay = 200) {
             navClose.addEventListener("click", handleNavClose);
             navSpreadReadingBtn.addEventListener("click", handleNavSpreadReading);
             navCustomReadingBtn.addEventListener("click", handleNavCustomReading);
-            navApprenticeBtn.addEventListener("click", handleNavApprentice);
+            navStudyTarotBtn.addEventListener("click", handleNavStudyTarot);
             document.addEventListener("click", handleClickOutside);
             document.querySelectorAll('#nav-links button').forEach(button => {
                 button.addEventListener("click", handleNavLinkClick);
@@ -697,7 +719,7 @@ function bindEventListeners(attempts = 5, delay = 200) {
                 console.error('navClose:', navClose);
                 console.error('navSpreadReadingBtn:', navSpreadReadingBtn);
                 console.error('navCustomReadingBtn:', navCustomReadingBtn);
-                console.error('navApprenticeBtn:', navApprenticeBtn);
+                console.error('navStudyTarotBtn:', navStudyTarotBtn);
             }
         }
     };
@@ -1562,3 +1584,4 @@ function setActiveButton(clickedBtn) {
         clickedBtn.classList.add("active-button");
     }
 }
+

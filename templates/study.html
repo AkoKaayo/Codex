@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-04QR4JQ0ZR"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-04QR4JQ0ZR');
+    </script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Codex Tarot - Study the Marseilles Tarot</title>
+    <meta name="description" content="Study and learn the Marseilles Tarot with interactive tools, visual guides, lessons, and quizzes at Codex Tarot.">
+    <meta name="keywords" content="Marseilles Tarot study, Jodorowsky-Camoin symbolism, tarot learning, tarot history, tarot quiz">
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="AkoKaayo">
+    <meta property="og:title" content="Codex Tarot - Study the Marseilles Tarot">
+    <meta property="og:description" content="Study and learn the Marseilles Tarot with interactive tools, visual guides, lessons, and quizzes at Codex Tarot.">
+    <meta property="og:image" content="/static/images/codextarotlogo.svg">
+    <meta property="og:url" content="https://codextarot.com/study">
+    <meta property="og:type" content="website">
+    <link rel="alternate" hreflang="en" href="https://codextarot.com/study" />
+    <link rel="alternate" hreflang="x-default" href="https://codextarot.com/study" />
+    <!-- Fonts and Favicons -->
+    <link href="https://fonts.googleapis.com/css2?family=Sorts+Mill+Goudy:wght@400;700&family=IBM+Plex+Sans:wght@200;400;600&family=IBM+Plex+Mono:wght@400;700&display=swap" rel="stylesheet" />
+    <link rel="icon" href="/static/images/favicon.svg" type="image/favicon" sizes="32x32">
+    <!-- Your CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}" />
+    <!-- Vanta.js and Three.js CDNs -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.fog.min.js"></script>
+</head>
+<body>
+    <body class="study-page"></body>
+    <!-- Global Loader -->
+    <div id="global-loader">
+        <pre id="global-spinner">|</pre>
+    </div>
+    <!-- TOP NAV BAR -->
+    <div id="top-navbar">
+        <div id="nav-logo">
+            <img src="/static/images/codextarotlogo.svg" alt="Codex Tarot Logo - Free Marseilles Tarot Reading App" />
+            <button id="nav-close" aria-label="Close navigation">←</button>
+        </div>
+        <div id="nav-links">
+            <button id="nav-spread-reading-btn">QUICK READ</button>
+            <button id="nav-custom-reading-btn">CUSTOM SPREAD</button>
+            <button id="nav-study-tarot-btn">STUDY THE TAROT</button>
+            <p class="nav-description">Explore the rich symbolism and meanings of the Marseilles Tarot through interactive learning tools.</p>
+        </div>
+        <div id="nav-footer">
+            <small>Version 1.1 &mdash; Created by AkoKaayo &mdash; © 2025</small>
+        </div>
+    </div>
+    <!-- Main Content Container -->
+    <div id="app-container">
+        <!-- Menu toggle button -->
+        <button id="nav-toggle">☰</button>
+        <!-- Background Layers -->
+        <div id="vanta-background"></div>
+        <canvas id="starry-canvas"></canvas>
+        
+        <!-- STUDY THE TAROT CONTAINER -->
+        <div id="study-tarot-container">
+            <div id="study-header">
+                <h1>STUDY THE<br>TAROT</h1>
+            </div>
+            
+            <div id="study-navigation">
+                <button class="study-nav-btn active" data-section="visual-guide">Visual Guide</button>
+                <button class="study-nav-btn" data-section="lessons">Interactive Lessons</button>
+                <button class="study-nav-btn" data-section="quiz">20 Questions Quiz</button>
+                <button class="study-nav-btn" data-section="encyclopedia">Encyclopedia</button>
+            </div>
+            
+            <div id="study-content">
+                <!-- Visual Guide Section -->
+                <div id="study-section-visual-guide" class="study-section active">
+                    <h2>Visual Guide to Marseilles Symbolism</h2>
+                    <div class="card-browser">
+                        <div class="filter-controls">
+                            <div class="search-bar">
+                                <input type="text" id="card-search" placeholder="Search cards or symbols...">
+                            </div>
+                            <div class="filter-buttons">
+                                <button class="filter-btn active" data-filter="all">All Cards</button>
+                                <button class="filter-btn" data-filter="major">Major Arcana</button>
+                                <button class="filter-btn" data-filter="minor">Minor Arcana</button>
+                                <button class="filter-btn" data-filter="court">Court Cards</button>
+                            </div>
+                            <div class="symbol-filters">
+                                <select id="symbol-type-filter">
+                                    <option value="">Filter by Symbol Type</option>
+                                    <option value="colors">Colors</option>
+                                    <option value="numbers">Numbers</option>
+                                    <option value="objects">Objects</option>
+                                    <option value="gestures">Gestures</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="cards-grid">
+                            <!-- Cards will be loaded here dynamically -->
+                            <div class="card-placeholder">Loading cards...</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Interactive Lessons Section -->
+                <div id="study-section-lessons" class="study-section">
+                    <h2>Interactive Lessons on Card Meanings</h2>
+                    <div class="modules-container">
+                        <div class="module-card" data-module="intro">
+                            <h3>Module 1: Introduction to Marseilles Tarot</h3>
+                            <p>Learn about the history, structure, and fundamental concepts of the Marseilles Tarot tradition.</p>
+                            <div class="progress-bar"><div style="width: 0%"></div></div>
+                            <button class="start-module-btn">Start Module</button>
+                        </div>
+                        
+                        <div class="module-card" data-module="major">
+                            <h3>Module 2: Major Arcana Deep Dive</h3>
+                            <p>Explore the 22 Major Arcana cards in depth, understanding their symbolism, meanings, and relationships.</p>
+                            <div class="progress-bar"><div style="width: 0%"></div></div>
+                            <button class="start-module-btn">Start Module</button>
+                        </div>
+                        
+                        <div class="module-card" data-module="minor">
+                            <h3>Module 3: Minor Arcana by Suit</h3>
+                            <p>Discover the four suits of the Minor Arcana and how they relate to different aspects of human experience.</p>
+                            <div class="progress-bar"><div style="width: 0%"></div></div>
+                            <button class="start-module-btn">Start Module</button>
+                        </div>
+                        
+                        <div class="module-card" data-module="combinations">
+                            <h3>Module 4: Reading Combinations</h3>
+                            <p>Learn how to interpret cards in relation to each other and recognize meaningful patterns in spreads.</p>
+                            <div class="progress-bar"><div style="width: 0%"></div></div>
+                            <button class="start-module-btn">Start Module</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 20 Questions Quiz Section -->
+                <div id="study-section-quiz" class="study-section">
+                    <h2>20 Questions Quiz</h2>
+                    <div class="quiz-difficulty-selector">
+                        <button class="quiz-difficulty-btn" data-difficulty="beginner">Beginner</button>
+                        <button class="quiz-difficulty-btn" data-difficulty="intermediate">Intermediate</button>
+                        <button class="quiz-difficulty-btn" data-difficulty="advanced">Advanced</button>
+                    </div>
+                    
+                    <div class="quiz-description">
+                        <h3>Test Your Knowledge</h3>
+                        <p id="quiz-description-text">Select a difficulty level to begin. The beginner quiz focuses on basic card identification and meanings.</p>
+                    </div>
+                    
+                    <button id="start-quiz-btn" disabled>Start Quiz</button>
+                    
+                    <div id="quiz-container" style="display: none;">
+                        <!-- Quiz content will be dynamically loaded here -->
+                    </div>
+                </div>
+                
+                <!-- Encyclopedia Section -->
+                <div id="study-section-encyclopedia" class="study-section">
+                    <h2>Tarot Encyclopedia</h2>
+                    <div class="encyclopedia-tabs">
+                        <button class="encyclopedia-tab active" data-tab="cards">Card Reference</button>
+                        <button class="encyclopedia-tab" data-tab="history">Historical Context</button>
+                        <button class="encyclopedia-tab" data-tab="symbols">Symbol Dictionary</button>
+                        <button class="encyclopedia-tab" data-tab="spreads">Reading Spreads</button>
+                    </div>
+                    
+                    <div class="encyclopedia-content">
+                        <div id="encyclopedia-tab-cards" class="tab-content active">
+                            <!-- Cards encyclopedia content -->
+                            <div class="encyclopedia-cards-grid">
+                                <!-- Will be populated dynamically -->
+                                <div class="card-placeholder">Loading encyclopedia...</div>
+                            </div>
+                        </div>
+                        
+                        <div id="encyclopedia-tab-history" class="tab-content">
+                            <h3>History of the Marseilles Tarot</h3>
+                            <div class="timeline">
+                                <div class="timeline-entry">
+                                    <h4>15th Century</h4>
+                                    <p>Early tarot decks emerge in Northern Italy as playing cards...</p>
+                                </div>
+                                <!-- More timeline entries -->
+                            </div>
+                        </div>
+                        
+                        <div id="encyclopedia-tab-symbols" class="tab-content">
+                            <h3>Symbol Dictionary</h3>
+                            <div class="symbol-categories">
+                                <!-- Symbol categories will be loaded here -->
+                            </div>
+                        </div>
+                        
+                        <div id="encyclopedia-tab-spreads" class="tab-content">
+                            <h3>Reading Spreads</h3>
+                            <div class="spreads-collection">
+                                <!-- Spread diagrams and explanations -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- INFO BUTTON -->
+        <button id="info-toggle">?</button>
+        
+        <!-- INFO MODAL -->
+        <div id="info-modal" class="modal">
+            <span class="close">×</span>
+            <div class="modal-content" id="info-content">
+                <h2>Study the Tarot at Codex Tarot</h2>
+                <p>Welcome to the Study section of Codex Tarot, where you can deepen your understanding of the Marseilles Tarot tradition through interactive learning tools and comprehensive references.</p>
+                
+                <h3>How to Use This Section</h3>
+                <p>The Study section is divided into four main areas:</p>
+                <ol>
+                    <li><strong>Visual Guide</strong> - An interactive reference that helps you explore the symbolism of each card through visual elements like colors, numbers, gestures, and objects.</li>
+                    <li><strong>Interactive Lessons</strong> - Structured learning modules that guide you from basic concepts to advanced interpretations.</li>
+                    <li><strong>20 Questions Quiz</strong> - Test your knowledge with quizzes of varying difficulty to reinforce your learning.</li>
+                    <li><strong>Encyclopedia</strong> - A comprehensive reference covering card meanings, historical context, symbol dictionary, and reading spreads.</li>
+                </ol>
+                
+                <h3>Resources & Credits</h3>
+                <p>The content in this section is based on the restored <a href="https://en.camoin.com/tarot/-Home-en-.html" class="resource-link">Jodorowsky-Camoin deck</a> and <a href="https://www.amazon.com/Way-Tarot-Spiritual-Teacher-Cards/dp/1594772630/" class="resource-link">The Way of the Tarot</a> by Alejandro Jodorowsky.</p>
+            </div>
+        </div>
+    </div>
+    <!-- Main Script -->
+    <script src="{{ url_for('static', filename='scripts.js') }}"></script>
+    <script src="{{ url_for('static', filename='study.js') }}"></script>
+</body>
+</html>
